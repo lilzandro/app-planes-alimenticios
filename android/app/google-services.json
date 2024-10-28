@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "899162124801",
+    "firebase_url": "https://app-alimentacion-1c03d-default-rtdb.firebaseio.com",
+    "project_id": "app-alimentacion-1c03d",
+    "storage_bucket": "app-alimentacion-1c03d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899162124801:android:cb6f4e05abdbb7d1124600",
+        "android_client_info": {
+          "package_name": "com.planes.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6nQ4HTQqJe-oh3kLYwQK4lqjqtgPOBgY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
