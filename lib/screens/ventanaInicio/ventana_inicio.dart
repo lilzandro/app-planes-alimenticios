@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Alignment, AnimatedContainer, BorderRadius, BoxDecoration, BoxFit, BoxShadow, BuildContext, Center, ClipRRect, Color, Colors, Column, Container, CrossAxisAlignment, EdgeInsets, FlexFit, Flexible, GestureDetector, Image, MainAxisAlignment, MediaQuery, Offset, Orientation, OrientationBuilder, Radius, Row, SafeArea, Scaffold, SingleChildScrollView, SizedBox, Stack, StackFit, State, StatefulWidget, Text, TextButton, TextStyle, VoidCallback, Widget;
 import 'package:app_planes/widgets/contenedor_expandible.dart';
 
 class VentanaInicio extends StatefulWidget {
@@ -216,7 +216,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
         },
         child: Column(children: [
           AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             height: selectedMeal == mealName
                 ? MediaQuery.of(context).size.height * .2
                 : MediaQuery.of(context).size.height * .08,
