@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import 'package:flutter/material.dart';
-=======
-import 'package:flutter/material.dart' show Alignment, AnimatedContainer, BorderRadius, BoxDecoration, BoxFit, BoxShadow, BuildContext, Center, ClipRRect, Color, Colors, Column, Container, CrossAxisAlignment, EdgeInsets, FlexFit, Flexible, GestureDetector, Image, MainAxisAlignment, MediaQuery, Offset, Orientation, OrientationBuilder, Radius, Row, SafeArea, Scaffold, SingleChildScrollView, SizedBox, Stack, StackFit, State, StatefulWidget, Text, TextButton, TextStyle, VoidCallback, Widget;
-import 'package:app_planes/widgets/contenedor_expandible.dart';
->>>>>>> 4ceacf1001d57cb1eed80c5d4d38a844dc7fdb3b
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
@@ -55,7 +50,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
         child: const Center(child: Text('Bloque 1')),
       ),
       Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
@@ -211,7 +206,6 @@ class _VentanaInicioState extends State<VentanaInicio> {
 
   Widget _buildExpandableOption(String mealName, Color color) {
     return GestureDetector(
-<<<<<<< HEAD
       onTap: () {
         setState(() {
           selectedMeal = selectedMeal == mealName ? null : mealName;
@@ -229,24 +223,6 @@ class _VentanaInicioState extends State<VentanaInicio> {
         child: Center(child: Text(mealName)),
       ),
     );
-=======
-        onTap: () {
-          setState(() {
-            selectedMeal = selectedMeal == mealName ? null : mealName;
-          });
-        },
-        child: Column(children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            height: selectedMeal == mealName
-                ? MediaQuery.of(context).size.height * .2
-                : MediaQuery.of(context).size.height * .08,
-            color: selectedMeal == mealName ? color : Colors.transparent,
-            alignment: Alignment.center,
-            child: Center(child: Text(mealName)),
-          ),
-        ]));
->>>>>>> 4ceacf1001d57cb1eed80c5d4d38a844dc7fdb3b
   }
 
   Widget _buildSeparator(double anchoPantalla) {
