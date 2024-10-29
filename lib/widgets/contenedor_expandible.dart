@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Contenedor extends StatefulWidget {
+  const Contenedor({super.key});
+
   @override
   _ContenedorState createState() => _ContenedorState();
 }
@@ -173,7 +175,7 @@ class _ContenedorState extends State<Contenedor> {
         });
       },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         height: selectedMeal == mealName
             ? MediaQuery.of(context).size.height * .2
             : MediaQuery.of(context).size.height * .08,
