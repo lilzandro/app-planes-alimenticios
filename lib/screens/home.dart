@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/screens/meal_plan_screen.dart';
 import 'package:app_planes/screens/profile_screen.dart';
 import 'package:app_planes/screens/ventanaInicio/ventana_inicio.dart';
-import "package:app_planes/widgets/contenedor_expandible.dart";
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});

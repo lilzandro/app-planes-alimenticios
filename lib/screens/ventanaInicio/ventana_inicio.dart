@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app_planes/widgets/contenedor_expandible.dart';
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
@@ -83,7 +82,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
               duration: const Duration(milliseconds: 300),
               height: selectedMeal == null
                   ? pantallaSize.height * 0.33
-                  : pantallaSize.height * 0.45,
+                  : pantallaSize.height * 0.5,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
                 color: const Color.fromARGB(255, 255, 255, 255),
@@ -206,25 +205,24 @@ class _VentanaInicioState extends State<VentanaInicio> {
   }
 
   Widget _buildExpandableOption(String mealName, Color color) {
-    final pantallaSize = MediaQuery.of(context).size;
-    final anchoPantalla = pantallaSize.width; // Ancho de la pantalla
     return GestureDetector(
-        onTap: () {
-          setState(() {
-            selectedMeal = selectedMeal == mealName ? null : mealName;
-          });
-        },
-        child: Column(children: [
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            height: selectedMeal == mealName
-                ? MediaQuery.of(context).size.height * .2
-                : MediaQuery.of(context).size.height * .08,
-            color: selectedMeal == mealName ? color : Colors.transparent,
-            alignment: Alignment.center,
-            child: Center(child: Text(mealName)),
-          ),
-        ]));
+      onTap: () {
+        setState(() {
+          selectedMeal = selectedMeal == mealName ? null : mealName;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        height: selectedMeal == mealName
+            ? MediaQuery.of(context).size.height * .2
+            : MediaQuery.of(context).size.height * .08,
+        color: selectedMeal == mealName
+            ? color
+            : const Color.fromARGB(255, 188, 17, 17),
+        alignment: Alignment.center,
+        child: Center(child: Text(mealName)),
+      ),
+    );
   }
 
   Widget _buildSeparator(double anchoPantalla) {
