@@ -99,17 +99,12 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   // Desayuno
                   _buildExpandableOption(
                       'Desayuno', const Color.fromARGB(0, 180, 14, 14)),
-                  if (selectedMeal != 'Desayuno')
-                    _buildSeparator(anchoPantalla),
 
                   // Almuerzo
                   _buildExpandableOption('Almuerzo', Colors.transparent),
-                  if (selectedMeal != 'Almuerzo')
-                    _buildSeparator(anchoPantalla),
 
                   // Cena
                   _buildExpandableOption('Cena', Colors.transparent),
-                  if (selectedMeal != 'Cena') _buildSeparator(anchoPantalla),
 
                   // Merienda
                   _buildExpandableOption('Merienda', Colors.transparent),
