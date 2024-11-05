@@ -47,7 +47,14 @@ class _VentanaInicioState extends State<VentanaInicio> {
       Container(
         color: const Color.fromARGB(255, 63, 243, 180),
         height: pantallaSize.height * 0.25,
-        child: const Center(child: Text('Bloque 1')),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Bloque 1'),
+            ],
+          ),
+        ),
       ),
       Container(
         padding: const EdgeInsets.all(16),
