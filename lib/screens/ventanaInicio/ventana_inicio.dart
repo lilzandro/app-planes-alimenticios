@@ -82,7 +82,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
               duration: const Duration(milliseconds: 300),
               height: selectedMeal == null
                   ? pantallaSize.height * 0.33
-                  : pantallaSize.height * 0.5,
+                  : pantallaSize.height * 0.45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
                 color: const Color.fromARGB(255, 255, 255, 255),
@@ -96,15 +96,20 @@ class _VentanaInicioState extends State<VentanaInicio> {
               ),
               child: Column(
                 children: [
-                  // Desayuno
-                  _buildExpandableOption(
-                      'Desayuno', const Color.fromARGB(0, 180, 14, 14)),
+                  // DESAYUNO
+                  Padding(
+                    padding: const EdgeInsets.all(1.5),
+                  ),
+                  _buildExpandableOption('Desayuno', Colors.transparent),
+                  _buildSeparator(anchoPantalla),
 
                   // Almuerzo
                   _buildExpandableOption('Almuerzo', Colors.transparent),
+                  _buildSeparator(anchoPantalla),
 
                   // Cena
                   _buildExpandableOption('Cena', Colors.transparent),
+                  _buildSeparator(anchoPantalla),
 
                   // Merienda
                   _buildExpandableOption('Merienda', Colors.transparent),
@@ -213,7 +218,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
             : MediaQuery.of(context).size.height * .08,
         color: selectedMeal == mealName
             ? color
-            : const Color.fromARGB(255, 188, 17, 17),
+            : const Color.fromARGB(0, 188, 17, 17),
         alignment: Alignment.center,
         child: Center(child: Text(mealName)),
       ),
