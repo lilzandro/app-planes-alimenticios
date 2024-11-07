@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
@@ -46,8 +47,36 @@ class _VentanaInicioState extends State<VentanaInicio> {
     return [
       Container(
         color: const Color.fromARGB(255, 63, 243, 180),
-        height: pantallaSize.height * 0.25,
-        child: const Center(child: Text('Bloque 1')),
+        height: pantallaSize.height * 0.20,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 1.0,
+            child: Stack(alignment: Alignment.center, children: <Widget>[
+              PieChart(
+                PieChartData(
+                  sections: [
+                    PieChartSectionData(
+                        value: 70.0,
+                        radius: 7.0,
+                        showTitle: false,
+                        color: Colors.white),
+                    PieChartSectionData(
+                        value: 30.0,
+                        radius: 7.0,
+                        showTitle: false,
+                        color: Color.fromARGB(150, 250, 250, 250)),
+                  ],
+                  centerSpaceRadius: 45.0,
+                  sectionsSpace: 0,
+                ),
+              ),
+              Text(
+                "Bloque 1",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ]),
+          ),
+        ),
       ),
       Container(
         padding: const EdgeInsets.all(16),
