@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:fl_chart/fl_chart.dart';
+=======
+import 'package:app_planes/widgets/orientacion.dart';
+>>>>>>> Stashed changes
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
@@ -15,32 +19,13 @@ class _VentanaInicioState extends State<VentanaInicio> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: OrientationBuilder(
-            builder: (context, orientation) {
-              // Detectar si el teléfono está en modo portrait o landscape
-              bool isPortrait = orientation == Orientation.portrait;
-
-              return isPortrait
-                  ? Column(
-                      children: _buildBlocks(),
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildBlocks(),
-                    );
-            },
-          ),
-        ),
-      ),
+    return ResponsiveContainer(
+      buildBlocks: (context) => _buildBlocks(context),
     );
   }
 
   // Función que construye los bloques
-  List<Widget> _buildBlocks() {
+  List<Widget> _buildBlocks(BuildContext context) {
     final pantallaSize = MediaQuery.of(context).size;
     final anchoPantalla = pantallaSize.width; // Ancho de la pantalla
 

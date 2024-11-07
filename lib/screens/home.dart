@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_planes/screens/meal_plan_screen.dart';
+import 'package:app_planes/screens/VentanaPlanAlimentacion/ventana_plan_alimentacion.dart';
 import 'package:app_planes/screens/profile_screen.dart';
 import 'package:app_planes/screens/ventanaInicio/ventana_inicio.dart';
 
@@ -15,7 +15,7 @@ class _InicioState extends State<Inicio> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const VentanaInicio(),
-    const VentanaPlanesAlimenticios(),
+    const VentanaPlanAlimentacion(),
     const VentanaPerfil(),
   ];
 
@@ -28,7 +28,7 @@ class _InicioState extends State<Inicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       backgroundColor: const Color.fromARGB(255, 62, 199, 183),

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-class VentanaPlanesAlimenticios extends StatelessWidget {
-  const VentanaPlanesAlimenticios({super.key});
+class VentanaPlanAlimentacion extends StatefulWidget {
+  const VentanaPlanAlimentacion({Key? key}) : super(key: key);
 
+  @override
+  _VentanaPlanAlimentacionState createState() =>
+      _VentanaPlanAlimentacionState();
+}
+
+class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-        automaticallyImplyLeading: false,
-      ),
-      body: const Center(
-        child: Text('Plan de alimentación'),
+      body: const SafeArea(
+        child: Text('Alimentacion'),
       ),
     );
   }
