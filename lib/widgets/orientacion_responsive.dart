@@ -4,9 +4,9 @@ class ResponsiveContainer extends StatelessWidget {
   final List<Widget> Function(BuildContext) buildBlocks;
 
   const ResponsiveContainer({
-    Key? key,
+    super.key,
     required this.buildBlocks,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
+
 import 'package:fl_chart/fl_chart.dart';
-=======
-import 'package:app_planes/widgets/orientacion.dart';
->>>>>>> Stashed changes
+
+import 'package:app_planes/widgets/orientacion_responsive.dart';
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
