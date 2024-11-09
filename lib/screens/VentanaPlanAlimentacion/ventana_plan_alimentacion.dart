@@ -24,16 +24,19 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _buildBlocks(context),
+      backgroundColor: (BuildContext) {
+        return Color.fromARGB(255, 254, 254, 254);
+      },
     );
   }
 
   List<Widget> _buildBlocks(BuildContext context) {
     final pantallaSize = MediaQuery.of(context).size;
+    final anchoPantalla = pantallaSize.width;
 
     return [
       // Encabezado
       Container(
-        color: const Color.fromARGB(255, 63, 243, 180),
         height: pantallaSize.height * 0.20,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +55,58 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       ),
       SizedBox(height: pantallaSize.height * 0.01),
       // Calendario
+
       _buildCalendarWidget(pantallaSize),
+
+      SizedBox(height: pantallaSize.height * 0.06),
+
+      Container(
+          padding: EdgeInsets.all(pantallaSize.height * 0),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text(
+                'Menú manual',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Realiza tus propias recetas',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+            ],
+          )),
+      SizedBox(
+        height: anchoPantalla * 0.05,
+      ),
+      Container(
+          height: anchoPantalla * .12,
+          width: anchoPantalla * .5,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.0),
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(45, 0, 0, 0),
+// Color de la sombra
+                blurRadius: 4.0,
+                offset: Offset(0, 0), // Desplazamiento de la sombra
+              ),
+            ],
+            // Esquinas redondeadas
+          ),
+          child: ElevatedButton(
+            onPressed: () {},
+            child: Text("Crear menú manual"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(15.0), // Esquinas redondeadas
+              ),
+            ),
+          ))
     ];
   }
 

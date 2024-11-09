@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:fl_chart/fl_chart.dart';
-
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 
 class VentanaInicio extends StatefulWidget {
