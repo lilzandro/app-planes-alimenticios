@@ -1,5 +1,6 @@
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class VentanaPlanAlimentacion extends StatefulWidget {
   const VentanaPlanAlimentacion({super.key});
@@ -34,7 +35,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     return [
       // Encabezado
       SizedBox(
-        height: pantallaSize.height * 0.20,
+        height: pantallaSize.height * 0.15,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -50,12 +51,12 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           ],
         ),
       ),
-      SizedBox(height: pantallaSize.height * 0.01),
+      SizedBox(height: pantallaSize.height * 0.0),
       // Calendario
 
       _buildCalendarWidget(pantallaSize),
 
-      SizedBox(height: pantallaSize.height * 0.06),
+      SizedBox(height: pantallaSize.height * 0.035),
 
       Container(
           padding: EdgeInsets.all(pantallaSize.height * 0),
@@ -85,7 +86,6 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             boxShadow: [
               BoxShadow(
                 color: Color.fromARGB(45, 0, 0, 0),
-// Color de la sombra
                 blurRadius: 4.0,
                 offset: Offset(0, 0), // Desplazamiento de la sombra
               ),
@@ -103,7 +103,32 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                     BorderRadius.circular(15.0), // Esquinas redondeadas
               ),
             ),
-          ))
+          )),
+      SizedBox(
+        height: anchoPantalla * 0.07,
+      ),
+
+      // Carrusel
+      CarouselSlider(
+        options: CarouselOptions(
+            height: pantallaSize.height * 0.18,
+            autoPlay: true,
+            viewportFraction: 0.5),
+        items: [1, 2, 3, 4, 5].map((i) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(color: Colors.amber),
+                  child: Text(
+                    'text $i',
+                    style: TextStyle(fontSize: 16.0),
+                  ));
+            },
+          );
+        }).toList(),
+      )
     ];
   }
 
@@ -169,6 +194,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             ],
           ),
         ),
+
         // Contenedores circulares ("orejas") en la parte superior del calendario
         Positioned(
           left: pantallaSize.width * 0.2, // Posición horizontal (izquierda)
