@@ -31,7 +31,7 @@ class _InicioState extends State<Inicio> {
       body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      backgroundColor: const Color.fromARGB(255, 62, 199, 183),
+      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
