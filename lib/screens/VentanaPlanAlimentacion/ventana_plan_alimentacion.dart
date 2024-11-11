@@ -33,7 +33,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
 
     return [
       // Encabezado
-      Container(
+      SizedBox(
         height: pantallaSize.height * 0.20,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
