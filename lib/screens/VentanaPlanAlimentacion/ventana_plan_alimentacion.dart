@@ -23,11 +23,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveContainer(
-      buildBlocks: (context) => _buildBlocks(context),
-      backgroundColor: (BuildContext) {
-        return Color.fromARGB(255, 254, 254, 254);
-      },
-    );
+        buildBlocks: (context) => _buildBlocks(context),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255));
   }
 
   List<Widget> _buildBlocks(BuildContext context) {

@@ -18,6 +18,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _buildBlocks(context),
+      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
     );
   }
 
@@ -31,14 +32,17 @@ class _VentanaInicioState extends State<VentanaInicio> {
         color: const Color.fromARGB(255, 63, 243, 180),
         height: pantallaSize.height * 0.20,
         child: Center(
-          child: CircularPercentIndicator(radius: 60, lineWidth: 6,
-          percent: 0.4,
-          progressColor: Colors.white,
-          backgroundColor: Color.fromARGB(150,250,250,250),
-          circularStrokeCap: CircularStrokeCap.round,
-          center: const Text("Restantes", style: TextStyle(fontSize:10),)
-          )
-        ),
+            child: CircularPercentIndicator(
+                radius: 60,
+                lineWidth: 6,
+                percent: 0.4,
+                progressColor: Colors.white,
+                backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                circularStrokeCap: CircularStrokeCap.round,
+                center: const Text(
+                  "Restantes",
+                  style: TextStyle(fontSize: 10),
+                ))),
       ),
       Container(
         padding: const EdgeInsets.all(16),
