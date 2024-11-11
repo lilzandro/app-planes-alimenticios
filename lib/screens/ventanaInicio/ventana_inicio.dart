@@ -41,7 +41,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                 circularStrokeCap: CircularStrokeCap.round,
                 center: const Text(
                   "Restantes",
-                  style: TextStyle(fontSize: 10),
+                  style: TextStyle(color: Colors.black54, fontSize: 12),
                 ),),
                 Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
