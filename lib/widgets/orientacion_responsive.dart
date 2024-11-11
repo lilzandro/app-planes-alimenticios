@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 class ResponsiveContainer extends StatelessWidget {
   final List<Widget> Function(BuildContext) buildBlocks;
+  final Color backgroundColor;
 
   const ResponsiveContainer({
     super.key,
     required this.buildBlocks,
+    required this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: OrientationBuilder(

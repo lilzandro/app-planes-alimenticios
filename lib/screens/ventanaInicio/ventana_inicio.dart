@@ -19,6 +19,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _buildBlocks(context),
+      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
     );
   }
 
@@ -30,6 +31,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
     return [
       Container(
         color: const Color.fromARGB(255, 63, 243, 180),
+
         height: pantallaSize.height * 0.25,
         child: Center(child: Column(
             children: [ CircularPercentIndicator(
@@ -41,6 +43,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                 circularStrokeCap: CircularStrokeCap.round,
                 center: const Text(
                   "Restantes",
+
                   style: TextStyle(color: Colors.black54, fontSize: 12),
                 ),),
                 Padding(
@@ -100,6 +103,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   ],
                 ),)
                 ],),),
+
       ),
       Container(
         padding: const EdgeInsets.all(16),
