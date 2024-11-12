@@ -35,92 +35,21 @@ class _VentanaInicioState extends State<VentanaInicio> {
         child: Center(
           child: Column(
             children: [
-              CircularPercentIndicator(
-                radius: 60,
-                lineWidth: 6,
-                percent: 0.4,
-                progressColor: Colors.white,
-                backgroundColor: Color.fromARGB(150, 250, 250, 250),
-                circularStrokeCap: CircularStrokeCap.round,
-                center: const Text(
-                  "Restantes",
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
-                ),
-              ),
+              // EL NIVEL DE LA BARRA Y EL NIVEL MAXIMO
+              _buildCircularPercentIndicator(350, 100),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // CODIGO CON ALTOS NIVELES DE MALAS PRACTICAS PERO FUNCIONAL
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Carbohidratos",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        ),
-                        LinearPercentIndicator(
-                          width: 120,
-                          lineHeight: 6,
-                          percent: 0.8,
-                          barRadius: Radius.circular(20),
-                          progressColor: Colors.white,
-                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
-                        ),
-                        Text(
-                          "0 / 989g",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        )
-                      ],
-                    ),
-
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Proteinas",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        ),
-                        LinearPercentIndicator(
-                          width: 120,
-                          lineHeight: 6,
-                          percent: 0.8,
-                          barRadius: Radius.circular(20),
-                          progressColor: Colors.white,
-                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
-                        ),
-                        Text(
-                          "0 / 329g",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        )
-                      ],
-                    ),
-
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Grasas",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        ),
-                        LinearPercentIndicator(
-                          width: 120,
-                          lineHeight: 6,
-                          percent: 0.8,
-                          barRadius: Radius.circular(20),
-                          progressColor: Colors.white,
-                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
-                        ),
-                        Text(
-                          "0 / 289g",
-                          style: TextStyle(color: Colors.black54, fontSize: 12),
-                        )
-                      ],
-                    ),
+                    // SE PASAN 3 DATOS
+                    // EL PRIMERO ES EL NOMBRE DE LA BARRA DE PROGRESO, EL NIVEL DE LA BARRA Y EL NIVEL MAXIMO
+                    _buildLinearPercentIndicator("Carbohidratos", 0.8, 120),
+                    _buildLinearPercentIndicator("Proteinas", 0.8, 120),
+                    _buildLinearPercentIndicator("Grasas", 0.8, 120),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -306,6 +235,45 @@ class _VentanaInicioState extends State<VentanaInicio> {
       width: anchoPantalla * .8,
       height: .8,
       color: const Color.fromARGB(255, 224, 224, 224),
+    );
+  }
+
+  Widget _buildCircularPercentIndicator(nivelDeProgreso, metaProgreso) {
+    return CircularPercentIndicator(
+      radius: 60,
+      lineWidth: 6,
+      percent: nivelDeProgreso/1000,
+      progressColor: Colors.white,
+      backgroundColor: Color.fromARGB(150, 250, 250, 250),
+      circularStrokeCap: CircularStrokeCap.round,
+      center: Text(
+        "${nivelDeProgreso - metaProgreso}",
+        style: TextStyle(color: Colors.black54, fontSize: 18),
+      ),
+    );
+  }
+
+  Widget _buildLinearPercentIndicator(nombre, nivelDeProgreso, metaProgreso) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          nombre,
+          style: TextStyle(color: Colors.black54, fontSize: 12),
+        ),
+        LinearPercentIndicator(
+          width: 120,
+          lineHeight: 6,
+          percent: nivelDeProgreso/100,
+          barRadius: Radius.circular(20),
+          progressColor: Colors.white,
+          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+        ),
+        Text(
+          "${nivelDeProgreso}g / ${metaProgreso}g",
+          style: TextStyle(color: Colors.black54, fontSize: 12, ),
+        )
+      ],
     );
   }
 }
