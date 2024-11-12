@@ -31,10 +31,11 @@ class _VentanaInicioState extends State<VentanaInicio> {
     return [
       Container(
         color: const Color.fromARGB(255, 63, 243, 180),
-
         height: pantallaSize.height * 0.25,
-        child: Center(child: Column(
-            children: [ CircularPercentIndicator(
+        child: Center(
+          child: Column(
+            children: [
+              CircularPercentIndicator(
                 radius: 60,
                 lineWidth: 6,
                 percent: 0.4,
@@ -43,67 +44,86 @@ class _VentanaInicioState extends State<VentanaInicio> {
                 circularStrokeCap: CircularStrokeCap.round,
                 center: const Text(
                   "Restantes",
-
                   style: TextStyle(color: Colors.black54, fontSize: 12),
-                ),),
-                Padding(
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
-                child:
-                Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // CODIGO CON ALTOS NIVELES DE MALAS PRACTICAS PERO FUNCIONAL 
+                    // CODIGO CON ALTOS NIVELES DE MALAS PRACTICAS PERO FUNCIONAL
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Carbohidratos", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ,
-                    LinearPercentIndicator(
-                    width: 120,
-                    lineHeight: 6,
-                    percent: 0.8,
-                    barRadius: Radius.circular(20),
-                    progressColor: Colors.white,
-                    backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Carbohidratos",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        LinearPercentIndicator(
+                          width: 120,
+                          lineHeight: 6,
+                          percent: 0.8,
+                          barRadius: Radius.circular(20),
+                          progressColor: Colors.white,
+                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                        ),
+                        Text(
+                          "0 / 989g",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        )
+                      ],
                     ),
-                    Text("0 / 989g", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ],),
 
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Proteinas", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ,
-                    LinearPercentIndicator(
-                    width: 120,
-                    lineHeight: 6,
-                    percent: 0.8,
-                    barRadius: Radius.circular(20),
-                    progressColor: Colors.white,
-                    backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Proteinas",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        LinearPercentIndicator(
+                          width: 120,
+                          lineHeight: 6,
+                          percent: 0.8,
+                          barRadius: Radius.circular(20),
+                          progressColor: Colors.white,
+                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                        ),
+                        Text(
+                          "0 / 329g",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        )
+                      ],
                     ),
-                    Text("0 / 329g", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ],),
 
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Grasas", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ,
-                    LinearPercentIndicator(
-                    width: 120,
-                    lineHeight: 6,
-                    percent: 0.8,
-                    barRadius: Radius.circular(20),
-                    progressColor: Colors.white,
-                    backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Grasas",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        LinearPercentIndicator(
+                          width: 120,
+                          lineHeight: 6,
+                          percent: 0.8,
+                          barRadius: Radius.circular(20),
+                          progressColor: Colors.white,
+                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                        ),
+                        Text(
+                          "0 / 289g",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        )
+                      ],
                     ),
-                    Text("0 / 289g", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ],),
                   ],
-                ),)
-                ],),),
-
+                ),
+              )
+            ],
+          ),
+        ),
       ),
       Container(
         padding: const EdgeInsets.all(16),

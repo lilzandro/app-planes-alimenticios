@@ -1,4 +1,21 @@
-import 'package:flutter/material.dart' show AppBar, BuildContext, Column, EdgeInsets, ElevatedButton, InputDecoration, MainAxisAlignment, Navigator, Padding, Scaffold, SizedBox, State, StatefulWidget, Text, TextField, Widget;
+import 'package:flutter/material.dart'
+    show
+        AppBar,
+        BuildContext,
+        Column,
+        EdgeInsets,
+        ElevatedButton,
+        InputDecoration,
+        MainAxisAlignment,
+        Navigator,
+        Padding,
+        Scaffold,
+        SizedBox,
+        State,
+        StatefulWidget,
+        Text,
+        TextField,
+        Widget;
 import 'package:firebase_auth/firebase_auth.dart';
 
 class VentanaRegistro extends StatefulWidget {
