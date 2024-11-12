@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_planes/screens/VentanaPlanAlimentacion/ventana_plan_alimentacion.dart';
-import 'package:app_planes/screens/profile_screen.dart';
+import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
 import 'package:app_planes/screens/ventanaInicio/ventana_inicio.dart';
 
 class Inicio extends StatefulWidget {

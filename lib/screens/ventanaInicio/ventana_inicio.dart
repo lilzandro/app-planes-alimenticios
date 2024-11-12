@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
@@ -25,16 +26,14 @@ class _VentanaInicioState extends State<VentanaInicio> {
 
   // Función que construye los bloques
   List<Widget> _buildBlocks(BuildContext context) {
-    final pantallaSize = MediaQuery.of(context).size;
-    final anchoPantalla = pantallaSize.width; // Ancho de la pantalla
-
     return [
       Container(
         color: const Color.fromARGB(255, 63, 243, 180),
-
-        height: pantallaSize.height * 0.25,
-        child: Center(child: Column(
-            children: [ CircularPercentIndicator(
+        height: DimensionesDePantalla.pantallaSize * 0.25,
+        child: Center(
+          child: Column(
+            children: [
+              CircularPercentIndicator(
                 radius: 60,
                 lineWidth: 6,
                 percent: 0.4,
@@ -43,67 +42,86 @@ class _VentanaInicioState extends State<VentanaInicio> {
                 circularStrokeCap: CircularStrokeCap.round,
                 center: const Text(
                   "Restantes",
-
                   style: TextStyle(color: Colors.black54, fontSize: 12),
-                ),),
-                Padding(
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
-                child:
-                Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // CODIGO CON ALTOS NIVELES DE MALAS PRACTICAS PERO FUNCIONAL 
+                    // CODIGO CON ALTOS NIVELES DE MALAS PRACTICAS PERO FUNCIONAL
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Carbohidratos", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ,
-                    LinearPercentIndicator(
-                    width: 120,
-                    lineHeight: 6,
-                    percent: 0.8,
-                    barRadius: Radius.circular(20),
-                    progressColor: Colors.white,
-                    backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Carbohidratos",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        LinearPercentIndicator(
+                          width: 120,
+                          lineHeight: 6,
+                          percent: 0.8,
+                          barRadius: Radius.circular(20),
+                          progressColor: Colors.white,
+                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                        ),
+                        Text(
+                          "0 / 989g",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        )
+                      ],
                     ),
-                    Text("0 / 989g", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ],),
 
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Proteinas", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ,
-                    LinearPercentIndicator(
-                    width: 120,
-                    lineHeight: 6,
-                    percent: 0.8,
-                    barRadius: Radius.circular(20),
-                    progressColor: Colors.white,
-                    backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Proteinas",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        LinearPercentIndicator(
+                          width: 120,
+                          lineHeight: 6,
+                          percent: 0.8,
+                          barRadius: Radius.circular(20),
+                          progressColor: Colors.white,
+                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                        ),
+                        Text(
+                          "0 / 329g",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        )
+                      ],
                     ),
-                    Text("0 / 329g", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ],),
 
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Grasas", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ,
-                    LinearPercentIndicator(
-                    width: 120,
-                    lineHeight: 6,
-                    percent: 0.8,
-                    barRadius: Radius.circular(20),
-                    progressColor: Colors.white,
-                    backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Grasas",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                        LinearPercentIndicator(
+                          width: 120,
+                          lineHeight: 6,
+                          percent: 0.8,
+                          barRadius: Radius.circular(20),
+                          progressColor: Colors.white,
+                          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+                        ),
+                        Text(
+                          "0 / 289g",
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        )
+                      ],
                     ),
-                    Text("0 / 289g", style: TextStyle(color: Colors.black54, fontSize: 12), )
-                    ],),
                   ],
-                ),)
-                ],),),
-
+                ),
+              )
+            ],
+          ),
+        ),
       ),
       Container(
         padding: const EdgeInsets.all(16),
@@ -137,8 +155,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
               padding: const EdgeInsets.all(0),
               duration: const Duration(milliseconds: 300),
               height: selectedMeal == null
-                  ? pantallaSize.height * 0.33
-                  : pantallaSize.height * 0.45,
+                  ? DimensionesDePantalla.pantallaSize * 0.33
+                  : DimensionesDePantalla.pantallaSize * 0.45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
                 color: const Color.fromARGB(255, 255, 255, 255),
@@ -157,15 +175,15 @@ class _VentanaInicioState extends State<VentanaInicio> {
                     padding: const EdgeInsets.all(1.5),
                   ),
                   _buildExpandableOption('Desayuno', Colors.transparent),
-                  _buildSeparator(anchoPantalla),
+                  _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Almuerzo
                   _buildExpandableOption('Almuerzo', Colors.transparent),
-                  _buildSeparator(anchoPantalla),
+                  _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Cena
                   _buildExpandableOption('Cena', Colors.transparent),
-                  _buildSeparator(anchoPantalla),
+                  _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Merienda
                   _buildExpandableOption('Merienda', Colors.transparent),
@@ -187,7 +205,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   ),
                 ],
               ),
-              height: pantallaSize.height * 0.2,
+              height: DimensionesDePantalla.pantallaSize * 0.2,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: Stack(
@@ -222,7 +240,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   )
                 ],
               ),
-              height: pantallaSize.height * 0.2,
+              height: DimensionesDePantalla.pantallaSize * 0.2,
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(children: [
@@ -231,7 +249,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                     fit: FlexFit.loose,
                     child: Container(
                       decoration: const BoxDecoration(),
-                      height: pantallaSize.height * .2,
+                      height: DimensionesDePantalla.pantallaSize * .2,
                       child: const Center(child: Text('Bloque Extra')),
                     ),
                   ),
@@ -246,11 +264,13 @@ class _VentanaInicioState extends State<VentanaInicio> {
 
   Widget _buildButton(String label, VoidCallback onPressed,
       {bool isMiddleButton = false}) {
-    final pantallaSize = MediaQuery.of(context).size;
-    final anchoPantalla = pantallaSize.width;
     return Container(
-      height: isMiddleButton ? anchoPantalla * .1 : anchoPantalla * .1,
-      width: isMiddleButton ? anchoPantalla * .5 : anchoPantalla * .1,
+      height: isMiddleButton
+          ? DimensionesDePantalla.anchoPantalla * .1
+          : DimensionesDePantalla.anchoPantalla * .1,
+      width: isMiddleButton
+          ? DimensionesDePantalla.anchoPantalla * .5
+          : DimensionesDePantalla.anchoPantalla * .1,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 234, 233, 233),
         borderRadius: BorderRadius.circular(30.0),
@@ -283,7 +303,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
 
   Widget _buildSeparator(double anchoPantalla) {
     return Container(
-      width: anchoPantalla * .8,
+      width: DimensionesDePantalla.anchoPantalla * .8,
       height: .8,
       color: const Color.fromARGB(255, 224, 224, 224),
     );
