@@ -5,55 +5,80 @@ class ArranqueApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-      ),
+    return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      backgroundColor: Color(0xFF6ECFA9),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Bienvenido a Healthy Diet App',
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text('Login'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/register');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text('Registrarse'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/home');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text('Entrar como Invitado'),
-              ),
-            ],
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        // NOMBRE APP
+        Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+          border: Border.all(
+          color: Colors.white.withOpacity(0.5),
+          width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+          "Nombre de la App",
+          style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
+        SizedBox(height: 30,),
+        //LOGO
+        Container(
+        width: 250,
+        height: 250, 
+        decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        ),
+        child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Image.asset('assets/logo.png'),
+        ),
+        ),
+        SizedBox(height: 50,),
+        ElevatedButton(
+        style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFF334B45),
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        ),
+        ),
+
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, '/home');
+        },
+
+        child: Text(
+        "Empecemos",
+        style: TextStyle(fontSize: 25, color: Colors.white),
+        ),
+        ),
+
+        Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        Text("Ya eres usuario?", style: TextStyle(color: Colors.white70),),
+        TextButton(
+        onPressed: () {},
+        child: Text(
+        "Inicia sesion",
+        style: TextStyle(color: Colors.white),
+        ),
+        )
+        ],
+        )
+        ],
+        ),
       ),
+    ),
     );
   }
 }
