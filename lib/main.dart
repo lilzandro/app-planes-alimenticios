@@ -1,4 +1,6 @@
+import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
 import 'package:flutter/material.dart';
+import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
 //Importaciones firebase
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +10,7 @@ import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home.dart';
-import 'screens/profile_screen.dart';
+import 'screens/VentanaPerfil/ventana_perfil.dart';
 import 'screens/start_screen.dart';
 
 void main() async {
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DimensionesDePantalla.init(context);
+
     return MaterialApp(
       title: '',
       theme: ThemeData(

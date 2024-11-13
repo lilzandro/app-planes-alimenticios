@@ -1,6 +1,7 @@
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
 class VentanaPlanAlimentacion extends StatefulWidget {
   const VentanaPlanAlimentacion({super.key});
@@ -29,18 +30,16 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   }
 
   List<Widget> _buildBlocks(BuildContext context) {
-    final pantallaSize = MediaQuery.of(context).size;
-    final anchoPantalla = pantallaSize.width;
-
     return [
       // Encabezado
       SizedBox(
-        height: pantallaSize.height * 0.15,
+        height: DimensionesDePantalla.pantallaSize * 0.2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(pantallaSize.height * 0.02),
+              padding:
+                  EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.02),
               alignment: Alignment.center,
               child: const Text(
                 'Plan Semanal\n de Alimentación',
@@ -51,15 +50,15 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           ],
         ),
       ),
-      SizedBox(height: pantallaSize.height * 0.0),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.0),
       // Calendario
 
-      _buildCalendarWidget(pantallaSize),
+      _buildCalendarWidget(),
 
-      SizedBox(height: pantallaSize.height * 0.035),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.035),
 
       Container(
-          padding: EdgeInsets.all(pantallaSize.height * 0),
+          padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0),
           alignment: Alignment.center,
           child: Column(
             children: [
@@ -76,11 +75,11 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             ],
           )),
       SizedBox(
-        height: anchoPantalla * 0.05,
+        height: DimensionesDePantalla.anchoPantalla * 0.05,
       ),
       Container(
-          height: anchoPantalla * .12,
-          width: anchoPantalla * .5,
+          height: DimensionesDePantalla.anchoPantalla * .12,
+          width: DimensionesDePantalla.anchoPantalla * .5,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
@@ -94,7 +93,6 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           ),
           child: ElevatedButton(
             onPressed: () {},
-            child: Text("Crear menú manual"),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               shadowColor: Colors.transparent,
@@ -103,15 +101,16 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                     BorderRadius.circular(15.0), // Esquinas redondeadas
               ),
             ),
+            child: Text("Crear menú manual"),
           )),
       SizedBox(
-        height: anchoPantalla * 0.07,
+        height: DimensionesDePantalla.anchoPantalla * 0.07,
       ),
 
       // Carrusel
       CarouselSlider(
         options: CarouselOptions(
-            height: pantallaSize.height * 0.18,
+            height: DimensionesDePantalla.pantallaSize * 0.18,
             autoPlay: true,
             viewportFraction: 0.5),
         items: [1, 2, 3, 4, 5].map((i) {
@@ -132,16 +131,18 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     ];
   }
 
-  Widget _buildCalendarWidget(Size pantallaSize) {
+  Widget _buildCalendarWidget() {
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          padding: EdgeInsets.all(pantallaSize.width * 0.06),
-          margin: EdgeInsets.symmetric(horizontal: pantallaSize.width * 0.02),
+          padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.01),
+          margin: EdgeInsets.symmetric(
+              horizontal: DimensionesDePantalla.pantallaSize * 0.01),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(pantallaSize.width * 0.09),
+            borderRadius: BorderRadius.circular(
+                DimensionesDePantalla.pantallaSize * 0.04),
             boxShadow: [
               BoxShadow(
                 color: Color.fromARGB(45, 0, 0, 0),
@@ -154,19 +155,19 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                  height: pantallaSize.height *
-                      0.03), // Espacio para que no cubra la línea superior
+                  height: DimensionesDePantalla.pantallaSize *
+                      0.045), // Espacio para que no cubra la línea superior
               Divider(
                   thickness: 3, color: const Color.fromARGB(255, 18, 32, 48)),
-              SizedBox(height: pantallaSize.height * 0.035),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.035),
               // Días de la semana en formato de cuadrícula
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  crossAxisSpacing: pantallaSize.width * 0.02,
-                  mainAxisSpacing: pantallaSize.height * 0.02,
+                  crossAxisSpacing: DimensionesDePantalla.pantallaSize * 0.01,
+                  mainAxisSpacing: DimensionesDePantalla.pantallaSize * 0.02,
                 ),
                 itemCount: days.length,
                 itemBuilder: (context, index) {
@@ -174,8 +175,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(pantallaSize.width * 0.02),
+                      borderRadius: BorderRadius.circular(
+                          DimensionesDePantalla.pantallaSize * 0.02),
                       border: Border.all(color: Colors.grey.shade300),
                       boxShadow: [
                         BoxShadow(
@@ -191,34 +192,41 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                   );
                 },
               ),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             ],
           ),
         ),
 
         // Contenedores circulares ("orejas") en la parte superior del calendario
         Positioned(
-          left: pantallaSize.width * 0.2, // Posición horizontal (izquierda)
-          top: -pantallaSize.height * 0.02, // Posición vertical (hacia arriba)
+          left: DimensionesDePantalla.pantallaSize *
+              0.08, // Posición horizontal (izquierda)
+          top: -DimensionesDePantalla.pantallaSize *
+              0.04, // Posición vertical (hacia arriba)
           child: Container(
-            width: pantallaSize.width * 0.08,
-            height: pantallaSize.width * 0.1,
+            width: DimensionesDePantalla.pantallaSize * 0.05,
+            height: DimensionesDePantalla.pantallaSize * 0.07,
             decoration: BoxDecoration(
               border: Border.all(width: 2, color: Color.fromARGB(140, 0, 0, 0)),
               color: Color.fromARGB(255, 63, 243, 180),
-              borderRadius: BorderRadius.circular(pantallaSize.width * 0.02),
+              borderRadius: BorderRadius.circular(
+                  DimensionesDePantalla.pantallaSize * 0.015),
             ),
           ),
         ),
         Positioned(
-          right: pantallaSize.width * 0.2, // Posición horizontal (derecha)
-          top: -pantallaSize.height * 0.02, // Posición vertical (hacia arriba)
+          right: DimensionesDePantalla.pantallaSize *
+              0.08, // Posición horizontal (derecha)
+          top: -DimensionesDePantalla.pantallaSize *
+              0.04, // Posición vertical (hacia arriba)
           child: Container(
-            width: pantallaSize.width * 0.08,
-            height: pantallaSize.width * 0.1,
+            width: DimensionesDePantalla.pantallaSize * 0.05,
+            height: DimensionesDePantalla.pantallaSize * 0.07,
             decoration: BoxDecoration(
               border: Border.all(width: 2, color: Color.fromARGB(140, 0, 0, 0)),
               color: Color.fromARGB(255, 63, 243, 180),
-              borderRadius: BorderRadius.circular(pantallaSize.width * 0.02),
+              borderRadius: BorderRadius.circular(
+                  DimensionesDePantalla.pantallaSize * 0.015),
             ),
           ),
         ),
