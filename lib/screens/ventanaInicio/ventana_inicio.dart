@@ -33,18 +33,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
         child: Center(
           child: Column(
             children: [
-              CircularPercentIndicator(
-                radius: 60,
-                lineWidth: 6,
-                percent: 0.4,
-                progressColor: Colors.white,
-                backgroundColor: Color.fromARGB(150, 250, 250, 250),
-                circularStrokeCap: CircularStrokeCap.round,
-                center: const Text(
-                  "Restantes",
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
-                ),
-              ),
+              // EL NIVEL DE LA BARRA Y EL NIVEL MAXIMO
+              _buildCircularPercentIndicator(350, 100),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Row(
