@@ -242,7 +242,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
     return CircularPercentIndicator(
       radius: 60,
       lineWidth: 6,
-      percent: nivelDeProgreso / 1000,
+      percent: nivelDeProgreso/1000,
       progressColor: Colors.white,
       backgroundColor: Color.fromARGB(150, 250, 250, 250),
       circularStrokeCap: CircularStrokeCap.round,
@@ -264,17 +264,14 @@ class _VentanaInicioState extends State<VentanaInicio> {
         LinearPercentIndicator(
           width: 120,
           lineHeight: 6,
-          percent: nivelDeProgreso / 100,
+          percent: nivelDeProgreso/100,
           barRadius: Radius.circular(20),
           progressColor: Colors.white,
           backgroundColor: Color.fromARGB(150, 250, 250, 250),
         ),
         Text(
           "${nivelDeProgreso}g / ${metaProgreso}g",
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.black54, fontSize: 12, ),
         )
       ],
     );
