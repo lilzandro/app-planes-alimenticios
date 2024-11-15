@@ -10,7 +10,6 @@ import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home.dart';
-import 'screens/VentanaPerfil/ventana_perfil.dart';
 import 'screens/start_screen.dart';
 
 void main() async {

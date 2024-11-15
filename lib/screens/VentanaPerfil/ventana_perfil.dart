@@ -116,7 +116,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
       child: Column(
         children: [
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.05),
-          _buildDetailCard(),
+          _progreso(),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
           _buildActionButton("Editar Perfil", () {
             EditarPerfil.mostrar(context);
@@ -128,7 +128,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
     );
   }
 
-  Widget _buildDetailCard() {
+  Widget _progreso() {
     return Container(
       height: DimensionesDePantalla.pantallaSize * 0.25,
       width: DimensionesDePantalla.pantallaSize * 0.9,
