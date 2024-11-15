@@ -1,4 +1,3 @@
-// dialogo_editar_perfil.dart
 import 'package:flutter/material.dart';
 
 class EditarPerfil {
@@ -7,7 +6,7 @@ class EditarPerfil {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent, // Sin bordes
+          backgroundColor: Color.fromARGB(255, 251, 23, 23), // Color de fondo
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8, // 80% del ancho
             padding: EdgeInsets.all(16.0),
@@ -22,62 +21,44 @@ class EditarPerfil {
                 ),
               ],
             ),
-            child: Column(
-              mainAxisSize:
-                  MainAxisSize.min, // Ajusta la altura según el contenido
-              children: [
-                Text("Modificar Datos del Usuario",
-                    style: TextStyle(fontSize: 20)),
-                SizedBox(height: 40),
-                _crearCampoTexto("Nombre:"),
-                SizedBox(height: 10),
-                _crearCampoTexto("Edad:"),
-                SizedBox(height: 20),
-                _crearCampoTexto("Fecha de Nacimiento:"),
-                SizedBox(height: 20),
-                _crearCampoTexto("Estatura:"),
-                SizedBox(height: 20),
-                _crearCampoTexto("Peso:"),
-                SizedBox(height: 20),
-                _crearCampoTexto("Telefono:"),
-                SizedBox(height: 20),
-                _crearCampoTexto("Dirección:"),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceEvenly, // Espaciado entre los botones
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pop(); // Cierra el diálogo sin guardar
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors
-                            .red, // Color de fondo para el botón de cancelar
-                      ),
-                      child: Text("Cancelar"),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Lógica para guardar los cambios
-                        Navigator.of(context)
-                            .pop(); // Cierra el diálogo después de guardar
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      child: Text("Guardar"),
-                    ),
-                  ],
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _titulo(),
+                  SizedBox(height: 40),
+                  ..._crearCamposTexto(), // Expande la lista de campos
+                  SizedBox(height: 20),
+                  _crearBotones(context), // Botones de guardar y cancelar
+                ],
+              ),
             ),
           ),
         );
       },
     );
+  }
+
+  static Widget _titulo() {
+    return Text(
+      "Modificar Datos del Usuario",
+      style: TextStyle(fontSize: 20),
+    );
+  }
+
+  static List<Widget> _crearCamposTexto() {
+    // Lista de etiquetas para los campos de texto
+    const etiquetas = [
+      "Nombre:",
+      "Edad:",
+      "Fecha de Nacimiento:",
+      "Estatura:",
+      "Peso:",
+      "Teléfono:",
+      "Dirección:",
+    ];
+
+    return etiquetas.map((etiqueta) => _crearCampoTexto(etiqueta)).toList();
   }
 
   static Widget _crearCampoTexto(String etiqueta) {
@@ -105,6 +86,34 @@ class EditarPerfil {
                   vertical: 10.0, horizontal: 15.0), // Espaciado interno
             ),
           ),
+        ),
+        SizedBox(height: 20), // Espaciado entre campos
+      ],
+    );
+  }
+
+  static Widget _crearBotones(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          onPressed: () =>
+              Navigator.of(context).pop(), // Cierra el diálogo sin guardar
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.red,
+          ),
+          child: Text("Cancelar"),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            // Lógica para guardar los cambios
+            Navigator.of(context).pop(); // Cierra el diálogo después de guardar
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+          ),
+          child: Text("Guardar"),
         ),
       ],
     );
