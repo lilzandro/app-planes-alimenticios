@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 //Importaciones screens
-import 'screens/login_screen.dart';
+import 'screens/Login/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home.dart';
 import 'screens/start_screen.dart';

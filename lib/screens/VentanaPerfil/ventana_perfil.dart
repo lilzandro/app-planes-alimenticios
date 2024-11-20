@@ -2,6 +2,7 @@ import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/widgets/editar_perfil.dart';
+import 'package:app_planes/screens/Login/login_screen.dart';
 
 class VentanaPerfil extends StatefulWidget {
   const VentanaPerfil({super.key});
@@ -122,7 +123,12 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
             EditarPerfil.mostrar(context);
           }),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-          _buildActionButton("Cerrar Sección", () {}),
+          _buildActionButton("Cerrar Sección", () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => VentanaInicioSeccion()),
+            );
+          }),
         ],
       ),
     );
@@ -161,7 +167,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: onPressed, // Acción{},
         style: ElevatedButton.styleFrom(
           foregroundColor: label == "Cerrar Sección"
               ? Color.fromARGB(255, 187, 13, 13)
