@@ -1,6 +1,5 @@
 import 'package:app_planes/screens/Login/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app_planes/screens/Register/register_screen.dart';
 
 class ArranqueApp extends StatelessWidget {
   const ArranqueApp({super.key});
@@ -58,7 +57,7 @@ class ArranqueApp extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/register');
+                  Navigator.pushReplacementNamed(context, '/register-1');
                 },
                 child: Text(
                   "Empecemos",
