@@ -1,4 +1,5 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:app_planes/utils/olvidar_contrase%C3%B1a.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +46,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
             ],
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
-          height: screenSize.height * 0.54,
+          height: screenSize.height * 0.55,
           width: screenSize.width * 0.9,
           padding: EdgeInsets.only(
               left: DimensionesDePantalla.pantallaSize * 0.02,
@@ -116,7 +117,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
               color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
           border: InputBorder.none, // Sin borde visible
           contentPadding: EdgeInsets.symmetric(
-              vertical: 15.0, horizontal: 10.0), // Espaciado interno
+              vertical: 10.0, horizontal: 10.0), // Espaciado interno
         ),
         validator: (value) => _validarEmail(value),
         onChanged: (value) => email = value,
@@ -163,7 +164,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
           ),
           border: InputBorder.none, // Sin borde visible
           contentPadding: EdgeInsets.symmetric(
-              vertical: 15.0, horizontal: 10.0), // Espaciado interno
+              vertical: 10.0, horizontal: 10.0), // Espaciado interno
         ),
         validator: (value) => _validarContrasena(value),
         onChanged: (value) => password = value,
@@ -193,16 +194,20 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
       ),
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          try {
-            await _auth.signInWithEmailAndPassword(
-                email: email, password: password);
-            print("Inicio de sesión exitoso");
-          } on FirebaseAuthException catch (e) {
-            setState(() {
-              errorMessage = e.message ?? "Error desconocido";
-            });
-          }
+          Navigator.pushNamed(context, '/home'); // Ir a la siguiente pantalla
         }
+
+        // if (_formKey.currentState!.validate()) {
+        //   try {
+        //     await _auth.signInWithEmailAndPassword(
+        //         email: email, password: password);
+        //     print("Inicio de sesión exitoso");
+        //   } on FirebaseAuthException catch (e) {
+        //     setState(() {
+        //       errorMessage = e.message ?? "Error desconocido";
+        //     });
+        //   }
+        // }
       },
       child: Text('Iniciar Sesión'),
     );
@@ -218,10 +223,10 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   Widget _construirOlvidasteContrasena() {
     return TextButton(
       onPressed: () {
-        // Aquí puedes agregar la lógica para navegar a la pantalla de recuperación de contraseña
-        print("Navegar a la pantalla de recuperación de contraseña");
-        // Por ejemplo:
-        // Navigator.push(context, MaterialPageRoute(builder:(context) => RecuperarContrasenaScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RecuperarContrasena()),
+        );
       },
       child: Text('¿Olvidaste tu contraseña?',
           style: TextStyle(color: Color.fromARGB(255, 26, 33, 63))),
