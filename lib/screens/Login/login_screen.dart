@@ -23,7 +23,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 63, 243, 180),
     );
   }
 
@@ -31,21 +31,48 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
     final screenSize = MediaQuery.of(context).size;
 
     return [
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
       Center(
         child: Container(
-          width: screenSize.width * 0.85,
-          padding: EdgeInsets.all(screenSize.width * 0.001),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromARGB(45, 0, 0, 0),
+                blurRadius: 4.0,
+                offset: Offset(0, 0),
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(30.0)),
+          ),
+          height: screenSize.height * 0.54,
+          width: screenSize.width * 0.9,
+          padding: EdgeInsets.only(
+              left: DimensionesDePantalla.pantallaSize * 0.02,
+              right: DimensionesDePantalla.pantallaSize * 0.02),
           child: _construirFormularioInicioSesion(),
         ),
       ),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
+      _construirBotonIniciarSesion(),
+      _construirOlvidasteContrasena(),
     ];
   }
 
   Widget _construirFormularioInicioSesion() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.15),
+        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
+        AppBar(
+            backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushReplacementNamed(
+                    context, '/start'); // Navega hacia atrás
+              },
+            )),
+        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
         Text(
           "Inicio de Sesión",
           style: TextStyle(
@@ -53,7 +80,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.15),
+        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.12),
         Form(
           key: _formKey,
           child: Column(
@@ -62,13 +89,8 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
               _construirCampoContrasena(),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
-              _construirBotonIniciarSesion(),
-              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
               if (errorMessage.isNotEmpty) _construirMensajeError(),
-              SizedBox(
-                  height: DimensionesDePantalla.pantallaSize *
-                      0.02), // Espacio adicional
-              _construirOlvidasteContrasena(),
+              // Espacio adicional
             ],
           ),
         ),
@@ -77,23 +99,28 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   }
 
   Widget _construirCampoEmail() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      cursorColor: const Color.fromARGB(255, 33, 31, 59),
-      decoration: InputDecoration(
-        labelText: 'Correo Electrónico',
-        labelStyle:
-            TextStyle(color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
-        focusedBorder: UnderlineInputBorder(
-          borderSide:
-              BorderSide(color: Color.fromARGB(255, 33, 31, 59), width: 2.0),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.5),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(
+            134, 238, 238, 238), // Color de fondo del input
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+            color: Color.fromARGB(255, 228, 228, 228)), // Esquinas redondeadas
       ),
-      validator: (value) => _validarEmail(value),
-      onChanged: (value) => email = value,
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        decoration: InputDecoration(
+          labelText: 'Correo Electrónico',
+          labelStyle: TextStyle(
+              color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          border: InputBorder.none, // Sin borde visible
+          contentPadding: EdgeInsets.symmetric(
+              vertical: 15.0, horizontal: 10.0), // Espaciado interno
+        ),
+        validator: (value) => _validarEmail(value),
+        onChanged: (value) => email = value,
+      ),
     );
   }
 
@@ -109,34 +136,38 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   }
 
   Widget _construirCampoContrasena() {
-    return TextFormField(
-      obscureText: _obscurePassword,
-      cursorColor: const Color.fromARGB(255, 33, 31, 59),
-      decoration: InputDecoration(
-        labelText: 'Contraseña',
-        labelStyle:
-            TextStyle(color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscurePassword ? Icons.visibility : Icons.visibility_off,
-            color: Color.fromARGB(255, 33, 31, 59),
-          ),
-          onPressed: () {
-            setState(() {
-              _obscurePassword = !_obscurePassword;
-            });
-          },
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide:
-              BorderSide(color: Color.fromARGB(255, 33, 31, 59), width: 2.0),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.5),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(
+            134, 238, 238, 238), // Color de fondo del input
+        borderRadius: BorderRadius.circular(10.0), // Esquinas redondeadas
+        border: Border.all(color: Color.fromARGB(255, 228, 228, 228)),
       ),
-      validator: (value) => _validarContrasena(value),
-      onChanged: (value) => password = value,
+      child: TextFormField(
+        obscureText: _obscurePassword,
+        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        decoration: InputDecoration(
+          labelText: 'Contraseña',
+          labelStyle: TextStyle(
+              color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+              color: Color.fromARGB(255, 33, 31, 59),
+            ),
+            onPressed: () {
+              setState(() {
+                _obscurePassword = !_obscurePassword;
+              });
+            },
+          ),
+          border: InputBorder.none, // Sin borde visible
+          contentPadding: EdgeInsets.symmetric(
+              vertical: 15.0, horizontal: 10.0), // Espaciado interno
+        ),
+        validator: (value) => _validarContrasena(value),
+        onChanged: (value) => password = value,
+      ),
     );
   }
 

@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const VentanaInicioSeccion(),
         '/profile': (context) => const VentanaPerfil(),
         '/home': (context) => const Inicio(),
+        '/start': (context) => const ArranqueApp(),
       },
     );
   }

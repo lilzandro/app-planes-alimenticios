@@ -25,7 +25,17 @@ class _VentanaRegistroState extends State<VentanaRegistro> {
 
   List<Widget> _construirBloques(BuildContext context) {
     return [
-      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.10),
+      AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+                context, '/start'); // Navega hacia atrás
+          },
+        ),
+      ),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.05),
       Center(
         child: Text(
           "Datos personales",
@@ -49,7 +59,38 @@ class _VentanaRegistroState extends State<VentanaRegistro> {
                   });
                 }),
                 SizedBox(height: 20),
-                _crearCampoTexto("Correo:", (value) {
+                _crearCampoTexto("Apellido:", (value) {
+                  setState(() {
+                    email = value;
+                  });
+                }),
+                SizedBox(height: 20),
+                _crearCampoTexto("Edad:", (value) {
+                  setState(() {
+                    email = value;
+                  });
+                }),
+                SizedBox(height: 20),
+                _crearCampoTexto("Estatura:", (value) {
+                  setState(() {
+                    email = value;
+                  });
+                }),
+                SizedBox(height: 20),
+                _crearCampoTexto("Peso:", (value) {
+                  setState(() {
+                    email = value;
+                  });
+                }),
+                SizedBox(height: 20),
+                _crearCampoTexto("Teléfono:", (value) {
+                  setState(() {
+                    email = value;
+                  });
+                }),
+                SizedBox(height: 20),
+
+                _crearCampoTexto("Fecha de nacimiento:", (value) {
                   setState(() {
                     email = value;
                   });
@@ -66,14 +107,14 @@ class _VentanaRegistroState extends State<VentanaRegistro> {
 
   Widget _crearCampoTexto(String etiqueta, Function(String) onChanged) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center, // Cambiado a center
       children: [
         SizedBox(width: 10),
         Expanded(
           child: Text(etiqueta, style: TextStyle(fontSize: 16)),
         ),
         Expanded(
-          flex: 3, // Ajusta el tamaño del campo de texto
+          flex: 2, // Ajusta el tamaño del campo de texto
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -111,7 +152,7 @@ class _VentanaRegistroState extends State<VentanaRegistro> {
         textStyle: TextStyle(fontSize: 18.0),
       ),
       onPressed: () async {},
-      child: Text('Iniciar Sesión'),
+      child: Text('Siguiente'),
     );
   }
 }
