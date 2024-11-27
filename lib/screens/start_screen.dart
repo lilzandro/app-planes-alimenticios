@@ -9,7 +9,7 @@ class ArranqueApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color(0xFF6ECFA9),
+        backgroundColor: Color(0xFF4DA674),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +50,7 @@ class ArranqueApp extends StatelessWidget {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF334B45),
+                  backgroundColor: Color(0xFF023336),
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -61,7 +61,7 @@ class ArranqueApp extends StatelessWidget {
                 },
                 child: Text(
                   "Empecemos",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(fontSize: 25, color: Color(0xFFEAF8E7)),
                 ),
               ),
 
@@ -70,7 +70,7 @@ class ArranqueApp extends StatelessWidget {
                 children: [
                   Text(
                     "Ya eres usuario?",
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: Color(0xFFC1E6BA)),
                   ),
                   TextButton(
                     onPressed: () {
@@ -82,7 +82,7 @@ class ArranqueApp extends StatelessWidget {
                     },
                     child: Text(
                       "Inicia sesion",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Color(0xFFEAF8E7)),
                     ),
                   )
                 ],
