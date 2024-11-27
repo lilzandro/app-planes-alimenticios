@@ -24,7 +24,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: Color.fromARGB(255, 63, 243, 180),
+      backgroundColor: Color(0xFF4DA674),
     );
   }
 
@@ -36,7 +36,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
       Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEAF8E7),
             boxShadow: const [
               BoxShadow(
                 color: Color.fromARGB(45, 0, 0, 0),
@@ -65,7 +65,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
       children: [
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
         AppBar(
-            backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+            backgroundColor: const Color(0xFFEAF8E7),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -102,19 +102,21 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   Widget _construirCampoEmail() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(
-            134, 238, 238, 238), // Color de fondo del input
+        color: const Color(0xFFC1E6BA)
+            .withOpacity(0.35), // Color de fondo del input
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(
-            color: Color.fromARGB(255, 228, 228, 228)), // Esquinas redondeadas
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
+        // Esquinas redondeadas
       ),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
-        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        cursorColor: const Color(0xFF023336),
+        style: TextStyle(color: const Color(0xFF123456)),
         decoration: InputDecoration(
           labelText: 'Correo Electrónico',
-          labelStyle: TextStyle(
-              color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+
           border: InputBorder.none, // Sin borde visible
           contentPadding: EdgeInsets.symmetric(
               vertical: 10.0, horizontal: 10.0), // Espaciado interno
@@ -139,22 +141,24 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   Widget _construirCampoContrasena() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(
-            134, 238, 238, 238), // Color de fondo del input
-        borderRadius: BorderRadius.circular(10.0), // Esquinas redondeadas
-        border: Border.all(color: Color.fromARGB(255, 228, 228, 228)),
+        color: const Color(0xFFC1E6BA)
+            .withOpacity(0.35), // Color de fondo del input
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
+        // Esquinas redondea        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
         obscureText: _obscurePassword,
-        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        cursorColor: const Color(0xFF023336),
+        style: TextStyle(color: const Color(0xFF123456)),
         decoration: InputDecoration(
           labelText: 'Contraseña',
-          labelStyle: TextStyle(
-              color: Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           suffixIcon: IconButton(
             icon: Icon(
               _obscurePassword ? Icons.visibility : Icons.visibility_off,
-              color: Color.fromARGB(255, 33, 31, 59),
+              color: Color(0xFF023336),
             ),
             onPressed: () {
               setState(() {
@@ -185,8 +189,8 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
   Widget _construirBotonIniciarSesion() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 26, 33, 63),
-        foregroundColor: Colors.white,
+        backgroundColor: const Color(0xFF023336),
+        foregroundColor: Color(0xFFEAF8E7),
         padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -229,7 +233,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
         );
       },
       child: Text('¿Olvidaste tu contraseña?',
-          style: TextStyle(color: Color.fromARGB(255, 26, 33, 63))),
+          style: TextStyle(color: Color(0xFF023336))),
     );
   }
 }

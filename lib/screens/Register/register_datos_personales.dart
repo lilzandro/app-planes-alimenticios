@@ -24,7 +24,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFFEAF8E7),
     );
   }
 
@@ -34,7 +34,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
     return [
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
       AppBar(
-          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+          backgroundColor: const Color(0xFFEAF8E7),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -63,9 +63,9 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             Text(
               "Datos Personales",
               style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.06,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF023336)),
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirCampoTexto(
@@ -127,17 +127,19 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(134, 238, 238, 238),
+        color: const Color(0xFFC1E6BA).withOpacity(0.35),
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color.fromARGB(255, 228, 228, 228)),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
         keyboardType: keyboardType,
-        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        cursorColor: const Color(0xFF023336),
+        style: TextStyle(
+            color: const Color(0xFF123456)), // Cambia aquí el color del texto
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(
-              color: const Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -151,9 +153,9 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   Widget _construirCampoFechaNacimiento() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(134, 238, 238, 238),
+        color: const Color(0xFFC1E6BA).withOpacity(0.35),
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color.fromARGB(255, 228, 228, 228)),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: ListTile(
         title: Text(
@@ -162,8 +164,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               : "Seleccionar Fecha de Nacimiento",
           style: TextStyle(
             color: fechaNacimiento != null
-                ? Colors.black
-                : const Color.fromARGB(255, 33, 31, 59).withOpacity(0.6),
+                ? Color(0xFF023336)
+                : const Color(0xFF023336).withOpacity(0.6),
           ),
         ),
         trailing: const Icon(Icons.calendar_today),
@@ -187,8 +189,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   Widget _construirBotonSiguiente() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 26, 33, 63),
-        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF023336),
+        foregroundColor: Color(0xFFEAF8E7),
         padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
