@@ -12,15 +12,11 @@ class VentanaPerfil extends StatefulWidget {
 }
 
 class _VentanaPerfilState extends State<VentanaPerfil> {
-  static const Color backgroundColor = Color.fromARGB(255, 63, 243, 180);
-  static const Color avatarBackgroundColor = Color.fromARGB(255, 46, 192, 140);
-  static const Color buttonBackgroundColor = Colors.white;
-
   @override
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _buildBlocks(context),
-      backgroundColor: backgroundColor,
+      backgroundColor: const Color(0xFF4DA674),
     );
   }
 
@@ -34,7 +30,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   Widget _buildProfileHeader() {
     return Container(
       padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.01),
-      color: backgroundColor,
+      color: Color(0xFF4DA674),
       height: DimensionesDePantalla.pantallaSize * 0.25,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +52,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           topLeft: Radius.circular(30.0),
           bottomLeft: Radius.circular(30.0),
         ),
-        color: avatarBackgroundColor,
+        color: Color(0xFF5AC488),
       ),
       child: Image.asset(
         'assets/avatar.png',
@@ -75,7 +71,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           topRight: Radius.circular(30.0),
           bottomRight: Radius.circular(30.0),
         ),
-        color: avatarBackgroundColor,
+        color: Color(0xFF5AC488),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +95,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   Widget _buildProfileText(String text, double fontSize) {
     return Text(
       text,
-      style: TextStyle(fontSize: fontSize),
+      style: TextStyle(fontSize: fontSize, color: Color(0xFF023336)),
     );
   }
 
@@ -112,7 +108,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
         ),
-        color: buttonBackgroundColor,
+        color: Color(0xFFEAF8E7),
       ),
       child: Column(
         children: [
@@ -147,7 +143,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
             offset: Offset(0, 0),
           ),
         ],
-        color: buttonBackgroundColor,
+        color: Color(0xFFEAF8E7),
       ),
     );
   }
@@ -170,9 +166,9 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
         onPressed: onPressed, // Acción{},
         style: ElevatedButton.styleFrom(
           foregroundColor: label == "Cerrar Sesión"
-              ? Color.fromARGB(255, 187, 13, 13)
-              : Color.fromARGB(255, 0, 0, 0),
-          backgroundColor: buttonBackgroundColor, // Color del fondo
+              ? Color.fromARGB(255, 202, 67, 67)
+              : Color(0xFFEAF8E7),
+          backgroundColor: Color(0xFF023336), // Color del fondo
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
               borderRadius:

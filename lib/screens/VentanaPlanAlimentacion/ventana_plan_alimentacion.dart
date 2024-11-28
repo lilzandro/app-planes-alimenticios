@@ -26,7 +26,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
         buildBlocks: (context) => _buildBlocks(context),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255));
+        backgroundColor: Color(0xFFEAF8E7));
   }
 
   List<Widget> _buildBlocks(BuildContext context) {
@@ -44,7 +44,10 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
               child: const Text(
                 'Plan Semanal\n de Alimentación',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF023336)),
               ),
             ),
           ],
@@ -65,12 +68,18 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
               Text(
                 'Menú manual',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF023336)),
               ),
               Text(
                 'Realiza tus propias recetas',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF023336)),
               ),
             ],
           )),
@@ -94,14 +103,17 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
+              backgroundColor: Color(0xFF023336),
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.circular(15.0), // Esquinas redondeadas
               ),
             ),
-            child: Text("Crear menú manual"),
+            child: Text("Crear menú manual",
+                style: TextStyle(
+                  color: Color(0xFFEAF8E7),
+                )),
           )),
       SizedBox(
         height: DimensionesDePantalla.anchoPantalla * 0.07,
@@ -119,7 +131,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
               return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(color: Colors.amber),
+                  decoration: BoxDecoration(color: Color(0xFFC1E6BA)),
                   child: Text(
                     'text $i',
                     style: TextStyle(fontSize: 16.0),
@@ -140,16 +152,10 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           margin: EdgeInsets.symmetric(
               horizontal: DimensionesDePantalla.pantallaSize * 0.01),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFFC1E6BA).withOpacity(0.35),
             borderRadius: BorderRadius.circular(
                 DimensionesDePantalla.pantallaSize * 0.04),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(45, 0, 0, 0),
-                blurRadius: 4.0,
-                offset: Offset(0, 0),
-              ),
-            ],
+            border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -157,8 +163,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
               SizedBox(
                   height: DimensionesDePantalla.pantallaSize *
                       0.045), // Espacio para que no cubra la línea superior
-              Divider(
-                  thickness: 3, color: const Color.fromARGB(255, 18, 32, 48)),
+              Divider(thickness: 3, color: Color(0xFF023336)),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.035),
               // Días de la semana en formato de cuadrícula
               GridView.builder(
@@ -174,10 +179,11 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                   return Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color(0xFFC1E6BA),
                       borderRadius: BorderRadius.circular(
                           DimensionesDePantalla.pantallaSize * 0.02),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border:
+                          Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
                       boxShadow: [
                         BoxShadow(
                           color: Color.fromARGB(42, 0, 0, 0),
@@ -188,6 +194,9 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                     ),
                     child: Text(
                       days[index],
+                      style: TextStyle(
+                        color: Color(0xFF023336),
+                      ),
                     ),
                   );
                 },
@@ -207,8 +216,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             width: DimensionesDePantalla.pantallaSize * 0.05,
             height: DimensionesDePantalla.pantallaSize * 0.07,
             decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Color.fromARGB(140, 0, 0, 0)),
-              color: Color.fromARGB(255, 63, 243, 180),
+              border: Border.all(width: 2, color: Color(0xFF023336)),
+              color: Color(0xFF4DA674),
               borderRadius: BorderRadius.circular(
                   DimensionesDePantalla.pantallaSize * 0.015),
             ),
@@ -223,8 +232,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             width: DimensionesDePantalla.pantallaSize * 0.05,
             height: DimensionesDePantalla.pantallaSize * 0.07,
             decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Color.fromARGB(140, 0, 0, 0)),
-              color: Color.fromARGB(255, 63, 243, 180),
+              border: Border.all(width: 2, color: Color(0xFF023336)),
+              color: Color(0xFF4DA674),
               borderRadius: BorderRadius.circular(
                   DimensionesDePantalla.pantallaSize * 0.015),
             ),
