@@ -28,14 +28,16 @@ class _InicioState extends State<Inicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF4DA674),
       body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFFEAF8E7),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
+            backgroundColor: Color(0xFF023336),
             label: 'Inicio',
           ),
           BottomNavigationBarItem(
@@ -48,7 +50,7 @@ class _InicioState extends State<Inicio> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Color(0xFF023336),
         onTap: _onItemTapped,
       ),
     );

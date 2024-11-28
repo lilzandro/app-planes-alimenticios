@@ -20,7 +20,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _buildBlocks(context),
-      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
+      backgroundColor: const Color(0xFF4DA674),
     );
   }
 
@@ -28,7 +28,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
   List<Widget> _buildBlocks(BuildContext context) {
     return [
       Container(
-        color: const Color.fromARGB(255, 63, 243, 180),
+        color: Color(0xFF4DA674),
         height: DimensionesDePantalla.pantallaSize * 0.25,
         child: Center(
           child: Column(
@@ -57,7 +57,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: Color(0xFFEAF8E7),
         ),
         child: Column(
           children: [
@@ -88,14 +88,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   : DimensionesDePantalla.pantallaSize * 0.45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
-                color: const Color.fromARGB(255, 255, 255, 255),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromARGB(45, 0, 0, 0),
-                    blurRadius: 4.0,
-                    offset: Offset(0, 0),
-                  ),
-                ],
+                color: const Color(0xFFC1E6BA).withOpacity(0.35),
+                border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
               ),
               child: Column(
                 children: [
@@ -125,14 +119,6 @@ class _VentanaInicioState extends State<VentanaInicio> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
-                color: const Color.fromARGB(255, 255, 255, 255),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromARGB(45, 0, 0, 0),
-                    blurRadius: 4.0,
-                    offset: Offset(0, 0),
-                  ),
-                ],
               ),
               height: DimensionesDePantalla.pantallaSize * 0.2,
               child: ClipRRect(
@@ -160,14 +146,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
-                color: const Color.fromARGB(255, 255, 255, 255),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromARGB(45, 0, 0, 0),
-                    blurRadius: 4.0,
-                    offset: Offset(0, 0),
-                  )
-                ],
+                color: const Color(0xFFC1E6BA).withOpacity(0.35),
+                border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
               ),
               height: DimensionesDePantalla.pantallaSize * 0.2,
               child: Container(
@@ -201,11 +181,16 @@ class _VentanaInicioState extends State<VentanaInicio> {
           ? DimensionesDePantalla.anchoPantalla * .5
           : DimensionesDePantalla.anchoPantalla * .1,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 234, 233, 233),
+        color: const Color(0xFF023336),
         borderRadius: BorderRadius.circular(30.0),
         // Esquinas redondeadas
       ),
-      child: TextButton(onPressed: onPressed, child: Text(label)),
+      child: TextButton(
+          onPressed: onPressed,
+          child: Text(
+            label,
+            style: TextStyle(color: Color(0xFFEAF8E7)),
+          )),
     );
   }
 
@@ -225,7 +210,9 @@ class _VentanaInicioState extends State<VentanaInicio> {
             ? color
             : const Color.fromARGB(0, 188, 17, 17),
         alignment: Alignment.center,
-        child: Center(child: Text(mealName)),
+        child: Center(
+            child: Text(mealName,
+                style: TextStyle(color: Color(0xFF023336), fontSize: 15))),
       ),
     );
   }
@@ -234,7 +221,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
     return Container(
       width: DimensionesDePantalla.anchoPantalla * .8,
       height: .8,
-      color: const Color.fromARGB(255, 224, 224, 224),
+      color: const Color(0xFF4DA674).withOpacity(0.5),
     );
   }
 
@@ -242,13 +229,13 @@ class _VentanaInicioState extends State<VentanaInicio> {
     return CircularPercentIndicator(
       radius: 60,
       lineWidth: 6,
-      percent: nivelDeProgreso/1000,
-      progressColor: Colors.white,
-      backgroundColor: Color.fromARGB(150, 250, 250, 250),
+      percent: nivelDeProgreso / 1000,
+      progressColor: Color(0xFFEAF8E7),
+      backgroundColor: Color(0xFFEAF8E7).withOpacity(0.5),
       circularStrokeCap: CircularStrokeCap.round,
       center: Text(
         "${nivelDeProgreso - metaProgreso}",
-        style: TextStyle(color: Colors.black54, fontSize: 18),
+        style: TextStyle(color: Color(0xFF023336), fontSize: 18),
       ),
     );
   }
@@ -259,19 +246,22 @@ class _VentanaInicioState extends State<VentanaInicio> {
       children: [
         Text(
           nombre,
-          style: TextStyle(color: Colors.black54, fontSize: 12),
+          style: TextStyle(color: Color(0xFF023336), fontSize: 12),
         ),
         LinearPercentIndicator(
           width: 120,
           lineHeight: 6,
-          percent: nivelDeProgreso/100,
+          percent: nivelDeProgreso / 100,
           barRadius: Radius.circular(20),
-          progressColor: Colors.white,
-          backgroundColor: Color.fromARGB(150, 250, 250, 250),
+          progressColor: Color(0xFFEAF8E7),
+          backgroundColor: Color(0xFFEAF8E7).withOpacity(0.5),
         ),
         Text(
           "${nivelDeProgreso}g / ${metaProgreso}g",
-          style: TextStyle(color: Colors.black54, fontSize: 12, ),
+          style: TextStyle(
+            color: Color(0xFF023336),
+            fontSize: 12,
+          ),
         )
       ],
     );
