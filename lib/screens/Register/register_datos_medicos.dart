@@ -22,7 +22,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFFEAF8E7),
     );
   }
 
@@ -32,9 +32,11 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
     return [
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
       AppBar(
-          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+          backgroundColor: Color(0xFFEAF8E7),
+          surfaceTintColor: Color(0xFFEAF8E7),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
+            color: Color(0xFF023336),
             onPressed: () {
               Navigator.pushReplacementNamed(
                   context, '/register-1'); // Volver a datos personales
@@ -63,6 +65,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width * 0.06,
                 fontWeight: FontWeight.bold,
+                color: Color(0xFF023336),
               ),
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
@@ -120,18 +123,19 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(134, 238, 238, 238),
+        color: Color(0xFFC1E6BA).withOpacity(0.35),
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color.fromARGB(255, 228, 228, 228)),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
         keyboardType: keyboardType,
-        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        cursorColor: Color(0xFF023336),
+        style: TextStyle(color: const Color(0xFF123456)),
         maxLines: maxLines,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(
-              color: const Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -150,10 +154,12 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
     return Row(
       children: [
         Checkbox(
+          checkColor: Color(0xFFEAF8E7),
+          activeColor: Color(0xFF023336),
           value: value,
           onChanged: onChanged,
         ),
-        Text(labelText),
+        Text(labelText, style: TextStyle(color: Color(0xFF023336))),
       ],
     );
   }
@@ -161,8 +167,8 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   Widget _construirBotonSiguiente() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 26, 33, 63),
-        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF023336),
+        foregroundColor: Color(0xFFEAF8E7),
         padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),

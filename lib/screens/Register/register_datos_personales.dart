@@ -35,8 +35,10 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
       AppBar(
           backgroundColor: const Color(0xFFEAF8E7),
+          surfaceTintColor: Color(0xFFEAF8E7),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
+            color: Color(0xFF023336),
             onPressed: () {
               Navigator.pushReplacementNamed(
                   context, '/start'); // Navega hacia atrás

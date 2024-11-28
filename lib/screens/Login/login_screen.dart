@@ -66,6 +66,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
         AppBar(
             backgroundColor: const Color(0xFFEAF8E7),
+            surfaceTintColor: Color(0xFFEAF8E7),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -153,6 +154,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
         style: TextStyle(color: const Color(0xFF123456)),
         decoration: InputDecoration(
           labelText: 'Contraseña',
+
           labelStyle:
               TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           suffixIcon: IconButton(

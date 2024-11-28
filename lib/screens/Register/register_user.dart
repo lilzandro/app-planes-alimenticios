@@ -22,7 +22,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFFEAF8E7),
     );
   }
 
@@ -32,9 +32,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     return [
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
       AppBar(
-          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+          backgroundColor: const Color(0xFFEAF8E7),
+          surfaceTintColor: Color(0xFFEAF8E7),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
+            color: Color(0xFF023336),
             onPressed: () {
               Navigator.pushReplacementNamed(
                   context, '/register-2'); // Volver a datos médicos
@@ -138,18 +140,19 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(134, 238, 238, 238),
+        color: Color(0xFFC1E6BA).withOpacity(0.35),
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color.fromARGB(255, 228, 228, 228)),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
         keyboardType: keyboardType,
-        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        cursorColor: Color(0xFF023336),
+        style: TextStyle(color: const Color(0xFF123456)),
         obscureText: isPassword && !(isPassword && mostrarContrasena),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(
-              color: const Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -157,6 +160,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
               ? IconButton(
                   icon: Icon(
                     mostrarContrasena ? Icons.visibility : Icons.visibility_off,
+                    color: Color(0xFF023336),
                   ),
                   onPressed: () {
                     setState(() {
@@ -175,8 +179,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget _construirBotonRegistrar() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 26, 33, 63),
-        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF023336),
+        foregroundColor: Color(0xFFEAF8E7),
         padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),

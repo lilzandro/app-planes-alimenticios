@@ -22,7 +22,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
   Widget build(BuildContext context) {
     return ResponsiveContainer(
       buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: const Color.fromARGB(255, 63, 243, 180),
+      backgroundColor: Color(0xFF4DA674),
     );
   }
 
@@ -30,11 +30,11 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
     final screenSize = MediaQuery.of(context).size;
 
     return [
-      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.1),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
       Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFEAF8E7),
             boxShadow: const [
               BoxShadow(
                 color: Color.fromARGB(45, 0, 0, 0),
@@ -44,14 +44,13 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
             ],
             borderRadius: const BorderRadius.all(Radius.circular(30.0)),
           ),
-          height: screenSize.height * 0.5,
           width: screenSize.width * 0.9,
-          padding: EdgeInsets.symmetric(
-              horizontal: DimensionesDePantalla.pantallaSize * 0.02),
+          padding: EdgeInsets.only(
+              left: DimensionesDePantalla.pantallaSize * 0.02,
+              right: DimensionesDePantalla.pantallaSize * 0.02),
           child: _construirFormularioRecuperarContrasena(),
         ),
       ),
-      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
     ];
   }
 
@@ -61,19 +60,21 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
       children: [
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
         AppBar(
-            backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+            backgroundColor: const Color(0xFFEAF8E7),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
+              color: Color(0xFF023336),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/login'); // Volver
               },
             )),
-        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
+        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
         Text(
           "Recuperar Contraseña",
           style: TextStyle(
             fontSize: MediaQuery.of(context).size.width * 0.06,
             fontWeight: FontWeight.bold,
+            color: Color(0xFF023336),
           ),
         ),
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
@@ -88,6 +89,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
             ],
           ),
         ),
+        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
       ],
     );
   }
@@ -95,17 +97,18 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
   Widget _construirCampoEmail() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(134, 238, 238, 238),
+        color: const Color(0xFFC1E6BA).withOpacity(0.35),
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color.fromARGB(255, 228, 228, 228)),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
-        cursorColor: const Color.fromARGB(255, 33, 31, 59),
+        cursorColor: Color(0xFF023336),
+        style: TextStyle(color: const Color(0xFF123456)),
         decoration: InputDecoration(
           labelText: 'Correo Electrónico',
-          labelStyle: TextStyle(
-              color: const Color.fromARGB(255, 33, 31, 59).withOpacity(0.6)),
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
               vertical: 10.0, horizontal: 10.0), // Espaciado interno
@@ -128,8 +131,8 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
   Widget _construirBotonEnviar() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 26, 33, 63),
-        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF023336),
+        foregroundColor: Color(0xFFEAF8E7),
         padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -144,7 +147,9 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
             },
       child: isLoading
           ? const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Color(0xFFEAF8E7),
+              ),
             )
           : const Text('Enviar Correo'),
     );
