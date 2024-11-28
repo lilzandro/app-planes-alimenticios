@@ -8,10 +8,10 @@ class VentanaInicioSeccion extends StatefulWidget {
   const VentanaInicioSeccion({super.key});
 
   @override
-  _VentanaInicioSeccionState createState() => _VentanaInicioSeccionState();
+  _VentanaInicioSesionState createState() => _VentanaInicioSesionState();
 }
 
-class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
+class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -46,7 +46,7 @@ class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
             ],
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
-          height: screenSize.height * 0.55,
+          height: screenSize.height * 0.60,
           width: screenSize.width * 0.9,
           padding: EdgeInsets.only(
               left: DimensionesDePantalla.pantallaSize * 0.02,

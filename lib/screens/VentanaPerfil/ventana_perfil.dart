@@ -169,7 +169,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
       child: ElevatedButton(
         onPressed: onPressed, // Acción{},
         style: ElevatedButton.styleFrom(
-          foregroundColor: label == "Cerrar Sección"
+          foregroundColor: label == "Cerrar Sesión"
               ? Color.fromARGB(255, 187, 13, 13)
               : Color.fromARGB(255, 0, 0, 0),
           backgroundColor: buttonBackgroundColor, // Color del fondo
