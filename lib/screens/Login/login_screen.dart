@@ -2,17 +2,17 @@ import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/utils/olvidar_contrase%C3%B1a.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class VentanaInicioSeccion extends StatefulWidget {
   const VentanaInicioSeccion({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _VentanaInicioSesionState createState() => _VentanaInicioSesionState();
 }
 
 class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String email = '';

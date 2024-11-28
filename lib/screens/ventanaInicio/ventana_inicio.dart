@@ -88,8 +88,14 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   : DimensionesDePantalla.pantallaSize * 0.45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0xFFC1E6BA).withOpacity(0.35),
-                border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
+                color: const Color(0xFFEAF8E7),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(45, 0, 0, 0),
+                    blurRadius: 4.0,
+                    offset: Offset(0, 0),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -146,8 +152,14 @@ class _VentanaInicioState extends State<VentanaInicio> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0xFFC1E6BA).withOpacity(0.35),
-                border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
+                color: const Color(0xFFEAF8E7),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(45, 0, 0, 0),
+                    blurRadius: 4.0,
+                    offset: Offset(0, 0),
+                  ),
+                ],
               ),
               height: DimensionesDePantalla.pantallaSize * 0.2,
               child: Container(
@@ -235,7 +247,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
       circularStrokeCap: CircularStrokeCap.round,
       center: Text(
         "${nivelDeProgreso - metaProgreso}",
-        style: TextStyle(color: Color(0xFF023336), fontSize: 18),
+        style: TextStyle(color: Color(0xFFEAF8E7), fontSize: 18),
       ),
     );
   }
@@ -246,7 +258,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
       children: [
         Text(
           nombre,
-          style: TextStyle(color: Color(0xFF023336), fontSize: 12),
+          style: TextStyle(color: Color(0xFFEAF8E7), fontSize: 12),
         ),
         LinearPercentIndicator(
           width: 120,
@@ -259,7 +271,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
         Text(
           "${nivelDeProgreso}g / ${metaProgreso}g",
           style: TextStyle(
-            color: Color(0xFF023336),
+            color: Color(0xFFEAF8E7),
             fontSize: 12,
           ),
         )

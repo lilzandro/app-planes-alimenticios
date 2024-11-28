@@ -107,7 +107,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             _construirCampoTexto(
               labelText: "Peso (kg)",
               keyboardType: TextInputType.number,
-              onChanged: (value) => peso = double.tryParse(value ?? '') ?? 0.0,
+              onChanged: (value) => peso = double.tryParse(value) ?? 0.0,
               validator: (value) =>
                   value == null || double.tryParse(value) == null
                       ? "Ingresa un peso válido"

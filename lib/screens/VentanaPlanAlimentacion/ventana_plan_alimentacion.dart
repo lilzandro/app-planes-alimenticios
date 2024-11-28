@@ -152,7 +152,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           margin: EdgeInsets.symmetric(
               horizontal: DimensionesDePantalla.pantallaSize * 0.01),
           decoration: BoxDecoration(
-            color: const Color(0xFFC1E6BA).withOpacity(0.35),
+            color: const Color(0xFFEAF8E7).withOpacity(0.35),
             borderRadius: BorderRadius.circular(
                 DimensionesDePantalla.pantallaSize * 0.04),
             border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
@@ -179,18 +179,12 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                   return Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Color(0xFFC1E6BA),
+                      color: Color(0xFFC1E6BA).withOpacity(0.35),
                       borderRadius: BorderRadius.circular(
                           DimensionesDePantalla.pantallaSize * 0.02),
                       border:
                           Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromARGB(42, 0, 0, 0),
-                          blurRadius: 2.0,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
+
                     ),
                     child: Text(
                       days[index],
