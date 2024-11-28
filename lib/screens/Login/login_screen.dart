@@ -8,10 +8,10 @@ class VentanaInicioSeccion extends StatefulWidget {
   const VentanaInicioSeccion({super.key});
 
   @override
-  _VentanaInicioSeccionState createState() => _VentanaInicioSeccionState();
+  _VentanaInicioSesionState createState() => _VentanaInicioSesionState();
 }
 
-class _VentanaInicioSeccionState extends State<VentanaInicioSeccion> {
+class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

@@ -81,7 +81,7 @@ class ArranqueApp extends StatelessWidget {
                       );
                     },
                     child: Text(
-                      "Inicia sesion",
+                      "Inicia Sesión",
                       style: TextStyle(color: Color(0xFFEAF8E7)),
                     ),
                   )
