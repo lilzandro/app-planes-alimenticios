@@ -65,13 +65,16 @@ class _VentanaInicioState extends State<VentanaInicio> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildButton('1', () {
+                _buildButton(icon: Icons.arrow_back, '', () {
                   // Acción del botón izquierdo
                 }),
-                _buildButton('Medio', () {
+                _buildButton('Hoy', () {
                   // Acción del botón del medio
-                }, isMiddleButton: true),
-                _buildButton('2', () {
+                },
+                    isMiddleButton: true,
+                    icon: Icons.calendar_today,
+                    iconSize: 22),
+                _buildButton(icon: Icons.arrow_forward, '', () {
                   // Acción del botón derecho
                 }),
               ],
@@ -93,6 +96,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
                   ),
                   _buildExpandableOption(
                       'Desayuno', Colors.transparent, 'assets/desayuno.png'),
+
                   _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Almuerzo
@@ -175,25 +179,33 @@ class _VentanaInicioState extends State<VentanaInicio> {
     ];
   }
 
-  Widget _buildButton(String label, VoidCallback onPressed,
-      {bool isMiddleButton = false}) {
+  Widget _buildButton(String? label, VoidCallback onPressed,
+      {bool isMiddleButton = false, IconData? icon, double? iconSize}) {
     return Container(
       height: isMiddleButton
           ? DimensionesDePantalla.anchoPantalla * .1
           : DimensionesDePantalla.anchoPantalla * .1,
       width: isMiddleButton
           ? DimensionesDePantalla.anchoPantalla * .5
-          : DimensionesDePantalla.anchoPantalla * .1,
+          : DimensionesDePantalla.anchoPantalla * .12,
       decoration: BoxDecoration(
-        color: const Color(0xFF4da674),
+        color: const Color(0xFF023336),
         borderRadius: BorderRadius.circular(30.0),
         // Esquinas redondeadas
       ),
       child: TextButton(
           onPressed: onPressed,
-          child: Text(
-            label,
-            style: TextStyle(color: Color(0xFFEAF8E7)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null)
+                Icon(icon, size: iconSize ?? 19, color: Color(0xFFEAF8E7)),
+              if (label != null)
+                Text(
+                  label,
+                  style: TextStyle(color: Color(0xFFEAF8E7)),
+                )
+            ],
           )),
     );
   }
@@ -218,14 +230,22 @@ class _VentanaInicioState extends State<VentanaInicio> {
           child: Row(children: [
             Image.asset(
               imagePath,
-              height: DimensionesDePantalla.anchoPantalla * .3,
+              height: DimensionesDePantalla.anchoPantalla * .2,
               width: DimensionesDePantalla.anchoPantalla * .22,
             ),
-            Text(
-              mealName,
-              style: TextStyle(color: Color(0xFF023336), fontSize: 15),
-              textAlign: TextAlign.start,
-            ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    mealName,
+                    style: TextStyle(color: Color(0xFF023336), fontSize: 15),
+                  ),
+                  Text(
+                    'Alimentos',
+                    style: TextStyle(color: Color(0xFF023336), fontSize: 10),
+                  )
+                ])
           ])),
     );
   }
