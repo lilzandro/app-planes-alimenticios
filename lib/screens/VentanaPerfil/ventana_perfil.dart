@@ -44,9 +44,10 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
 
   Widget _buildAvatar() {
     return Container(
-      padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.02),
+      margin: EdgeInsets.only(right: DimensionesDePantalla.pantallaSize * 0),
+      padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.01),
       height: DimensionesDePantalla.pantallaSize * 0.25,
-      width: DimensionesDePantalla.pantallaSize * 0.21,
+      width: DimensionesDePantalla.pantallaSize * 0.18,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -65,7 +66,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   Widget _buildProfileInfo() {
     return Container(
       height: DimensionesDePantalla.pantallaSize * 0.25,
-      width: DimensionesDePantalla.pantallaSize * 0.21,
+      width: DimensionesDePantalla.pantallaSize * 0.24,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(30.0),
@@ -95,7 +96,10 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   Widget _buildProfileText(String text, double fontSize) {
     return Text(
       text,
-      style: TextStyle(fontSize: fontSize, color: Color(0xFF023336)),
+      style: TextStyle(
+          fontFamily: 'Comfortaa',
+          fontSize: fontSize,
+          color: Color(0xFF023336)),
     );
   }
 
@@ -174,7 +178,10 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
               borderRadius:
                   BorderRadius.circular(15.0)), // Esquinas redondeadas
         ),
-        child: Text(label), // Texto del botón
+        child: Text(
+          label,
+          style: TextStyle(fontFamily: 'Comfortaa'),
+        ), // Texto del botón
       ),
     );
   }

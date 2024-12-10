@@ -2,6 +2,7 @@ import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:intl/intl.dart';
 
 class VentanaPlanAlimentacion extends StatefulWidget {
   const VentanaPlanAlimentacion({super.key});
@@ -33,7 +34,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     return [
       // Encabezado
       SizedBox(
-        height: DimensionesDePantalla.pantallaSize * 0.18,
+        height: DimensionesDePantalla.pantallaSize * 0.17,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -52,11 +53,21 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           ],
         ),
       ),
+      Container(
+        width: DimensionesDePantalla.anchoPantalla * .9,
+        height: .8,
+        color: const Color(0xFF4DA674).withOpacity(0.5),
+      ),
       // Calendario
 
       _buildCalendarWidget(),
+      Container(
+        width: DimensionesDePantalla.anchoPantalla * .9,
+        height: .8,
+        color: const Color(0xFF4DA674).withOpacity(0.5),
+      ),
 
-      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.05),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
 
       Container(
           padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0),
@@ -87,7 +98,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       ),
       Container(
           height: DimensionesDePantalla.anchoPantalla * .12,
-          width: DimensionesDePantalla.anchoPantalla * .5,
+          width: DimensionesDePantalla.anchoPantalla * 0.6,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
@@ -144,53 +155,149 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   }
 
   Widget _buildCalendarWidget() {
+    final List<String> daysOfWeek = [
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado',
+      'Domingo'
+    ];
+
+    // Obtener la fecha actual
+    DateTime today = DateTime.now();
+
+    // Encontrar el lunes de la semana actual
+    DateTime startOfWeek = today.subtract(Duration(days: today.weekday - 1));
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.01),
+          padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.02),
           margin: EdgeInsets.symmetric(
               horizontal: DimensionesDePantalla.pantallaSize * 0.01),
           decoration: BoxDecoration(
             color: const Color(0xFFEAF8E7).withOpacity(0.35),
-            borderRadius: BorderRadius.circular(
-                DimensionesDePantalla.pantallaSize * 0.04),
-            border: Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Espacio para que no cubra la línea superior
-              // Divider(thickness: 3, color: Color(0xFF023336)),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.025),
-              // Días de la semana en formato de cuadrícula
+              // Usa un Container o SizedBox para definir el tamaño fijo
               GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap:
+                    true, // Asegura que el GridView se ajusta al tamaño del contenedor
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   crossAxisSpacing: DimensionesDePantalla.pantallaSize * 0.01,
                   mainAxisSpacing: DimensionesDePantalla.pantallaSize * 0.02,
+                  childAspectRatio: 1,
                 ),
-                itemCount: days.length,
+                itemCount: daysOfWeek.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                          DimensionesDePantalla.pantallaSize * 0.02),
-                      border:
-                          Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          DimensionesDePantalla.pantallaSize * 0.02),
-                      child: Image.asset(
-                        'assets/semana.png', // Asegúrate de que las imágenes estén en esta ruta
-                        fit: BoxFit
-                            .cover, // Ajusta la imagen para cubrir el área del contenedor
+                  // Calcular la fecha correspondiente a cada día de la semana
+                  DateTime dayDate = startOfWeek.add(Duration(days: index));
+
+                  // Formatear la fecha para mostrar solo el día
+                  String dayString = DateFormat('d').format(dayDate);
+
+                  return Stack(
+                    clipBehavior: Clip
+                        .none, // Permite mostrar contenido fuera de los límites
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // Mostrar el diálogo cuando el cuadro es presionado
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Día seleccionado'),
+                                content:
+                                    Text('Has seleccionado el día: $dayString'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cerrar'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFeaf8e7), // Fondo blanco
+                            borderRadius: BorderRadius.circular(
+                              DimensionesDePantalla.pantallaSize * 0.015,
+                            ),
+                            border: Border.all(
+                              color: const Color(0xFF023336),
+                              width: 2,
+                            ), // Borde verde
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(4.0),
+                                height:
+                                    DimensionesDePantalla.pantallaSize * 0.03,
+                                width: DimensionesDePantalla.pantallaSize * 0.1,
+                                decoration: BoxDecoration(
+                                  border: const Border(
+                                    bottom: BorderSide(
+                                      color:
+                                          Color(0xFF023336), // Color del borde
+                                      width: 2.0, // Grosor del borde
+                                    ),
+                                  ),
+                                  color: const Color(0xFF4da674),
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(9.0),
+                                    topRight: Radius.circular(9.0),
+                                  ),
+                                ),
+                                child: Text(
+                                  daysOfWeek[
+                                      index], // Mostrar el nombre del día
+                                  style: const TextStyle(
+                                    fontFamily: 'Comfortaa',
+                                    color: Color(0xFFeaf8e7), // Texto blanco
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    dayString, // Mostrar la fecha calculada
+                                    style: TextStyle(
+                                      color: const Color(
+                                          0xFF023336), // Texto verde
+                                      fontWeight: FontWeight.bold,
+                                      fontSize:
+                                          DimensionesDePantalla.pantallaSize *
+                                              0.02,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      // Gancho decorativo
+                      _positionGancho(0.008, 0.015, 0.075),
+                      _positionGancho(0.008, 0.075, 0.015),
+                    ],
                   );
                 },
               ),
@@ -198,42 +305,23 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             ],
           ),
         ),
-
-        // Contenedores circulares ("orejas") en la parte superior del calendario
-        // Positioned(
-        //   left: DimensionesDePantalla.pantallaSize *
-        //       0.08, // Posición horizontal (izquierda)
-        //   top: -DimensionesDePantalla.pantallaSize *
-        //       0.04, // Posición vertical (hacia arriba)
-        //   child: Container(
-        //     width: DimensionesDePantalla.pantallaSize * 0.05,
-        //     height: DimensionesDePantalla.pantallaSize * 0.07,
-        //     decoration: BoxDecoration(
-        //       border: Border.all(width: 2, color: Color(0xFF023336)),
-        //       color: Color(0xFF4DA674),
-        //       borderRadius: BorderRadius.circular(
-        //           DimensionesDePantalla.pantallaSize * 0.015),
-        //     ),
-        //   ),
-        // ),
-        // Positioned(
-        //   right: DimensionesDePantalla.pantallaSize *
-        //       0.08, // Posición horizontal (derecha)
-        //   top: -DimensionesDePantalla.pantallaSize *
-        //       0.04, // Posición vertical (hacia arriba)
-        //   child: Container(
-        //     width: DimensionesDePantalla.pantallaSize * 0.05,
-        //     height: DimensionesDePantalla.pantallaSize * 0.07,
-        //     decoration: BoxDecoration(
-        //       border: Border.all(width: 2, color: Color(0xFF023336)),
-        //       color: Color(0xFF4DA674),
-        //       borderRadius: BorderRadius.circular(
-        //           DimensionesDePantalla.pantallaSize * 0.015),
-        //     ),
-        //   ),
-        // ),
-        // Contenedor principal del calendario
       ],
+    );
+  }
+
+  Widget _positionGancho(double top, double left, double right) {
+    return Positioned(
+      top: -DimensionesDePantalla.pantallaSize * 0.008,
+      left: DimensionesDePantalla.pantallaSize * left,
+      right: DimensionesDePantalla.pantallaSize * right,
+      child: Container(
+        height: DimensionesDePantalla.pantallaSize * 0.015,
+        width: DimensionesDePantalla.pantallaSize * 0.01,
+        decoration: BoxDecoration(
+          color: const Color(0xFF023336), // Color del gancho
+          shape: BoxShape.rectangle,
+        ),
+      ),
     );
   }
 }
