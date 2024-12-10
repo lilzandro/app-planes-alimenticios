@@ -203,7 +203,10 @@ class _VentanaInicioState extends State<VentanaInicio> {
               if (label != null)
                 Text(
                   label,
-                  style: TextStyle(color: Color(0xFFEAF8E7)),
+                  style: TextStyle(
+                      fontFamily: 'Comfortaa',
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFEAF8E7)),
                 )
             ],
           )),
@@ -239,11 +242,18 @@ class _VentanaInicioState extends State<VentanaInicio> {
                 children: [
                   Text(
                     mealName,
-                    style: TextStyle(color: Color(0xFF023336), fontSize: 15),
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF023336),
+                        fontSize: 14),
                   ),
                   Text(
                     'Alimentos',
-                    style: TextStyle(color: Color(0xFF023336), fontSize: 10),
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa',
+                        color: Color(0xFF023336),
+                        fontSize: 10),
                   )
                 ])
           ])),
@@ -268,7 +278,11 @@ class _VentanaInicioState extends State<VentanaInicio> {
       circularStrokeCap: CircularStrokeCap.round,
       center: Text(
         "${nivelDeProgreso - metaProgreso}",
-        style: TextStyle(color: Color(0xFFEAF8E7), fontSize: 18),
+        style: TextStyle(
+            fontFamily: 'Comfortaa',
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFEAF8E7),
+            fontSize: 18),
       ),
     );
   }
@@ -279,7 +293,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
       children: [
         Text(
           nombre,
-          style: TextStyle(color: Color(0xFFEAF8E7), fontSize: 12),
+          style: TextStyle(
+              fontFamily: 'Comfortaa', color: Color(0xFFEAF8E7), fontSize: 12),
         ),
         LinearPercentIndicator(
           width: 120,
@@ -292,6 +307,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
         Text(
           "${nivelDeProgreso}g / ${metaProgreso}g",
           style: TextStyle(
+            fontFamily: 'Comfortaa',
             color: Color(0xFFEAF8E7),
             fontSize: 12,
           ),
