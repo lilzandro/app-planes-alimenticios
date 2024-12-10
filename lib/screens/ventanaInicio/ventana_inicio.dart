@@ -28,7 +28,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
   List<Widget> _buildBlocks(BuildContext context) {
     return [
       Container(
-        color: Color(0xFF4DA674),
+        color: Color(0xFF4da674),
         height: DimensionesDePantalla.pantallaSize * 0.25,
         child: Center(
           child: Column(
@@ -81,41 +81,33 @@ class _VentanaInicioState extends State<VentanaInicio> {
 
             // CONTENEDOR DEL PLAN ALIMENTICIO
             AnimatedContainer(
-              padding: const EdgeInsets.all(0),
               duration: const Duration(milliseconds: 300),
               height: selectedMeal == null
                   ? DimensionesDePantalla.pantallaSize * 0.33
                   : DimensionesDePantalla.pantallaSize * 0.45,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                color: const Color(0xFFEAF8E7),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromARGB(45, 0, 0, 0),
-                    blurRadius: 4.0,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
               child: Column(
                 children: [
                   // DESAYUNO
                   Padding(
                     padding: const EdgeInsets.all(1.5),
                   ),
-                  _buildExpandableOption('Desayuno', Colors.transparent),
+                  _buildExpandableOption(
+                      'Desayuno', Colors.transparent, 'assets/desayuno.png'),
                   _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Almuerzo
-                  _buildExpandableOption('Almuerzo', Colors.transparent),
+                  _buildExpandableOption(
+                      'Almuerzo', Colors.transparent, 'assets/almuerzo.png'),
                   _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Cena
-                  _buildExpandableOption('Cena', Colors.transparent),
+                  _buildExpandableOption(
+                      'Cena', Colors.transparent, 'assets/cena.png'),
                   _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
                   // Merienda
-                  _buildExpandableOption('Merienda', Colors.transparent),
+                  _buildExpandableOption(
+                      'Merienda', Colors.transparent, 'assets/merienda.png'),
                 ],
               ),
             ),
@@ -193,7 +185,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
           ? DimensionesDePantalla.anchoPantalla * .5
           : DimensionesDePantalla.anchoPantalla * .1,
       decoration: BoxDecoration(
-        color: const Color(0xFF023336),
+        color: const Color(0xFF4da674),
         borderRadius: BorderRadius.circular(30.0),
         // Esquinas redondeadas
       ),
@@ -206,7 +198,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
     );
   }
 
-  Widget _buildExpandableOption(String mealName, Color color) {
+  Widget _buildExpandableOption(
+      String mealName, Color color, String imagePath) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -214,24 +207,32 @@ class _VentanaInicioState extends State<VentanaInicio> {
         });
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        height: selectedMeal == mealName
-            ? MediaQuery.of(context).size.height * .2
-            : MediaQuery.of(context).size.height * .08,
-        color: selectedMeal == mealName
-            ? color
-            : const Color.fromARGB(0, 188, 17, 17),
-        alignment: Alignment.center,
-        child: Center(
-            child: Text(mealName,
-                style: TextStyle(color: Color(0xFF023336), fontSize: 15))),
-      ),
+          duration: const Duration(milliseconds: 300),
+          height: selectedMeal == mealName
+              ? MediaQuery.of(context).size.height * .2
+              : MediaQuery.of(context).size.height * .08,
+          color: selectedMeal == mealName
+              ? color
+              : const Color.fromARGB(0, 188, 17, 17),
+          alignment: Alignment.centerLeft,
+          child: Row(children: [
+            Image.asset(
+              imagePath,
+              height: DimensionesDePantalla.anchoPantalla * .3,
+              width: DimensionesDePantalla.anchoPantalla * .22,
+            ),
+            Text(
+              mealName,
+              style: TextStyle(color: Color(0xFF023336), fontSize: 15),
+              textAlign: TextAlign.start,
+            ),
+          ])),
     );
   }
 
   Widget _buildSeparator(double anchoPantalla) {
     return Container(
-      width: DimensionesDePantalla.anchoPantalla * .8,
+      width: DimensionesDePantalla.anchoPantalla * .9,
       height: .8,
       color: const Color(0xFF4DA674).withOpacity(0.5),
     );
