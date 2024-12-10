@@ -33,18 +33,17 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     return [
       // Encabezado
       SizedBox(
-        height: DimensionesDePantalla.pantallaSize * 0.2,
+        height: DimensionesDePantalla.pantallaSize * 0.18,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding:
-                  EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.02),
               alignment: Alignment.center,
               child: const Text(
                 'Plan Semanal\n de Alimentación',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                    fontFamily: 'Comfortaa',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF023336)),
@@ -53,12 +52,11 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           ],
         ),
       ),
-      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.0),
       // Calendario
 
       _buildCalendarWidget(),
 
-      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.035),
+      SizedBox(height: DimensionesDePantalla.pantallaSize * 0.05),
 
       Container(
           padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0),
@@ -69,6 +67,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                 'Menú manual',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                    fontFamily: 'Comfortaa',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF023336)),
@@ -77,8 +76,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                 'Realiza tus propias recetas',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                    fontFamily: 'Comfortaa',
                     fontSize: 15,
-                    fontWeight: FontWeight.bold,
                     color: Color(0xFF023336)),
               ),
             ],
@@ -112,6 +111,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             ),
             child: Text("Crear menú manual",
                 style: TextStyle(
+                  fontFamily: 'Comfortaa',
                   color: Color(0xFFEAF8E7),
                 )),
           )),
@@ -160,11 +160,9 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                  height: DimensionesDePantalla.pantallaSize *
-                      0.045), // Espacio para que no cubra la línea superior
-              Divider(thickness: 3, color: Color(0xFF023336)),
-              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.035),
+              // Espacio para que no cubra la línea superior
+              // Divider(thickness: 3, color: Color(0xFF023336)),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.025),
               // Días de la semana en formato de cuadrícula
               GridView.builder(
                 shrinkWrap: true,
@@ -179,17 +177,18 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                   return Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Color(0xFFC1E6BA).withOpacity(0.35),
                       borderRadius: BorderRadius.circular(
                           DimensionesDePantalla.pantallaSize * 0.02),
                       border:
                           Border.all(color: Color(0xFF4DA674).withOpacity(0.2)),
-
                     ),
-                    child: Text(
-                      days[index],
-                      style: TextStyle(
-                        color: Color(0xFF023336),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          DimensionesDePantalla.pantallaSize * 0.02),
+                      child: Image.asset(
+                        'assets/semana.png', // Asegúrate de que las imágenes estén en esta ruta
+                        fit: BoxFit
+                            .cover, // Ajusta la imagen para cubrir el área del contenedor
                       ),
                     ),
                   );
@@ -201,38 +200,38 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
         ),
 
         // Contenedores circulares ("orejas") en la parte superior del calendario
-        Positioned(
-          left: DimensionesDePantalla.pantallaSize *
-              0.08, // Posición horizontal (izquierda)
-          top: -DimensionesDePantalla.pantallaSize *
-              0.04, // Posición vertical (hacia arriba)
-          child: Container(
-            width: DimensionesDePantalla.pantallaSize * 0.05,
-            height: DimensionesDePantalla.pantallaSize * 0.07,
-            decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Color(0xFF023336)),
-              color: Color(0xFF4DA674),
-              borderRadius: BorderRadius.circular(
-                  DimensionesDePantalla.pantallaSize * 0.015),
-            ),
-          ),
-        ),
-        Positioned(
-          right: DimensionesDePantalla.pantallaSize *
-              0.08, // Posición horizontal (derecha)
-          top: -DimensionesDePantalla.pantallaSize *
-              0.04, // Posición vertical (hacia arriba)
-          child: Container(
-            width: DimensionesDePantalla.pantallaSize * 0.05,
-            height: DimensionesDePantalla.pantallaSize * 0.07,
-            decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Color(0xFF023336)),
-              color: Color(0xFF4DA674),
-              borderRadius: BorderRadius.circular(
-                  DimensionesDePantalla.pantallaSize * 0.015),
-            ),
-          ),
-        ),
+        // Positioned(
+        //   left: DimensionesDePantalla.pantallaSize *
+        //       0.08, // Posición horizontal (izquierda)
+        //   top: -DimensionesDePantalla.pantallaSize *
+        //       0.04, // Posición vertical (hacia arriba)
+        //   child: Container(
+        //     width: DimensionesDePantalla.pantallaSize * 0.05,
+        //     height: DimensionesDePantalla.pantallaSize * 0.07,
+        //     decoration: BoxDecoration(
+        //       border: Border.all(width: 2, color: Color(0xFF023336)),
+        //       color: Color(0xFF4DA674),
+        //       borderRadius: BorderRadius.circular(
+        //           DimensionesDePantalla.pantallaSize * 0.015),
+        //     ),
+        //   ),
+        // ),
+        // Positioned(
+        //   right: DimensionesDePantalla.pantallaSize *
+        //       0.08, // Posición horizontal (derecha)
+        //   top: -DimensionesDePantalla.pantallaSize *
+        //       0.04, // Posición vertical (hacia arriba)
+        //   child: Container(
+        //     width: DimensionesDePantalla.pantallaSize * 0.05,
+        //     height: DimensionesDePantalla.pantallaSize * 0.07,
+        //     decoration: BoxDecoration(
+        //       border: Border.all(width: 2, color: Color(0xFF023336)),
+        //       color: Color(0xFF4DA674),
+        //       borderRadius: BorderRadius.circular(
+        //           DimensionesDePantalla.pantallaSize * 0.015),
+        //     ),
+        //   ),
+        // ),
         // Contenedor principal del calendario
       ],
     );

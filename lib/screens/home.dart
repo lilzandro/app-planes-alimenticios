@@ -37,15 +37,13 @@ class _InicioState extends State<Inicio> {
         height: DimensionesDePantalla.pantallaSize * 0.08,
         padding: const EdgeInsets.all(0),
         color: const Color(0xFFEAF8E7),
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home, 'Inicio', 0),
-              _buildNavItem(Icons.settings, 'Plan de alimentación', 1),
-              _buildNavItem(Icons.person, 'Perfil', 2),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(Icons.home, 'Inicio', 0),
+            _buildNavItem(Icons.settings, 'Plan de alimentación', 1),
+            _buildNavItem(Icons.person, 'Perfil', 2),
+          ],
         ),
       ),
     );
