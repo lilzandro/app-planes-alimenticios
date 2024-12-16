@@ -272,7 +272,7 @@ Widget _buildInformacionNutricional() {
         ...categorias.entries.map((entry) {
           return _buildCategoria(
               entry.key, categoriaColores[entry.key]!, entry.value);
-        }).toList(),
+        }),
       ],
     ),
   );
