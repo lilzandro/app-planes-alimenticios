@@ -1,7 +1,7 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
-import 'package:app_planes/widgets/editar_perfil.dart';
+import 'package:app_planes/widgets/perfil/editar_informacion_usuario.dart';
 import 'package:app_planes/screens/Login/login_screen.dart';
 
 class VentanaPerfil extends StatefulWidget {
@@ -120,7 +120,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           _progreso(),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
           _buildActionButton("Editar Perfil", () {
-            EditarPerfil.mostrar(context);
+            EditarInformacionUsuario.mostrar(context);
           }),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
           _buildActionButton("Cerrar Sección", () {
