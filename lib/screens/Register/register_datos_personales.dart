@@ -1,3 +1,4 @@
+import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
@@ -72,14 +73,14 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirCampoTexto(
               labelText: "Nombre",
-              onChanged: (value) => nombre = value,
+              onChanged: (value) => registroUsuario.nombre = value, // Cambiado
               validator: (value) =>
                   value == null || value.isEmpty ? "Ingresa tu nombre" : null,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Apellido",
-              onChanged: (value) => apellido = value,
+              onChanged: (value) => registroUsuario.apellido = value,
               validator: (value) =>
                   value == null || value.isEmpty ? "Ingresa tu apellido" : null,
             ),
@@ -87,7 +88,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             _construirCampoTexto(
               labelText: "Teléfono",
               keyboardType: TextInputType.phone,
-              onChanged: (value) => telefono = value,
+              onChanged: (value) => registroUsuario.telefono = value,
               validator: (value) =>
                   value == null || value.isEmpty ? "Ingresa tu teléfono" : null,
             ),
@@ -97,7 +98,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             _construirCampoTexto(
               labelText: "Estatura (cm)",
               keyboardType: TextInputType.number,
-              onChanged: (value) => estatura = double.tryParse(value) ?? 0.0,
+              onChanged: (value) =>
+                  registroUsuario.estatura = double.tryParse(value) ?? 0.0,
               validator: (value) =>
                   value == null || double.tryParse(value) == null
                       ? "Ingresa una estatura válida"
@@ -107,7 +109,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             _construirCampoTexto(
               labelText: "Peso (kg)",
               keyboardType: TextInputType.number,
-              onChanged: (value) => peso = double.tryParse(value) ?? 0.0,
+              onChanged: (value) =>
+                  registroUsuario.peso = double.tryParse(value) ?? 0.0,
               validator: (value) =>
                   value == null || double.tryParse(value) == null
                       ? "Ingresa un peso válido"
@@ -161,26 +164,27 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
       ),
       child: ListTile(
         title: Text(
-          fechaNacimiento != null
-              ? "${fechaNacimiento!.day}/${fechaNacimiento!.month}/${fechaNacimiento!.year}"
+          registroUsuario.fechaNacimiento != null
+              ? "${registroUsuario.fechaNacimiento!.day}/${registroUsuario.fechaNacimiento!.month}/${registroUsuario.fechaNacimiento!.year}"
               : "Seleccionar Fecha de Nacimiento",
           style: TextStyle(
-            color: fechaNacimiento != null
-                ? Color(0xFF023336)
+            color: registroUsuario.fechaNacimiento != null
+                ? const Color(0xFF023336)
                 : const Color(0xFF023336).withOpacity(0.6),
           ),
         ),
         trailing: const Icon(Icons.calendar_today),
         onTap: () async {
+          // Mostrar el selector de fecha
           final nuevaFecha = await showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
+            initialDate: registroUsuario.fechaNacimiento ?? DateTime.now(),
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
           );
           if (nuevaFecha != null) {
             setState(() {
-              fechaNacimiento = nuevaFecha;
+              registroUsuario.fechaNacimiento = nuevaFecha;
             });
           }
         },

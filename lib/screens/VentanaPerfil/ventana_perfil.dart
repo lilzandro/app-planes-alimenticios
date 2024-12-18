@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/widgets/perfil/editar_informacion_usuario.dart';
 import 'package:app_planes/screens/Login/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class VentanaPerfil extends StatefulWidget {
   const VentanaPerfil({super.key});
@@ -152,7 +153,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
     );
   }
 
-  Widget _buildActionButton(String label, VoidCallback onPressed) {
+  Widget _buildActionButton(String label, VoidCallback? onPressed) {
     return Container(
       height: DimensionesDePantalla.anchoPantalla * .12,
       width: DimensionesDePantalla.anchoPantalla * .5,
@@ -167,7 +168,28 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: onPressed, // Acción{},
+        onPressed: () async {
+          if (label == "Cerrar Sesión") {
+            // Lógica específica para cerrar sesión
+            try {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => VentanaInicioSeccion()),
+                (Route<dynamic> route) => false,
+              );
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error al cerrar sesión: $e")),
+              );
+            }
+          } else {
+            // Llamar a la acción genérica pasada como parámetro
+            if (onPressed != null) {
+              onPressed();
+            }
+          }
+        },
         style: ElevatedButton.styleFrom(
           foregroundColor: label == "Cerrar Sesión"
               ? Color.fromARGB(255, 202, 67, 67)

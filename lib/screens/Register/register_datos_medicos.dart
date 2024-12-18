@@ -1,3 +1,4 @@
+import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
@@ -71,19 +72,23 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirCheckbox(
               labelText: "Diabetes",
-              value: diabetes,
-              onChanged: (value) => setState(() => diabetes = value!),
+              value: registroUsuario.diabetes,
+              onChanged: (value) => setState(() {
+                registroUsuario.diabetes = value ?? false;
+              }),
             ),
             _construirCheckbox(
               labelText: "Hipertensión",
-              value: hipertension,
-              onChanged: (value) => setState(() => hipertension = value!),
+              value: registroUsuario.hipertension,
+              onChanged: (value) => setState(() {
+                registroUsuario.hipertension = value ?? false;
+              }),
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Nivel de Glucosa (mg/dL)",
               keyboardType: TextInputType.number,
-              onChanged: (value) => nivelGlucosa = value,
+              onChanged: (value) => registroUsuario.nivelGlucosa = value,
               validator: (value) => value == null || value.isEmpty
                   ? "Ingresa el nivel de glucosa"
                   : null,
@@ -91,7 +96,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Presión Arterial (ej. 120/80)",
-              onChanged: (value) => presionArterial = value,
+              onChanged: (value) => registroUsuario.presionArterial = value,
               validator: (value) => value == null || value.isEmpty
                   ? "Ingresa la presión arterial"
                   : null,
@@ -100,7 +105,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
             _construirCampoTexto(
               labelText: "Observaciones Médicas",
               keyboardType: TextInputType.multiline,
-              onChanged: (value) => observaciones = value,
+              onChanged: (value) => registroUsuario.observaciones = value,
               validator: (value) => value == null || value.isEmpty
                   ? "Ingresa alguna observación médica"
                   : null,
@@ -154,12 +159,12 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
     return Row(
       children: [
         Checkbox(
-          checkColor: Color(0xFFEAF8E7),
-          activeColor: Color(0xFF023336),
+          checkColor: const Color(0xFFEAF8E7),
+          activeColor: const Color(0xFF023336),
           value: value,
           onChanged: onChanged,
         ),
-        Text(labelText, style: TextStyle(color: Color(0xFF023336))),
+        Text(labelText, style: const TextStyle(color: Color(0xFF023336))),
       ],
     );
   }
@@ -176,8 +181,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
       ),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          Navigator.pushNamed(
-              context, '/register-3'); // Ir a la siguiente pantalla
+          Navigator.pushNamed(context, '/register-3'); // Ir a la pantalla final
         }
       },
       child: const Text('Siguiente'),
