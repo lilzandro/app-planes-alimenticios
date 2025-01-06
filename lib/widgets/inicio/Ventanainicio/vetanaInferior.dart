@@ -16,7 +16,9 @@ void showMealBottomSheet({
     enableDrag: false, // Desactivar el deslizamiento para cerrar
     backgroundColor: Colors.transparent,
     builder: (BuildContext context) {
-      return Container(
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 300), // Duración de la animación
+        curve: Curves.easeInOut, // Curva de la animación
         decoration: BoxDecoration(
           color: const Color(0xFFEAF8E7),
           borderRadius: BorderRadius.vertical(

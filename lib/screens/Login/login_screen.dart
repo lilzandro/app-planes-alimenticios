@@ -202,18 +202,6 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
         if (_formKey.currentState!.validate()) {
           Navigator.pushNamed(context, '/home'); // Ir a la siguiente pantalla
         }
-
-        // if (_formKey.currentState!.validate()) {
-        //   try {
-        //     await _auth.signInWithEmailAndPassword(
-        //         email: email, password: password);
-        //     print("Inicio de sesión exitoso");
-        //   } on FirebaseAuthException catch (e) {
-        //     setState(() {
-        //       errorMessage = e.message ?? "Error desconocido";
-        //     });
-        //   }
-        // }
       },
       child: Text('Iniciar Sesión'),
     );

@@ -1,9 +1,7 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
-import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Asegúrate de agregar esto
-import 'package:firebase_core/firebase_core.dart';
 import 'package:app_planes/models/registro_usuario_model.dart'; // Importa tu modelo
 
 class RegistroUsuario extends StatefulWidget {
@@ -193,11 +191,18 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       registroUsuario.fechaNacimiento?.toIso8601String(),
                   'estatura': registroUsuario.estatura,
                   'peso': registroUsuario.peso,
-                  'diabetes': registroUsuario.diabetes,
+                  'diabetesTipo1': registroUsuario.diabetesTipo1,
+                  'diabetesTipo2': registroUsuario.diabetesTipo2,
                   'hipertension': registroUsuario.hipertension,
                   'nivelGlucosa': registroUsuario.nivelGlucosa,
                   'presionArterial': registroUsuario.presionArterial,
                   'observaciones': registroUsuario.observaciones,
+                  'sexo': registroUsuario.sexo,
+                  'nivelActividad': registroUsuario.nivelActividad,
+                  'alimentosNoGustan': registroUsuario.alimentosNoGustan,
+                  'alergiasIntolerancias':
+                      registroUsuario.alergiasIntolerancias,
+                  'nivelActividadFisica': registroUsuario.nivelActividadFisica,
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Usuario registrado exitosamente")),

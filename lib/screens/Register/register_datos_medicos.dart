@@ -12,12 +12,7 @@ class RegistroDatosMedicos extends StatefulWidget {
 
 class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  String nivelGlucosa = '';
-  String presionArterial = '';
-  String observaciones = '';
-  bool diabetes = false;
-  bool hipertension = false;
+  String _nivelActividad = 'Sedentario';
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +66,17 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirCheckbox(
-              labelText: "Diabetes",
-              value: registroUsuario.diabetes,
+              labelText: "Diabetes Tipo 1",
+              value: registroUsuario.diabetesTipo1,
               onChanged: (value) => setState(() {
-                registroUsuario.diabetes = value ?? false;
+                registroUsuario.diabetesTipo1 = value ?? false;
+              }),
+            ),
+            _construirCheckbox(
+              labelText: "Diabetes Tipo 2",
+              value: registroUsuario.diabetesTipo2,
+              onChanged: (value) => setState(() {
+                registroUsuario.diabetesTipo2 = value ?? false;
               }),
             ),
             _construirCheckbox(
@@ -85,20 +87,42 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
               }),
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            if (registroUsuario.diabetesTipo1 || registroUsuario.diabetesTipo2)
+              _construirCampoTexto(
+                labelText: "Nivel de Glucosa (mg/dL)",
+                keyboardType: TextInputType.number,
+                onChanged: (value) => registroUsuario.nivelGlucosa = value,
+                validator: (value) => value == null || value.isEmpty
+                    ? "Ingresa el nivel de glucosa"
+                    : null,
+              ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            if (registroUsuario.hipertension)
+              _construirCampoTexto(
+                labelText: "Presión Arterial (ej. 120/80)",
+                onChanged: (value) => registroUsuario.presionArterial = value,
+                validator: (value) => value == null || value.isEmpty
+                    ? "Ingresa la presión arterial"
+                    : null,
+              ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            _construirDropdownNivelActividad(),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
-              labelText: "Nivel de Glucosa (mg/dL)",
-              keyboardType: TextInputType.number,
-              onChanged: (value) => registroUsuario.nivelGlucosa = value,
+              labelText: "Alimentos que no te gustan",
+              onChanged: (value) =>
+                  registroUsuario.alimentosNoGustan = value.split(','),
               validator: (value) => value == null || value.isEmpty
-                  ? "Ingresa el nivel de glucosa"
+                  ? "Ingresa los alimentos que no te gustan"
                   : null,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
-              labelText: "Presión Arterial (ej. 120/80)",
-              onChanged: (value) => registroUsuario.presionArterial = value,
+              labelText: "Alergias o Intolerancias",
+              onChanged: (value) =>
+                  registroUsuario.alergiasIntolerancias = value.split(','),
               validator: (value) => value == null || value.isEmpty
-                  ? "Ingresa la presión arterial"
+                  ? "Ingresa tus alergias o intolerancias"
                   : null,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
@@ -111,6 +135,8 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                   : null,
               maxLines: 3,
             ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirBotonSiguiente(),
           ],
@@ -166,6 +192,42 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
         ),
         Text(labelText, style: const TextStyle(color: Color(0xFF023336))),
       ],
+    );
+  }
+
+  Widget _construirDropdownNivelActividad() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFC1E6BA).withOpacity(0.35),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: DropdownButtonFormField<String>(
+        value: _nivelActividad,
+        decoration: InputDecoration(
+          labelText: "Nivel de Actividad Física",
+          labelStyle:
+              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+          border: InputBorder.none,
+        ),
+        items: ['Sedentario', 'Actividad ligera', 'Actividad moderada']
+            .map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            _nivelActividad = newValue!;
+            registroUsuario.nivelActividad = newValue;
+          });
+        },
+        validator: (value) => value == null || value.isEmpty
+            ? "Selecciona el nivel de actividad física"
+            : null,
+      ),
     );
   }
 
