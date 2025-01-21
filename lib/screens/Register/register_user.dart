@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/calculo_imc.dart'; // Importa la función de cálculo de IMC
+import 'package:app_planes/utils/calculo_tmb.dart'; // Importa la función de cálculo de TMB
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -187,6 +188,18 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 );
                 registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
 
+                // Calcular la TMB
+                int edad = DateTime.now().year -
+                    (registroUsuario.fechaNacimiento?.year ??
+                        DateTime.now().year);
+                double tmb = calcularTMB(
+                  registroUsuario.sexo ?? 'Hombre',
+                  registroUsuario.peso ?? 0.0,
+                  registroUsuario.estatura ?? 0.0,
+                  edad,
+                );
+                registroUsuario.tasaMetabolicaBasal = tmb.toStringAsFixed(2);
+
                 // Guardar los datos del usuario en Firestore
                 FirebaseFirestore.instance.collection('usuarios').add({
                   'nombre': registroUsuario.nombre,
@@ -208,6 +221,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   'alergiasIntolerancias':
                       registroUsuario.alergiasIntolerancias,
                   'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
+                  'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
                 });
 
                 ScaffoldMessenger.of(context).showSnackBar(
