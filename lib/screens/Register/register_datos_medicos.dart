@@ -97,6 +97,15 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                     : null,
               ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            if (registroUsuario.diabetesTipo1)
+              _construirCampoTexto(
+                labelText: "Uso de Insulina",
+                onChanged: (value) => registroUsuario.usoInsulina = value,
+                validator: (value) => value == null || value.isEmpty
+                    ? "Ingresa el uso de insulina"
+                    : null,
+              ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             if (registroUsuario.hipertension)
               _construirCampoTexto(
                 labelText: "Presión Arterial (ej. 120/80)",
@@ -135,8 +144,6 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                   : null,
               maxLines: 3,
             ),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirBotonSiguiente(),
           ],
@@ -211,8 +218,13 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
               TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
         ),
-        items: ['Sedentario', 'Actividad ligera', 'Actividad moderada']
-            .map((String value) {
+        items: [
+          'Sedentario',
+          'Actividad ligera',
+          'Actividad moderada',
+          'Activo',
+          'Muy activo'
+        ].map((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),

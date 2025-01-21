@@ -1,8 +1,9 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Asegúrate de agregar esto
-import 'package:app_planes/models/registro_usuario_model.dart'; // Importa tu modelo
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_planes/models/registro_usuario_model.dart';
+import 'package:app_planes/utils/calculo_imc.dart'; // Importa la función de cálculo de IMC
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -21,9 +22,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   @override
   void initState() {
     super.initState();
-    // Inicializa los valores de correo y contraseña desde el objeto global
-    correo = registroUsuario.nombre ??
-        ''; // Puedes usar el correo si está en el modelo
+    correo = registroUsuario.nombre ?? '';
     contrasena = '';
     repetirContrasena = '';
   }
@@ -39,8 +38,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           icon: Icon(Icons.arrow_back),
           color: Color(0xFF023336),
           onPressed: () {
-            Navigator.pushReplacementNamed(
-                context, '/register-2'); // Volver a datos médicos
+            Navigator.pushReplacementNamed(context, '/register-2');
           },
         ),
       ),
@@ -181,8 +179,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   email: correo,
                   password: contrasena,
                 );
-                // Aquí puedes guardar los demás datos del usuario en la base de datos de Firebase
-                // Si usas Firestore, por ejemplo:
+
+                // Calcular el IMC
+                double imc = calcularIMC(
+                  registroUsuario.peso ?? 0.0,
+                  (registroUsuario.estatura ?? 0.0) / 100, // Convertir cm a m
+                );
+                registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
+
+                // Guardar los datos del usuario en Firestore
                 FirebaseFirestore.instance.collection('usuarios').add({
                   'nombre': registroUsuario.nombre,
                   'apellido': registroUsuario.apellido,
@@ -202,12 +207,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   'alimentosNoGustan': registroUsuario.alimentosNoGustan,
                   'alergiasIntolerancias':
                       registroUsuario.alergiasIntolerancias,
-                  'nivelActividadFisica': registroUsuario.nivelActividadFisica,
+                  'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
                 });
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Usuario registrado exitosamente")),
                 );
-                // Después de registrar al usuario, navegas a la pantalla de inicio
+
+                // Navegar a la pantalla de inicio
                 Navigator.pushReplacementNamed(context, '/home');
               } on FirebaseAuthException catch (e) {
                 // Manejo de errores de Firebase

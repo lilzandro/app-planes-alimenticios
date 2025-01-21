@@ -124,11 +124,8 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
             EditarInformacionUsuario.mostrar(context);
           }),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-          _buildActionButton("Cerrar Sección", () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => VentanaInicioSeccion()),
-            );
+          _buildActionButton("Cerrar Sesión", () {
+            _showSignOutConfirmationDialog(context);
           }),
         ],
       ),
@@ -168,28 +165,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () async {
-          if (label == "Cerrar Sesión") {
-            // Lógica específica para cerrar sesión
-            try {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => VentanaInicioSeccion()),
-                (Route<dynamic> route) => false,
-              );
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error al cerrar sesión: $e")),
-              );
-            }
-          } else {
-            // Llamar a la acción genérica pasada como parámetro
-            if (onPressed != null) {
-              onPressed();
-            }
-          }
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           foregroundColor: label == "Cerrar Sesión"
               ? Color.fromARGB(255, 202, 67, 67)
@@ -205,6 +181,45 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           style: TextStyle(fontFamily: 'Comfortaa'),
         ), // Texto del botón
       ),
+    );
+  }
+
+  void _showSignOutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmar cierre de sesión'),
+          content: Text('¿Estás seguro de que deseas cerrar sesión?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Cerrar sesión'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                try {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VentanaInicioSeccion()),
+                    (Route<dynamic> route) => false,
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error al cerrar sesión: $e")),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -10,12 +10,15 @@ class RegistroUsuarioModel {
   bool diabetesTipo2 = false;
   bool hipertension = false;
   String? nivelGlucosa;
+  String? usoInsulina;
   String? presionArterial;
   String? observaciones;
   String? nivelActividad;
   List<String> alimentosNoGustan = [];
   List<String> alergiasIntolerancias = [];
-  String? nivelActividadFisica; // Nuevo campo
+  String? indiceMasaCorporal;
+  String? tasaMetabolicaBasal;
+  // String? IndiceMasaCorporal;
 }
 
 final registroUsuario = RegistroUsuarioModel(); // Este será el objeto global

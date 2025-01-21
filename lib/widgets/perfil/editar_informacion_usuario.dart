@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
 class EditarInformacionUsuario extends StatelessWidget {
-  const EditarInformacionUsuario({Key? key}) : super(key: key);
+  const EditarInformacionUsuario({super.key});
 
   static void mostrar(BuildContext context) {
     showModalBottomSheet(
