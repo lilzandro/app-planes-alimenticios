@@ -3,6 +3,7 @@ class RegistroUsuarioModel {
   String? apellido;
   String? telefono;
   DateTime? fechaNacimiento;
+  int? edad;
   double? estatura;
   double? peso;
   String? sexo;
@@ -18,6 +19,7 @@ class RegistroUsuarioModel {
   List<String> alergiasIntolerancias = [];
   String? indiceMasaCorporal;
   String? tasaMetabolicaBasal;
+  String? caloriasDiarias;
   // String? IndiceMasaCorporal;
 }
 

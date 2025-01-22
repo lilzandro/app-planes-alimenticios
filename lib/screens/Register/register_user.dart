@@ -1,3 +1,4 @@
+import 'package:app_planes/utils/calcular_calorias_diarias.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -189,9 +190,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
 
                 // Calcular la TMB
-                int edad = DateTime.now().year -
-                    (registroUsuario.fechaNacimiento?.year ??
-                        DateTime.now().year);
+                int edad = calcularEdad(registroUsuario.fechaNacimiento!);
                 double tmb = calcularTMB(
                   registroUsuario.sexo ?? 'Hombre',
                   registroUsuario.peso ?? 0.0,
@@ -200,6 +199,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 );
                 registroUsuario.tasaMetabolicaBasal = tmb.toStringAsFixed(2);
 
+                // Calcular las calorías diarias
+                double caloriasDiarias = calcularCaloriasDiarias(
+                  tmb,
+                  registroUsuario.nivelActividad ?? 'Sedentario',
+                );
+                registroUsuario.caloriasDiarias =
+                    caloriasDiarias.toStringAsFixed(2);
+
                 // Guardar los datos del usuario en Firestore
                 FirebaseFirestore.instance.collection('usuarios').add({
                   'nombre': registroUsuario.nombre,
@@ -207,6 +214,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   'telefono': registroUsuario.telefono,
                   'fechaNacimiento':
                       registroUsuario.fechaNacimiento?.toIso8601String(),
+                  'edad': edad,
                   'estatura': registroUsuario.estatura,
                   'peso': registroUsuario.peso,
                   'diabetesTipo1': registroUsuario.diabetesTipo1,
@@ -222,6 +230,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       registroUsuario.alergiasIntolerancias,
                   'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
                   'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
+                  'caloriasDiarias': registroUsuario.caloriasDiarias,
                 });
 
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -243,4 +252,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       child: const Text('Registrar'),
     );
   }
+}
+
+int calcularEdad(DateTime fechaNacimiento) {
+  DateTime hoy = DateTime.now();
+  int edad = hoy.year - fechaNacimiento.year;
+  if (hoy.month < fechaNacimiento.month ||
+      (hoy.month == fechaNacimiento.month && hoy.day < fechaNacimiento.day)) {
+    edad--;
+  }
+  return edad;
 }
