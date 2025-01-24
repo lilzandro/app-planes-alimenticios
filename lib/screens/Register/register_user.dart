@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/calculo_imc.dart'; // Importa la función de cálculo de IMC
-import 'package:app_planes/utils/calculo_tmb.dart'; // Importa la función de cálculo de TMB
+import 'package:app_planes/utils/calculo_tmb.dart';
+import 'package:app_planes/utils/plan_alimenticio.dart';
+import 'package:app_planes/models/planAlimenticioModel.dart';
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -27,6 +29,104 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     correo = registroUsuario.nombre ?? '';
     contrasena = '';
     repetirContrasena = '';
+  }
+
+  Future<void> _registrarUsuario() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: correo,
+          password: contrasena,
+        );
+
+        // Calcular el IMC
+        double imc = calcularIMC(
+          registroUsuario.peso ?? 0.0,
+          (registroUsuario.estatura ?? 0.0) / 100, // Convertir cm a m
+        );
+        registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
+
+        // Calcular la TMB
+        int edad = calcularEdad(registroUsuario.fechaNacimiento!);
+        double tmb = calcularTMB(
+          registroUsuario.sexo ?? 'Hombre',
+          registroUsuario.peso ?? 0.0,
+          registroUsuario.estatura ?? 0.0,
+          edad,
+        );
+        registroUsuario.tasaMetabolicaBasal = tmb.toStringAsFixed(2);
+
+        // Calcular las calorías diarias
+        double caloriasDiarias = calcularCaloriasDiarias(
+          tmb,
+          registroUsuario.nivelActividad ?? 'Sedentario',
+        );
+        registroUsuario.caloriasDiarias = caloriasDiarias.toStringAsFixed(2);
+
+        // Crear el plan alimenticio
+        PlanAlimenticioModel plan = await crearPlanAlimenticio(registroUsuario);
+
+        // Guardar el plan alimenticio en Firestore
+        DocumentReference planRef = await FirebaseFirestore.instance
+            .collection('planesAlimenticios')
+            .add({
+          'desayuno': plan.desayuno,
+          'almuerzo': plan.almuerzo,
+          'cena': plan.cena,
+          'merienda': plan.merienda,
+          'caloriasDesayuno': plan.caloriasDesayuno,
+          'caloriasAlmuerzo': plan.caloriasAlmuerzo,
+          'caloriasCena': plan.caloriasCena,
+          'caloriasMerienda': plan.caloriasMerienda,
+          'usuarioId': userCredential.user!.uid,
+        });
+
+        // Guardar los datos del usuario en Firestore
+        await FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(userCredential.user!.uid)
+            .set({
+          'nombre': registroUsuario.nombre,
+          'apellido': registroUsuario.apellido,
+          'telefono': registroUsuario.telefono,
+          'fechaNacimiento': registroUsuario.fechaNacimiento?.toIso8601String(),
+          'edad': edad,
+          'estatura': registroUsuario.estatura,
+          'peso': registroUsuario.peso,
+          'sexo': registroUsuario.sexo,
+          'diabetesTipo1': registroUsuario.diabetesTipo1,
+          'diabetesTipo2': registroUsuario.diabetesTipo2,
+          'hipertension': registroUsuario.hipertension,
+          'nivelGlucosa': registroUsuario.nivelGlucosa,
+          'usoInsulina': registroUsuario.usoInsulina,
+          'presionArterial': registroUsuario.presionArterial,
+          'observaciones': registroUsuario.observaciones,
+          'nivelActividad': registroUsuario.nivelActividad,
+          'alimentosNoGustan': registroUsuario.alimentosNoGustan,
+          'alergiasIntolerancias': registroUsuario.alergiasIntolerancias,
+          'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
+          'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
+          'caloriasDiarias': registroUsuario.caloriasDiarias,
+          'planAlimenticioId':
+              planRef.id, // Guardar la referencia del plan alimenticio
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Usuario registrado exitosamente")),
+        );
+
+        // Navegar a la pantalla de inicio
+        Navigator.pushReplacementNamed(context, '/home');
+      } on FirebaseAuthException catch (e) {
+        // Manejo de errores de Firebase
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error al registrar usuario: ${e.message}")),
+        );
+      }
+    }
   }
 
   @override
@@ -174,80 +274,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
               contrasena.isNotEmpty &&
               repetirContrasena.isNotEmpty &&
               _formKey.currentState!.validate()
-          ? () async {
-              try {
-                // Crear usuario en Firebase
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: correo,
-                  password: contrasena,
-                );
-
-                // Calcular el IMC
-                double imc = calcularIMC(
-                  registroUsuario.peso ?? 0.0,
-                  (registroUsuario.estatura ?? 0.0) / 100, // Convertir cm a m
-                );
-                registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
-
-                // Calcular la TMB
-                int edad = calcularEdad(registroUsuario.fechaNacimiento!);
-                double tmb = calcularTMB(
-                  registroUsuario.sexo ?? 'Hombre',
-                  registroUsuario.peso ?? 0.0,
-                  registroUsuario.estatura ?? 0.0,
-                  edad,
-                );
-                registroUsuario.tasaMetabolicaBasal = tmb.toStringAsFixed(2);
-
-                // Calcular las calorías diarias
-                double caloriasDiarias = calcularCaloriasDiarias(
-                  tmb,
-                  registroUsuario.nivelActividad ?? 'Sedentario',
-                );
-                registroUsuario.caloriasDiarias =
-                    caloriasDiarias.toStringAsFixed(2);
-
-                // Guardar los datos del usuario en Firestore
-                FirebaseFirestore.instance.collection('usuarios').add({
-                  'nombre': registroUsuario.nombre,
-                  'apellido': registroUsuario.apellido,
-                  'telefono': registroUsuario.telefono,
-                  'fechaNacimiento':
-                      registroUsuario.fechaNacimiento?.toIso8601String(),
-                  'edad': edad,
-                  'estatura': registroUsuario.estatura,
-                  'peso': registroUsuario.peso,
-                  'diabetesTipo1': registroUsuario.diabetesTipo1,
-                  'diabetesTipo2': registroUsuario.diabetesTipo2,
-                  'hipertension': registroUsuario.hipertension,
-                  'nivelGlucosa': registroUsuario.nivelGlucosa,
-                  'presionArterial': registroUsuario.presionArterial,
-                  'observaciones': registroUsuario.observaciones,
-                  'sexo': registroUsuario.sexo,
-                  'nivelActividad': registroUsuario.nivelActividad,
-                  'alimentosNoGustan': registroUsuario.alimentosNoGustan,
-                  'alergiasIntolerancias':
-                      registroUsuario.alergiasIntolerancias,
-                  'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
-                  'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
-                  'caloriasDiarias': registroUsuario.caloriasDiarias,
-                });
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Usuario registrado exitosamente")),
-                );
-
-                // Navegar a la pantalla de inicio
-                Navigator.pushReplacementNamed(context, '/home');
-              } on FirebaseAuthException catch (e) {
-                // Manejo de errores de Firebase
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content:
-                          Text("Error al registrar usuario: ${e.message}")),
-                );
-              }
-            }
+          ? _registrarUsuario
           : null,
       child: const Text('Registrar'),
     );
