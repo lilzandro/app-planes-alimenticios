@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/calculo_imc.dart'; // Importa la función de cálculo de IMC
 import 'package:app_planes/utils/calculo_tmb.dart';
-import 'package:app_planes/utils/plan_alimenticio.dart';
+import 'package:app_planes/utils/plan_alimenticio_patologias.dart';
 import 'package:app_planes/models/planAlimenticioModel.dart';
 
 class RegistroUsuario extends StatefulWidget {
@@ -66,8 +66,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
         );
         registroUsuario.caloriasDiarias = caloriasDiarias.toStringAsFixed(2);
 
-        // Crear el plan alimenticio
-        PlanAlimenticioModel plan = await crearPlanAlimenticio(registroUsuario);
+        // Crear el plan alimenticio dependiendo de la patología
+        PlanAlimenticioModel plan;
+        if (registroUsuario.diabetesTipo1) {
+          plan = await crearPlanAlimenticioDiabetesTipo1(registroUsuario);
+        } else {
+          // Aquí puedes agregar más condiciones para otras patologías
+          plan = await crearPlanAlimenticioDiabetesTipo1(
+              registroUsuario); // Por ahora, usa la misma función
+        }
 
         // Guardar el plan alimenticio en Firestore
         DocumentReference planRef = await FirebaseFirestore.instance
