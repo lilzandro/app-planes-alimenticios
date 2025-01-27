@@ -89,6 +89,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           'caloriasCena': plan.caloriasCena,
           'caloriasMerienda': plan.caloriasMerienda,
           'usuarioId': userCredential.user!.uid,
+          'carbohidratosDesayuno': plan.carbohidratosDesayuno,
+          'carbohidratosAlmuerzo': plan.carbohidratosAlmuerzo,
+          'carbohidratosCena': plan.carbohidratosCena,
+          'carbohidratosMerienda': plan.carbohidratosMerienda,
+          'carbohidratosDiarios': plan.carbohidratosDiarios,
         });
 
         // Guardar los datos del usuario en Firestore

@@ -7,6 +7,11 @@ class PlanAlimenticioModel {
   double caloriasAlmuerzo;
   double caloriasCena;
   double caloriasMerienda;
+  double carbohidratosDesayuno;
+  double carbohidratosAlmuerzo;
+  double carbohidratosCena;
+  double carbohidratosMerienda;
+  double carbohidratosDiarios;
 
   PlanAlimenticioModel({
     required this.desayuno,
@@ -17,5 +22,10 @@ class PlanAlimenticioModel {
     required this.caloriasAlmuerzo,
     required this.caloriasCena,
     required this.caloriasMerienda,
+    required this.carbohidratosDesayuno,
+    required this.carbohidratosAlmuerzo,
+    required this.carbohidratosCena,
+    required this.carbohidratosMerienda,
+    required this.carbohidratosDiarios,
   });
 }
