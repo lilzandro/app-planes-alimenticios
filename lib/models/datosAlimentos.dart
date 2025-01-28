@@ -18,10 +18,10 @@ Future<void> cargarYGuardarAlimentos() async {
       await alimentosCollection.doc(item['Id'].toString()).set({
         'Id': item['Id'] ?? 0,
         'Alimento': item['Alimento'] ?? '',
-        'Cantidad _gr': item['Cantidad _gr'] ?? 0,
+        'Cantidad_gr': item['Cantidad _gr'] ?? 0,
         'Calorias': item['Calorias'] ?? 0,
-        'Humed_g': item['Humed_g'] ?? 0,
-        'Protena_g': item['Protena_g'] ?? 0,
+        'Humedad_g': item['Humed_g'] ?? 0,
+        'Proteina_g': item['Protena_g'] ?? 0,
         'Grasas_g': item['Grasas_g'] ?? 0,
         'CarbohidratosDispon': item['CarbohidratosDispon'] ?? 0,
         'CarbohidratosTotales': item['CarbohidratosTotales'] ?? 0,
@@ -44,6 +44,7 @@ Future<void> cargarYGuardarAlimentos() async {
         'VitaminaB6_mg': item['VitaminaB6_mg'] ?? 0,
         'AcidAscorb_mg': item['AcidAscorb_mg'] ?? 0,
         'Categoria': item['Categoria'] ?? '',
+        'Tipo': item['Tipo'] ?? '',
       });
     }
     print('Datos de alimentos guardados exitosamente.');

@@ -81,18 +81,21 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             .collection('planesAlimenticios')
             .add({
           'desayuno': plan.desayuno,
+          'merienda1': plan.merienda1,
           'almuerzo': plan.almuerzo,
           'cena': plan.cena,
-          'merienda': plan.merienda,
+          'merienda': plan.merienda2,
           'caloriasDesayuno': plan.caloriasDesayuno,
+          'caloriasMerienda1': plan.caloriasMerienda1,
           'caloriasAlmuerzo': plan.caloriasAlmuerzo,
+          'caloriasMerienda2': plan.caloriasMerienda2,
           'caloriasCena': plan.caloriasCena,
-          'caloriasMerienda': plan.caloriasMerienda,
           'usuarioId': userCredential.user!.uid,
           'carbohidratosDesayuno': plan.carbohidratosDesayuno,
+          'carbohidratosMerienda1': plan.carbohidratosMerienda1,
           'carbohidratosAlmuerzo': plan.carbohidratosAlmuerzo,
+          'carbohidratosMerienda2': plan.carbohidratosMerienda2,
           'carbohidratosCena': plan.carbohidratosCena,
-          'carbohidratosMerienda': plan.carbohidratosMerienda,
           'carbohidratosDiarios': plan.carbohidratosDiarios,
         });
 
