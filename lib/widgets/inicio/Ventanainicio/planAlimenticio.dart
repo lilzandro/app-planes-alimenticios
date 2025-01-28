@@ -37,16 +37,22 @@ Widget buildPlanAlimenticio(
 
         // CONTENEDOR DEL PLAN ALIMENTICIO
         SizedBox(
-          height: DimensionesDePantalla.pantallaSize * 0.33,
+          height: DimensionesDePantalla.pantallaSize * 0.41,
           child: Column(
             children: [
-              // DESAYUNO
               Padding(
                 padding: const EdgeInsets.all(1.5),
               ),
+
+              // DESAYUNO
               _buildExpandableOption('Desayuno', Colors.transparent,
                   'assets/desayuno.png', selectedMeal, setState, context),
 
+              _buildSeparator(DimensionesDePantalla.anchoPantalla),
+
+              // Merienda
+              _buildExpandableOption('Merienda', Colors.transparent,
+                  'assets/merienda.png', selectedMeal, setState, context),
               _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
               // Almuerzo
@@ -54,14 +60,14 @@ Widget buildPlanAlimenticio(
                   'assets/almuerzo.png', selectedMeal, setState, context),
               _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
-              // Cena
-              _buildExpandableOption('Cena', Colors.transparent,
-                  'assets/cena.png', selectedMeal, setState, context),
-              _buildSeparator(DimensionesDePantalla.anchoPantalla),
-
               // Merienda
               _buildExpandableOption('Merienda', Colors.transparent,
                   'assets/merienda.png', selectedMeal, setState, context),
+              _buildSeparator(DimensionesDePantalla.anchoPantalla),
+
+              // Cena
+              _buildExpandableOption('Cena', Colors.transparent,
+                  'assets/cena.png', selectedMeal, setState, context),
             ],
           ),
         ),
