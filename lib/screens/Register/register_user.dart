@@ -84,7 +84,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           'merienda1': plan.merienda1,
           'almuerzo': plan.almuerzo,
           'cena': plan.cena,
-          'merienda': plan.merienda2,
+          'merienda2': plan.merienda2,
           'caloriasDesayuno': plan.caloriasDesayuno,
           'caloriasMerienda1': plan.caloriasMerienda1,
           'caloriasAlmuerzo': plan.caloriasAlmuerzo,

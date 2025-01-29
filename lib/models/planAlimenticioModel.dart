@@ -15,6 +15,12 @@ class PlanAlimenticioModel {
   double carbohidratosMerienda2;
   double carbohidratosCena;
   double carbohidratosDiarios;
+  // double fibraDesayuno;
+  // double fibraMerienda1;
+  // double fibraAlmuerzo;
+  // double fibraMerienda2;
+  // double fibraCena;
+  // double fibraDiaria;
 
   PlanAlimenticioModel({
     required this.desayuno,
@@ -33,5 +39,11 @@ class PlanAlimenticioModel {
     required this.carbohidratosMerienda2,
     required this.carbohidratosCena,
     required this.carbohidratosDiarios,
+    // required this.fibraDesayuno,
+    // required this.fibraMerienda1,
+    // required this.fibraAlmuerzo,
+    // required this.fibraMerienda2,
+    // required this.fibraCena,
+    // required this.fibraDiaria,
   });
 }

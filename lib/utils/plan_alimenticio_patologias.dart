@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
+import 'package:app_planes/services/database_service.dart';
 
 Map<String, double> dividirCalorias(double caloriasDiarias) {
   return {
@@ -14,7 +14,10 @@ Map<String, double> dividirCalorias(double caloriasDiarias) {
 
 Map<String, double> dividirCarbohidratos(double caloriasDiarias) {
   double carbohidratosDiarios = (caloriasDiarias * 0.45) / 4;
-  print('calorias diarios: $caloriasDiarias');
+
+  print('Calorias diarias: $caloriasDiarias');
+  print('Carbohidratos diarios: $carbohidratosDiarios');
+
   return {
     'desayuno': carbohidratosDiarios * 0.20,
     'merienda1': carbohidratosDiarios * 0.10,
@@ -23,19 +26,6 @@ Map<String, double> dividirCarbohidratos(double caloriasDiarias) {
     'merienda2': carbohidratosDiarios * 0.10,
     'carbohidratos': carbohidratosDiarios
   };
-}
-
-Future<List<Map<String, dynamic>>> cargarAlimentos() async {
-  try {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('alimentos').get();
-    List<Map<String, dynamic>> alimentos =
-        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    return alimentos;
-  } catch (e) {
-    print('Error al cargar los alimentos: $e');
-    return [];
-  }
 }
 
 Future<List<Map<String, dynamic>>> seleccionarAlimentos(
@@ -120,11 +110,11 @@ PlanAlimenticioModel repartirAlimentos(
     Map<String, double> carbohidratosPorComida) {
   var desayunoResult = llenarComidaConAlimentos(desayunoAlimentos,
       caloriasPorComida['desayuno']!, carbohidratosPorComida['desayuno']!);
-  var merienda2Result = llenarComidaConAlimentos(merienda1Alimentos,
+  var merienda1Result = llenarComidaConAlimentos(merienda1Alimentos,
       caloriasPorComida['merienda1']!, carbohidratosPorComida['merienda1']!);
   var almuerzoResult = llenarComidaConAlimentos(almuerzoAlimentos,
       caloriasPorComida['almuerzo']!, carbohidratosPorComida['almuerzo']!);
-  var merienda1Result = llenarComidaConAlimentos(merienda2Alimentos,
+  var merienda2Result = llenarComidaConAlimentos(merienda2Alimentos,
       caloriasPorComida['merienda2']!, carbohidratosPorComida['merienda2']!);
   var cenaResult = llenarComidaConAlimentos(cenaAlimentos,
       caloriasPorComida['cena']!, carbohidratosPorComida['cena']!);
@@ -140,11 +130,11 @@ PlanAlimenticioModel repartirAlimentos(
     caloriasAlmuerzo: almuerzoResult[1],
     caloriasMerienda2: merienda2Result[1],
     caloriasCena: cenaResult[1],
-    carbohidratosDesayuno: carbohidratosPorComida['desayuno']!,
-    carbohidratosMerienda1: carbohidratosPorComida['merienda1']!,
+    carbohidratosDesayuno: desayunoResult[2],
+    carbohidratosMerienda1: merienda1Result[2],
     carbohidratosAlmuerzo: almuerzoResult[2],
-    carbohidratosCena: carbohidratosPorComida['cena']!,
-    carbohidratosMerienda2: carbohidratosPorComida['merienda2']!,
+    carbohidratosMerienda2: merienda2Result[2],
+    carbohidratosCena: cenaResult[2],
     carbohidratosDiarios: carbohidratosPorComida['carbohidratos']!,
   );
 }
@@ -155,9 +145,8 @@ Future<PlanAlimenticioModel> crearPlanAlimenticioDiabetesTipo1(
   Map<String, double> caloriasPorComida = dividirCalorias(caloriasDiarias);
   Map<String, double> carbohidratosPorComida =
       dividirCarbohidratos(caloriasDiarias);
-  print(
-      'carbos: ${carbohidratosPorComida['desayuno']}, ${carbohidratosPorComida['merienda1']}, ${carbohidratosPorComida['almuerzo']}, ${carbohidratosPorComida['merienda2']},${carbohidratosPorComida['cena']}');
-  List<Map<String, dynamic>> alimentos = await cargarAlimentos();
+  DatabaseService dbService = DatabaseService();
+  List<Map<String, dynamic>> alimentos = await dbService.cargarAlimentos();
   List<Map<String, dynamic>> desayunoAlimentos = await seleccionarAlimentos(
       caloriasPorComida['desayuno']!,
       carbohidratosPorComida['desayuno']!,
