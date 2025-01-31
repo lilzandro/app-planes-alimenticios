@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:intl/intl.dart';
+import 'package:app_planes/screens/VentanaPlanAlimentacion/plan_dia.dart';
 
 class VentanaPlanAlimentacion extends StatefulWidget {
   const VentanaPlanAlimentacion({super.key});
@@ -209,24 +210,12 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                     children: [
                       InkWell(
                         onTap: () {
-                          // Mostrar el diálogo cuando el cuadro es presionado
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Día seleccionado'),
-                                content:
-                                    Text('Has seleccionado el día: $dayString'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('Cerrar'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DayDetailScreen.planDia(dayString: dayString),
+                            ),
                           );
                         },
                         child: Container(
@@ -234,7 +223,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                           decoration: BoxDecoration(
                             color: const Color(0xFFeaf8e7), // Fondo blanco
                             borderRadius: BorderRadius.circular(
-                              DimensionesDePantalla.pantallaSize * 0.015,
+                              DimensionesDePantalla.pantallaSize * 0.012,
                             ),
                             border: Border.all(
                               color: const Color(0xFF023336),
