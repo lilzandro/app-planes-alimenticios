@@ -213,8 +213,10 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  DayDetailScreen.planDia(dayString: dayString),
+                              builder: (context) => DayDetailScreen.planDia(
+                                dayString: dayString,
+                                daysOfWeek: daysOfWeek[index],
+                              ),
                             ),
                           );
                         },
