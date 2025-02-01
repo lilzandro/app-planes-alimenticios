@@ -106,7 +106,6 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             .set({
           'nombre': registroUsuario.nombre,
           'apellido': registroUsuario.apellido,
-          'telefono': registroUsuario.telefono,
           'fechaNacimiento': registroUsuario.fechaNacimiento?.toIso8601String(),
           'edad': edad,
           'estatura': registroUsuario.estatura,

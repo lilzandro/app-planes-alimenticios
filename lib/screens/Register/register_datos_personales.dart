@@ -13,9 +13,25 @@ class RegistroDatosPersonales extends StatefulWidget {
 
 class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? numeroTelefono;
+
+  String nombre = '';
+  String apellido = '';
+  DateTime? fechaNacimiento;
+  double? estatura;
+  double? peso;
+  String? sexo;
   String? errorEdad;
-  String? codigoArea;
+
+  @override
+  void initState() {
+    super.initState();
+    nombre = registroUsuario.nombre ?? '';
+    apellido = registroUsuario.apellido ?? '';
+    fechaNacimiento = registroUsuario.fechaNacimiento;
+    estatura = registroUsuario.estatura;
+    peso = registroUsuario.peso;
+    sexo = registroUsuario.sexo;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +85,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirCampoTexto(
               labelText: "Nombre",
-              initialValue: registroUsuario.nombre,
+              initialValue: nombre,
               onChanged: (value) => registroUsuario.nombre = value,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -85,7 +101,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Apellido",
-              initialValue: registroUsuario.apellido,
+              initialValue: apellido,
               onChanged: (value) => registroUsuario.apellido = value,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -98,8 +114,6 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
                 return null;
               },
             ),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            _construirCampoTelefono(),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoFechaNacimiento(),
             if (errorEdad != null)
@@ -115,8 +129,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Estatura (cm)",
-              initialValue: registroUsuario.estatura?.toString(),
               keyboardType: TextInputType.number,
+              initialValue: estatura?.toString(),
               onChanged: (value) =>
                   registroUsuario.estatura = double.tryParse(value) ?? 0.0,
               validator: (value) {
@@ -134,8 +148,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Peso (kg)",
-              initialValue: registroUsuario.peso?.toString(),
               keyboardType: TextInputType.number,
+              initialValue: peso?.toString(),
               onChanged: (value) =>
                   registroUsuario.peso = double.tryParse(value) ?? 0.0,
               validator: (value) {
@@ -163,9 +177,9 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   Widget _construirCampoTexto({
     required String labelText,
     required ValueChanged<String> onChanged,
-    String? initialValue,
     String? Function(String?)? validator,
     TextInputType keyboardType = TextInputType.text,
+    String? initialValue,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -257,7 +271,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         ),
-        value: registroUsuario.sexo,
+        value: sexo,
         items: ["Masculino", "Femenino", "Otro"]
             .map((sexo) => DropdownMenuItem(
                   value: sexo,
@@ -272,99 +286,6 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
         validator: (value) =>
             value == null || value.isEmpty ? "Selecciona tu sexo" : null,
       ),
-    );
-  }
-
-  Widget _construirCampoTelefono() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFC1E6BA).withOpacity(0.35),
-              borderRadius: BorderRadius.circular(10.0),
-              border:
-                  Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
-            ),
-            child: DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: "Código",
-                labelStyle:
-                    TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 10.0),
-              ),
-              value: ["0414", "0424", "0416", "0426", "0412"]
-                      .contains(registroUsuario.telefono?.split('-').first)
-                  ? registroUsuario.telefono?.split('-').first
-                  : "0414", // Valor por defecto
-              items: ["0414", "0424", "0416", "0426", "0412"]
-                  .map((codigo) => DropdownMenuItem(
-                        value: codigo,
-                        child: Text(
-                          codigo,
-                          style: TextStyle(color: const Color(0xFF023336)),
-                        ),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  codigoArea = value;
-                  registroUsuario.telefono =
-                      '$codigoArea-${registroUsuario.telefono?.split('-').last ?? ''}';
-                });
-              },
-              validator: (value) => value == null || value.isEmpty
-                  ? "Selecciona un código"
-                  : null,
-            ),
-          ),
-        ),
-        SizedBox(width: 10),
-        Expanded(
-          flex: 4,
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFC1E6BA).withOpacity(0.35),
-              borderRadius: BorderRadius.circular(10.0),
-              border:
-                  Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
-            ),
-            child: TextFormField(
-              initialValue: registroUsuario.telefono?.split('-').last,
-              keyboardType: TextInputType.number,
-              cursorColor: const Color(0xFF023336),
-              style: TextStyle(color: const Color(0xFF123456)),
-              decoration: InputDecoration(
-                labelText: "Teléfono",
-                labelStyle:
-                    TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
-                border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10.0),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  numeroTelefono = value;
-                  registroUsuario.telefono = '$codigoArea-$numeroTelefono';
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Ingresa tu teléfono";
-                } else if (value.length != 7) {
-                  return "Debe tener 7 dígitos";
-                } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                  return "Solo se permiten números";
-                }
-                return null;
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 

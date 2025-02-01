@@ -1,7 +1,6 @@
 class RegistroUsuarioModel {
   String? nombre;
   String? apellido;
-  String? telefono;
   DateTime? fechaNacimiento;
   int? edad;
   double? estatura;
