@@ -13,16 +13,9 @@ class RegistroDatosPersonales extends StatefulWidget {
 
 class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  String nombre = '';
-  String apellido = '';
-  String telefono = '';
-  DateTime? fechaNacimiento;
-  double? estatura;
-  double? peso;
-  String? sexo;
-  String? codigoArea;
   String? numeroTelefono;
+  String? errorEdad;
+  String? codigoArea;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +69,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirCampoTexto(
               labelText: "Nombre",
+              initialValue: registroUsuario.nombre,
               onChanged: (value) => registroUsuario.nombre = value,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -91,6 +85,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Apellido",
+              initialValue: registroUsuario.apellido,
               onChanged: (value) => registroUsuario.apellido = value,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -107,27 +102,53 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             _construirCampoTelefono(),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoFechaNacimiento(),
+            if (errorEdad != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 86.0),
+                child: Text(
+                  errorEdad!,
+                  style: TextStyle(
+                      color: const Color.fromARGB(255, 187, 48, 38),
+                      fontSize: 12.0),
+                ),
+              ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Estatura (cm)",
+              initialValue: registroUsuario.estatura?.toString(),
               keyboardType: TextInputType.number,
               onChanged: (value) =>
                   registroUsuario.estatura = double.tryParse(value) ?? 0.0,
-              validator: (value) =>
-                  value == null || double.tryParse(value) == null
-                      ? "Ingresa una estatura válida"
-                      : null,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Ingresa tu estatura";
+                } else if (double.tryParse(value) == null) {
+                  return "Ingresa una estatura válida";
+                } else if (double.parse(value) < 130 ||
+                    double.parse(value) > 220) {
+                  return "La estatura debe estar entre 1.30 m y 2.20 m";
+                }
+                return null;
+              },
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Peso (kg)",
+              initialValue: registroUsuario.peso?.toString(),
               keyboardType: TextInputType.number,
               onChanged: (value) =>
                   registroUsuario.peso = double.tryParse(value) ?? 0.0,
-              validator: (value) =>
-                  value == null || double.tryParse(value) == null
-                      ? "Ingresa un peso válido"
-                      : null,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Ingresa tu peso";
+                } else if (double.tryParse(value) == null) {
+                  return "Ingresa un peso válido";
+                } else if (double.parse(value) < 40 ||
+                    double.parse(value) > 200) {
+                  return "El peso debe estar entre 40 kg y 200 kg";
+                }
+                return null;
+              },
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoSeleccionSexo(),
@@ -142,6 +163,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
   Widget _construirCampoTexto({
     required String labelText,
     required ValueChanged<String> onChanged,
+    String? initialValue,
     String? Function(String?)? validator,
     TextInputType keyboardType = TextInputType.text,
   }) {
@@ -152,6 +174,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
         border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
+        initialValue: initialValue,
         keyboardType: keyboardType,
         cursorColor: const Color(0xFF023336),
         style: TextStyle(
@@ -205,6 +228,17 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
         },
       ),
     );
+  }
+
+  String _validarEdad(DateTime? fechaNacimiento) {
+    if (fechaNacimiento == null) {
+      return "Selecciona tu fecha de nacimiento";
+    }
+    final edad = DateTime.now().year - fechaNacimiento.year;
+    if (edad < 18 || edad > 80) {
+      return "La edad debe estar entre 18 y 80 años";
+    }
+    return "";
   }
 
   Widget _construirCampoSeleccionSexo() {
@@ -262,7 +296,10 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
                 contentPadding: const EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 10.0),
               ),
-              value: codigoArea,
+              value: ["0414", "0424", "0416", "0426", "0412"]
+                      .contains(registroUsuario.telefono?.split('-').first)
+                  ? registroUsuario.telefono?.split('-').first
+                  : "0414", // Valor por defecto
               items: ["0414", "0424", "0416", "0426", "0412"]
                   .map((codigo) => DropdownMenuItem(
                         value: codigo,
@@ -275,6 +312,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               onChanged: (value) {
                 setState(() {
                   codigoArea = value;
+                  registroUsuario.telefono =
+                      '$codigoArea-${registroUsuario.telefono?.split('-').last ?? ''}';
                 });
               },
               validator: (value) => value == null || value.isEmpty
@@ -294,6 +333,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
                   Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
             ),
             child: TextFormField(
+              initialValue: registroUsuario.telefono?.split('-').last,
               keyboardType: TextInputType.number,
               cursorColor: const Color(0xFF023336),
               style: TextStyle(color: const Color(0xFF123456)),
@@ -316,6 +356,8 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
                   return "Ingresa tu teléfono";
                 } else if (value.length != 7) {
                   return "Debe tener 7 dígitos";
+                } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                  return "Solo se permiten números";
                 }
                 return null;
               },
@@ -337,7 +379,10 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
         textStyle: const TextStyle(fontSize: 18.0),
       ),
       onPressed: () {
-        if (_formKey.currentState!.validate()) {
+        setState(() {
+          errorEdad = _validarEdad(registroUsuario.fechaNacimiento);
+        });
+        if (_formKey.currentState!.validate() && errorEdad!.isEmpty) {
           Navigator.pushNamed(
               context, '/register-2'); // Ir a la siguiente pantalla
         }
