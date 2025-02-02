@@ -27,6 +27,7 @@ Future<void> main() async {
     print('Error al inicializar Firebase: $e');
   }
 
+  // Cargar los alimentos en la base de datos
   runApp(const MyApp());
 }
 

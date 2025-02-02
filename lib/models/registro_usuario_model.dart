@@ -14,12 +14,13 @@ class RegistroUsuarioModel {
   String? presionArterial;
   String? observaciones;
   String? nivelActividad;
-  List<String> alimentosNoGustan = [];
   List<String> alergiasIntolerancias = [];
   String? indiceMasaCorporal;
   String? tasaMetabolicaBasal;
   String? caloriasDiarias;
-  // String? IndiceMasaCorporal;
+  String? cantidadInsulina;
+  String? tipoInsulina;
+  String? relacionInsulinaCarbohidratos;
 }
 
 final registroUsuario = RegistroUsuarioModel(); // Este será el objeto global

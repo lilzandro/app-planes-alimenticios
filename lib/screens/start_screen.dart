@@ -113,11 +113,12 @@ void resetRegistroUsuario() {
   registroUsuario.presionArterial = '';
   registroUsuario.observaciones = '';
   registroUsuario.nivelActividad = '';
-  registroUsuario.alimentosNoGustan = [];
   registroUsuario.alergiasIntolerancias = [];
   registroUsuario.indiceMasaCorporal = '';
   registroUsuario.tasaMetabolicaBasal = '';
   registroUsuario.caloriasDiarias = '';
+  registroUsuario.cantidadInsulina = '';
+  registroUsuario.tipoInsulina = '';
 }
 
 class ArranqueApp extends StatelessWidget {

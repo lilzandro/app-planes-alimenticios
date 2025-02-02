@@ -119,13 +119,16 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           'presionArterial': registroUsuario.presionArterial,
           'observaciones': registroUsuario.observaciones,
           'nivelActividad': registroUsuario.nivelActividad,
-          'alimentosNoGustan': registroUsuario.alimentosNoGustan,
           'alergiasIntolerancias': registroUsuario.alergiasIntolerancias,
           'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
           'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
           'caloriasDiarias': registroUsuario.caloriasDiarias,
           'planAlimenticioId':
               planRef.id, // Guardar la referencia del plan alimenticio
+          'tipoInsulina': registroUsuario.tipoInsulina,
+          'cantidadInsulina': registroUsuario.cantidadInsulina,
+          'relacionInsulinaCarbohidratos':
+              registroUsuario.relacionInsulinaCarbohidratos,
         });
 
         ScaffoldMessenger.of(context).showSnackBar(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
+import 'package:app_planes/utils/validaciones.dart';
+import 'package:app_planes/widgets/widgets_registro_datos_medicos.dart';
 
 class RegistroDatosMedicos extends StatefulWidget {
   const RegistroDatosMedicos({super.key});
@@ -14,6 +16,9 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _nivelActividad;
   late String _patologia;
+  String? _tipoInsulina;
+  double? _relacionInsulinaCarbohidratos;
+  String? _mensajeAdvertenciaPresionArterial;
 
   final List<String> patologias = [
     'Diabetes Tipo 1',
@@ -26,6 +31,22 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
     super.initState();
     _nivelActividad = registroUsuario.nivelActividad ?? 'Sedentario';
     _patologia = ''; // Inicializar con cadena vacía
+    _mensajeAdvertenciaPresionArterial = null;
+  }
+
+  void _calcularRelacionInsulinaCarbohidratos() {
+    if (registroUsuario.cantidadInsulina != null &&
+        registroUsuario.cantidadInsulina!.isNotEmpty) {
+      final cantidadInsulina =
+          double.tryParse(registroUsuario.cantidadInsulina!);
+      if (cantidadInsulina != null && cantidadInsulina > 0) {
+        setState(() {
+          _relacionInsulinaCarbohidratos = 500 / cantidadInsulina;
+          registroUsuario.relacionInsulinaCarbohidratos =
+              _relacionInsulinaCarbohidratos!.toStringAsFixed(2);
+        });
+      }
+    }
   }
 
   @override
@@ -79,183 +100,147 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
               ),
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
-            _construirDropdownPatologia(),
+            construirDropdownPatologia(
+              patologia: _patologia,
+              onChanged: (newValue) {
+                setState(() {
+                  _patologia = newValue!;
+                  registroUsuario.diabetesTipo1 =
+                      _patologia == 'Diabetes Tipo 1';
+                  registroUsuario.diabetesTipo2 =
+                      _patologia == 'Diabetes Tipo 2';
+                  registroUsuario.hipertension = _patologia == 'Hipertensión';
+
+                  // Limpiar campos específicos de cada patología
+                  if (_patologia != 'Diabetes Tipo 1') {
+                    registroUsuario.nivelGlucosa = null;
+                    registroUsuario.usoInsulina = null;
+                    registroUsuario.tipoInsulina = null;
+                    registroUsuario.cantidadInsulina = null;
+                    registroUsuario.relacionInsulinaCarbohidratos = null;
+                  }
+                  if (_patologia != 'Diabetes Tipo 2') {
+                    registroUsuario.nivelGlucosa = null;
+                  }
+                  if (_patologia != 'Hipertensión') {
+                    registroUsuario.presionArterial = null;
+                  }
+                });
+              },
+              patologias: patologias,
+            ),
             if (_patologia == 'Diabetes Tipo 1' ||
                 _patologia == 'Diabetes Tipo 2')
               Column(children: [
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-                _construirCampoTexto(
+                construirCampoTexto(
                   labelText: "Nivel de Glucosa (mg/dL)",
                   keyboardType: TextInputType.number,
                   initialValue: registroUsuario.nivelGlucosa,
                   onChanged: (value) => registroUsuario.nivelGlucosa = value,
-                  validator: (value) => value == null || value.isEmpty
-                      ? "Ingresa el nivel de glucosa"
-                      : null,
+                  validator: validarNivelGlucosa,
                 ),
               ]),
             if (_patologia == 'Diabetes Tipo 1')
               Column(children: [
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-                _construirCampoTexto(
-                  labelText: "Uso de Insulina",
-                  initialValue: registroUsuario.usoInsulina,
-                  onChanged: (value) => registroUsuario.usoInsulina = value,
-                  validator: (value) => value == null || value.isEmpty
-                      ? "Ingresa el uso de insulina"
-                      : null,
+                construirDropdownUsoInsulina(
+                  usoInsulina: registroUsuario.usoInsulina,
+                  onChanged: (newValue) {
+                    setState(() {
+                      registroUsuario.usoInsulina = newValue!;
+                    });
+                  },
                 ),
+                if (registroUsuario.usoInsulina == 'Sí') ...[
+                  SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+                  construirDropdownTipoInsulina(
+                    tipoInsulina: _tipoInsulina,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _tipoInsulina = newValue!;
+                        registroUsuario.tipoInsulina = newValue;
+                      });
+                    },
+                  ),
+                  SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+                  construirCampoTexto(
+                    labelText: "Cantidad de Insulina (unidades/día)",
+                    keyboardType: TextInputType.number,
+                    initialValue: registroUsuario.cantidadInsulina,
+                    onChanged: (value) {
+                      registroUsuario.cantidadInsulina = value;
+                      _calcularRelacionInsulinaCarbohidratos();
+                    },
+                    validator: validarCantidadInsulina,
+                  ),
+                ],
               ]),
             if (_patologia == 'Hipertensión')
               Column(children: [
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-                _construirCampoTexto(
-                  labelText: "Presión Arterial (ej. 120/80)",
+                construirCampoTexto(
+                  labelText: "Presión Arterial",
                   initialValue: registroUsuario.presionArterial,
-                  onChanged: (value) => registroUsuario.presionArterial = value,
-                  validator: (value) => value == null || value.isEmpty
-                      ? "Ingresa la presión arterial"
-                      : null,
+                  onChanged: (value) {
+                    setState(() {
+                      registroUsuario.presionArterial = value;
+                      final presionArterial = double.tryParse(value);
+                      if (presionArterial != null) {
+                        if (presionArterial < 60) {
+                          _mensajeAdvertenciaPresionArterial =
+                              "La presión arterial es muy baja. Hay riesgo de insuficiencia en órganos vitales.";
+                        } else if (presionArterial > 120) {
+                          _mensajeAdvertenciaPresionArterial =
+                              "La presión arterial es muy alta. Considera acudir a un centro médico.";
+                        } else {
+                          _mensajeAdvertenciaPresionArterial = null;
+                        }
+                      }
+                    });
+                  },
+                  validator: validarPresionArterial,
                 ),
+                if (_mensajeAdvertenciaPresionArterial != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      _mensajeAdvertenciaPresionArterial!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
               ]),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            _construirDropdownNivelActividad(),
+            construirDropdownNivelActividad(
+              nivelActividad: _nivelActividad,
+              onChanged: (newValue) {
+                setState(() {
+                  _nivelActividad = newValue!;
+                  registroUsuario.nivelActividad = newValue;
+                });
+              },
+            ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            _construirCampoTexto(
+            construirCampoTexto(
               labelText: "Alergias o Intolerancias",
               initialValue: registroUsuario.alergiasIntolerancias.join(','),
               onChanged: (value) =>
                   registroUsuario.alergiasIntolerancias = value.split(','),
-              validator: (value) => value == null || value.isEmpty
-                  ? "Ingresa tus alergias o intolerancias"
-                  : null,
+              validator: validarAlergiasIntolerancias,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            _construirCampoTexto(
+            construirCampoTexto(
               labelText: "Observaciones Médicas",
               keyboardType: TextInputType.multiline,
               initialValue: registroUsuario.observaciones,
               onChanged: (value) => registroUsuario.observaciones = value,
-              validator: (value) => value == null || value.isEmpty
-                  ? "Ingresa alguna observación médica"
-                  : null,
+              validator: validarObservacionesMedicas,
               maxLines: 3,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirBotonSiguiente(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _construirCampoTexto({
-    required String labelText,
-    required ValueChanged<String> onChanged,
-    String? Function(String?)? validator,
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    String? initialValue,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFFC1E6BA).withOpacity(0.35),
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
-      ),
-      child: TextFormField(
-        initialValue: initialValue,
-        keyboardType: keyboardType,
-        cursorColor: Color(0xFF023336),
-        style: TextStyle(color: const Color(0xFF123456)),
-        maxLines: maxLines,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        ),
-        onChanged: onChanged,
-        validator: validator,
-      ),
-    );
-  }
-
-  Widget _construirDropdownPatologia() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFFC1E6BA).withOpacity(0.35),
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: DropdownButtonFormField<String>(
-        value: _patologia.isNotEmpty ? _patologia : null,
-        decoration: InputDecoration(
-          labelText: "Patología",
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
-          border: InputBorder.none,
-        ),
-        items: patologias.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-        onChanged: (newValue) {
-          setState(() {
-            _patologia = newValue!;
-            registroUsuario.diabetesTipo1 = _patologia == 'Diabetes Tipo 1';
-            registroUsuario.diabetesTipo2 = _patologia == 'Diabetes Tipo 2';
-            registroUsuario.hipertension = _patologia == 'Hipertensión';
-          });
-        },
-        validator: (value) =>
-            value == null || value.isEmpty ? "Selecciona una patología" : null,
-      ),
-    );
-  }
-
-  Widget _construirDropdownNivelActividad() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFFC1E6BA).withOpacity(0.35),
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: DropdownButtonFormField<String>(
-        value: _nivelActividad.isNotEmpty ? _nivelActividad : null,
-        decoration: InputDecoration(
-          labelText: "Nivel de Actividad Física",
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
-          border: InputBorder.none,
-        ),
-        items: [
-          'Sedentario',
-          'Actividad ligera',
-          'Actividad moderada',
-          'Activo',
-          'Muy activo'
-        ].map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-        onChanged: (newValue) {
-          setState(() {
-            _nivelActividad = newValue!;
-            registroUsuario.nivelActividad = newValue;
-          });
-        },
-        validator: (value) => value == null || value.isEmpty
-            ? "Selecciona el nivel de actividad física"
-            : null,
       ),
     );
   }
