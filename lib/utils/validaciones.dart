@@ -38,8 +38,11 @@ String? validarPresionArterial(String? value) {
   if (presionArterial == null) {
     return "Ingresa un número válido";
   }
-  if (presionArterial < 60 || presionArterial > 120) {
-    return "La presión arterial debe estar entre 60 y 120";
+  if (presionArterial < 60) {
+    return "La presión arterial es muy baja. Hay riesgo de insuficiencia en órganos vitales.";
+  }
+  if (presionArterial > 120) {
+    return "La presión arterial es muy alta. Asista a un centro médico.";
   }
   return null;
 }
@@ -57,7 +60,14 @@ String? validarAlergiasIntolerancias(String? value) {
 }
 
 String? validarObservacionesMedicas(String? value) {
-  return validarCampoVacio(value, "Ingresa alguna observación médica");
+  if (value == null || value.isEmpty) {
+    return "Ingresa alguna observación médica";
+  }
+  final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
+  if (!regex.hasMatch(value)) {
+    return "Ingresa solo letras";
+  }
+  return null;
 }
 
 String? validarUsoInsulina(String? value) {

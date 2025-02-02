@@ -26,6 +26,13 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
     'Hipertensión'
   ];
 
+  final List<String> opcionesAlergias = [
+    'Sin lácteo',
+    'Sin huevo',
+    'Sin pesca',
+    'Sin gluten'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -192,7 +199,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                               "La presión arterial es muy baja. Hay riesgo de insuficiencia en órganos vitales.";
                         } else if (presionArterial > 120) {
                           _mensajeAdvertenciaPresionArterial =
-                              "La presión arterial es muy alta. Considera acudir a un centro médico.";
+                              "La presión arterial es muy alta. Asista a un centro médico.";
                         } else {
                           _mensajeAdvertenciaPresionArterial = null;
                         }
@@ -211,6 +218,57 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                   ),
               ]),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            Text(
+              "Alergias o Intolerancias",
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF023336),
+              ),
+            ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            Wrap(
+              spacing: 8.0,
+              children: opcionesAlergias.map((String opcion) {
+                return ChoiceChip(
+                  label: Text(opcion),
+                  selected:
+                      registroUsuario.alergiasIntolerancias.contains(opcion),
+                  onSelected: (bool selected) {
+                    setState(() {
+                      if (selected) {
+                        registroUsuario.alergiasIntolerancias.add(opcion);
+                      } else {
+                        registroUsuario.alergiasIntolerancias.remove(opcion);
+                      }
+                    });
+                  },
+                  selectedColor: Color(0xFF023336),
+                  backgroundColor: Color(0xFFC1E6BA).withOpacity(0.35),
+                  labelStyle: TextStyle(
+                    color:
+                        registroUsuario.alergiasIntolerancias.contains(opcion)
+                            ? Colors.white
+                            : Color(0xFF023336),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color:
+                          registroUsuario.alergiasIntolerancias.contains(opcion)
+                              ? Color(0xFF023336)
+                              : Color(0xFFC1E6BA),
+                      width: 1.0,
+                    ),
+                  ),
+                  iconTheme: IconThemeData(
+                    color: Color(
+                        0xFF023336), // Color del icono cuando no está seleccionado
+                  ),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             construirDropdownNivelActividad(
               nivelActividad: _nivelActividad,
               onChanged: (newValue) {
@@ -219,14 +277,6 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                   registroUsuario.nivelActividad = newValue;
                 });
               },
-            ),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            construirCampoTexto(
-              labelText: "Alergias o Intolerancias",
-              initialValue: registroUsuario.alergiasIntolerancias.join(','),
-              onChanged: (value) =>
-                  registroUsuario.alergiasIntolerancias = value.split(','),
-              validator: validarAlergiasIntolerancias,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             construirCampoTexto(
