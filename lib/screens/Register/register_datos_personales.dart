@@ -1,5 +1,6 @@
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:app_planes/utils/validaciones.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
 
@@ -87,32 +88,14 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               labelText: "Nombre",
               initialValue: nombre,
               onChanged: (value) => registroUsuario.nombre = value,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Ingresa tu nombre";
-                } else if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                  return "Solo se permiten letras";
-                } else if (value.length > 50) {
-                  return "Máximo 50 caracteres";
-                }
-                return null;
-              },
+              validator: validarNombre,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
               labelText: "Apellido",
               initialValue: apellido,
               onChanged: (value) => registroUsuario.apellido = value,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Ingresa tu apellido";
-                } else if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                  return "Solo se permiten letras";
-                } else if (value.length > 50) {
-                  return "Máximo 50 caracteres";
-                }
-                return null;
-              },
+              validator: validarApellido,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoFechaNacimiento(),
@@ -133,17 +116,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               initialValue: estatura?.toString(),
               onChanged: (value) =>
                   registroUsuario.estatura = double.tryParse(value) ?? 0.0,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Ingresa tu estatura";
-                } else if (double.tryParse(value) == null) {
-                  return "Ingresa una estatura válida";
-                } else if (double.parse(value) < 130 ||
-                    double.parse(value) > 220) {
-                  return "La estatura debe estar entre 1.30 m y 2.20 m";
-                }
-                return null;
-              },
+              validator: validarEstatura,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoTexto(
@@ -152,17 +125,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               initialValue: peso?.toString(),
               onChanged: (value) =>
                   registroUsuario.peso = double.tryParse(value) ?? 0.0,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Ingresa tu peso";
-                } else if (double.tryParse(value) == null) {
-                  return "Ingresa un peso válido";
-                } else if (double.parse(value) < 40 ||
-                    double.parse(value) > 200) {
-                  return "El peso debe estar entre 40 kg y 200 kg";
-                }
-                return null;
-              },
+              validator: validarPeso,
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
             _construirCampoSeleccionSexo(),
@@ -244,17 +207,6 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
     );
   }
 
-  String _validarEdad(DateTime? fechaNacimiento) {
-    if (fechaNacimiento == null) {
-      return "Selecciona tu fecha de nacimiento";
-    }
-    final edad = DateTime.now().year - fechaNacimiento.year;
-    if (edad < 18 || edad > 80) {
-      return "La edad debe estar entre 18 y 80 años";
-    }
-    return "";
-  }
-
   Widget _construirCampoSeleccionSexo() {
     return Container(
       decoration: BoxDecoration(
@@ -283,8 +235,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             registroUsuario.sexo = value;
           });
         },
-        validator: (value) =>
-            value == null || value.isEmpty ? "Selecciona tu sexo" : null,
+        validator: validarSexo,
       ),
     );
   }
@@ -301,7 +252,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
       ),
       onPressed: () {
         setState(() {
-          errorEdad = _validarEdad(registroUsuario.fechaNacimiento);
+          errorEdad = validarEdad(registroUsuario.fechaNacimiento);
         });
         if (_formKey.currentState!.validate() && errorEdad!.isEmpty) {
           Navigator.pushNamed(

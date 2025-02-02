@@ -8,6 +8,7 @@ import 'package:app_planes/utils/calculo_imc.dart'; // Importa la función de c�
 import 'package:app_planes/utils/calculo_tmb.dart';
 import 'package:app_planes/utils/plan_alimenticio_patologias.dart';
 import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:app_planes/utils/validaciones.dart'; // Importa las validaciones
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -180,42 +181,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
                 _construirCampoTexto(
                   labelText: "Correo Electrónico",
-                  initialValue: correo,
                   onChanged: (value) => setState(() => correo = value),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Ingresa tu correo";
-                    }
-                    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-                    if (!emailRegex.hasMatch(value)) {
-                      return "Ingresa un correo válido";
-                    }
-                    return null;
-                  },
+                  validator: validarCorreo,
                 ),
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
                 _construirCampoTexto(
                   labelText: "Contraseña",
                   isPassword: true,
                   onChanged: (value) => setState(() => contrasena = value),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Ingresa tu contraseña";
-                    }
-                    if (value.length < 6) {
-                      return "Debe tener al menos 6 caracteres";
-                    }
-                    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                      return "Debe incluir al menos una letra mayúscula";
-                    }
-                    if (!RegExp(r'[0-9]').hasMatch(value)) {
-                      return "Debe incluir al menos un número";
-                    }
-                    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
-                      return "Debe incluir al menos un carácter especial";
-                    }
-                    return null;
-                  },
+                  validator: validarContrasena,
                 ),
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
                 _construirCampoTexto(
@@ -223,15 +197,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   isPassword: true,
                   onChanged: (value) =>
                       setState(() => repetirContrasena = value),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Repite la contraseña";
-                    }
-                    if (value != contrasena) {
-                      return "Las contraseñas no coinciden";
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      validarRepetirContrasena(value, contrasena),
                 ),
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
                 _construirBotonRegistrar(),
