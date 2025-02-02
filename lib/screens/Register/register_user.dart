@@ -1,14 +1,9 @@
-import 'package:app_planes/utils/calcular_calorias_diarias.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
-import 'package:app_planes/utils/calculo_imc.dart'; // Importa la función de cálculo de IMC
-import 'package:app_planes/utils/calculo_tmb.dart';
-import 'package:app_planes/utils/plan_alimenticio_patologias.dart';
-import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/utils/validaciones.dart'; // Importa las validaciones
+import 'package:app_planes/services/auth_service.dart'; // Importa el servicio de autenticación
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -19,6 +14,7 @@ class RegistroUsuario extends StatefulWidget {
 
 class _RegistroUsuarioState extends State<RegistroUsuario> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
 
   late String correo;
   late String contrasena;
@@ -38,99 +34,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
 
       try {
         UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: correo,
-          password: contrasena,
-        );
-
-        // Calcular el IMC
-        double imc = calcularIMC(
-          registroUsuario.peso ?? 0.0,
-          (registroUsuario.estatura ?? 0.0) / 100, // Convertir cm a m
-        );
-        registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
-
-        // Calcular la TMB
-        int edad = calcularEdad(registroUsuario.fechaNacimiento!);
-        double tmb = calcularTMB(
-          registroUsuario.sexo ?? 'Hombre',
-          registroUsuario.peso ?? 0.0,
-          registroUsuario.estatura ?? 0.0,
-          edad,
-        );
-        registroUsuario.tasaMetabolicaBasal = tmb.toStringAsFixed(2);
-
-        // Calcular las calorías diarias
-        double caloriasDiarias = calcularCaloriasDiarias(
-          tmb,
-          registroUsuario.nivelActividad ?? 'Sedentario',
-        );
-        registroUsuario.caloriasDiarias = caloriasDiarias.toStringAsFixed(2);
-
-        // Crear el plan alimenticio dependiendo de la patología
-        PlanAlimenticioModel plan;
-        if (registroUsuario.diabetesTipo1) {
-          plan = await crearPlanAlimenticioDiabetesTipo1(registroUsuario);
-        } else {
-          // Aquí puedes agregar más condiciones para otras patologías
-          plan = await crearPlanAlimenticioDiabetesTipo1(
-              registroUsuario); // Por ahora, usa la misma función
-        }
-
-        // Guardar el plan alimenticio en Firestore
-        DocumentReference planRef = await FirebaseFirestore.instance
-            .collection('planesAlimenticios')
-            .add({
-          'desayuno': plan.desayuno,
-          'merienda1': plan.merienda1,
-          'almuerzo': plan.almuerzo,
-          'cena': plan.cena,
-          'merienda2': plan.merienda2,
-          'caloriasDesayuno': plan.caloriasDesayuno,
-          'caloriasMerienda1': plan.caloriasMerienda1,
-          'caloriasAlmuerzo': plan.caloriasAlmuerzo,
-          'caloriasMerienda2': plan.caloriasMerienda2,
-          'caloriasCena': plan.caloriasCena,
-          'usuarioId': userCredential.user!.uid,
-          'carbohidratosDesayuno': plan.carbohidratosDesayuno,
-          'carbohidratosMerienda1': plan.carbohidratosMerienda1,
-          'carbohidratosAlmuerzo': plan.carbohidratosAlmuerzo,
-          'carbohidratosMerienda2': plan.carbohidratosMerienda2,
-          'carbohidratosCena': plan.carbohidratosCena,
-          'carbohidratosDiarios': plan.carbohidratosDiarios,
-        });
-
-        // Guardar los datos del usuario en Firestore
-        await FirebaseFirestore.instance
-            .collection('usuarios')
-            .doc(userCredential.user!.uid)
-            .set({
-          'nombre': registroUsuario.nombre,
-          'apellido': registroUsuario.apellido,
-          'fechaNacimiento': registroUsuario.fechaNacimiento?.toIso8601String(),
-          'edad': edad,
-          'estatura': registroUsuario.estatura,
-          'peso': registroUsuario.peso,
-          'sexo': registroUsuario.sexo,
-          'diabetesTipo1': registroUsuario.diabetesTipo1,
-          'diabetesTipo2': registroUsuario.diabetesTipo2,
-          'hipertension': registroUsuario.hipertension,
-          'nivelGlucosa': registroUsuario.nivelGlucosa,
-          'usoInsulina': registroUsuario.usoInsulina,
-          'presionArterial': registroUsuario.presionArterial,
-          'observaciones': registroUsuario.observaciones,
-          'nivelActividad': registroUsuario.nivelActividad,
-          'alergiasIntolerancias': registroUsuario.alergiasIntolerancias,
-          'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
-          'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
-          'caloriasDiarias': registroUsuario.caloriasDiarias,
-          'planAlimenticioId':
-              planRef.id, // Guardar la referencia del plan alimenticio
-          'tipoInsulina': registroUsuario.tipoInsulina,
-          'cantidadInsulina': registroUsuario.cantidadInsulina,
-          'relacionInsulinaCarbohidratos':
-              registroUsuario.relacionInsulinaCarbohidratos,
-        });
+            await _authService.registrarUsuario(correo, contrasena);
+        await _authService.guardarDatosUsuario(userCredential, registroUsuario);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Usuario registrado exitosamente")),
@@ -263,14 +168,4 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       child: const Text('Registrar'),
     );
   }
-}
-
-int calcularEdad(DateTime fechaNacimiento) {
-  DateTime hoy = DateTime.now();
-  int edad = hoy.year - fechaNacimiento.year;
-  if (hoy.month < fechaNacimiento.month ||
-      (hoy.month == fechaNacimiento.month && hoy.day < fechaNacimiento.day)) {
-    edad--;
-  }
-  return edad;
 }
