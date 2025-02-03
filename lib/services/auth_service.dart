@@ -19,6 +19,15 @@ class AuthService {
     );
   }
 
+  Future<void> enviarCorreoVerificacion(User user) async {
+    await user.sendEmailVerification();
+  }
+
+  Future<bool> verificarCorreo(User user) async {
+    await user.reload();
+    return user.emailVerified;
+  }
+
   Future<void> guardarDatosUsuario(UserCredential userCredential,
       RegistroUsuarioModel registroUsuario) async {
     // Calcular el IMC
@@ -115,5 +124,11 @@ class AuthService {
       edad--;
     }
     return edad;
+  }
+
+  Future<bool> verificarUsuarioExistente(String correo) async {
+    final List<String> signInMethods =
+        await _auth.fetchSignInMethodsForEmail(correo);
+    return signInMethods.isNotEmpty;
   }
 }

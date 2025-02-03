@@ -23,7 +23,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   @override
   void initState() {
     super.initState();
-    correo = registroUsuario.nombre ?? '';
+    correo = '';
     contrasena = '';
     repetirContrasena = '';
   }
@@ -35,14 +35,34 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       try {
         UserCredential userCredential =
             await _authService.registrarUsuario(correo, contrasena);
+
+        // Enviar correo de verificación
+        await _authService.enviarCorreoVerificacion(userCredential.user!);
+
+        // Guardar los datos del usuario
         await _authService.guardarDatosUsuario(userCredential, registroUsuario);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Usuario registrado exitosamente")),
+        // Mostrar alerta de verificación de correo
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Registro Exitoso"),
+              content: Text(
+                  "Usuario registrado exitosamente. Por favor verifica tu correo electrónico."),
+              actions: [
+                TextButton(
+                  child: Text("Continuar"),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el diálogo
+                    Navigator.pushReplacementNamed(
+                        context, '/login'); // Ir al login
+                  },
+                ),
+              ],
+            );
+          },
         );
-
-        // Navegar a la pantalla de inicio
-        Navigator.pushReplacementNamed(context, '/home');
       } on FirebaseAuthException catch (e) {
         // Manejo de errores de Firebase
         ScaffoldMessenger.of(context).showSnackBar(
