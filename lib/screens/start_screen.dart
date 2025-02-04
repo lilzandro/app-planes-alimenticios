@@ -181,7 +181,7 @@ class ArranqueApp extends StatelessWidget {
                   ),
                   onPressed: () {
                     resetRegistroUsuario();
-                    Navigator.pushReplacementNamed(context, '/register');
+                    Navigator.pushReplacementNamed(context, '/register-1');
                   },
                   child: Text(
                     "Empecemos",

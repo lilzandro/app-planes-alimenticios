@@ -52,7 +52,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             return AlertDialog(
               title: Text("Registro Exitoso"),
               content: Text(
-                  "Usuario registrado exitosamente. Por favor verifica tu correo electrónico."),
+                  "Se ha enviado un correo de verificación a tu dirección de correo electrónico. Para continuar, por favor verifica tu correo. Una vez verificado, podrás iniciar sesión y revisar tu plan de alimentación."),
               actions: [
                 TextButton(
                   child: Text("Continuar"),
@@ -68,9 +68,26 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {
-          // Usa el código de la excepción
           case 'email-already-in-use':
             errorMessage = "El correo ya está registrado.";
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Correo en uso"),
+                  content: Text(
+                      "El correo ya está registrado. Por favor, use otro correo."),
+                  actions: [
+                    TextButton(
+                      child: Text("Aceptar"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
             break;
           case 'weak-password':
             errorMessage = "La contraseña es muy débil.";
@@ -82,23 +99,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             errorMessage = "Error: ${e.message}";
         }
 
-        // Mostrar error al usuario
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } on PlatformException catch (e) {
-        // <-- Captura también PlatformException por si acaso
-        if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        // Mostrar error al usuario si no es 'email-already-in-use'
+        if (e.code != 'email-already-in-use') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text("El correo ya está registrado (Plataforma)")),
+              content: Text(errorMessage),
+              backgroundColor: Colors.red,
+            ),
           );
         }
-      } catch (e) {
-        // Manejo de otros errores
       }
     }
   }

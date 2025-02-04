@@ -1,7 +1,6 @@
 import 'package:app_planes/screens/Register/register_datos_medicos.dart';
 import 'package:app_planes/screens/Register/register_user.dart';
 import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
-import 'package:app_planes/screens/registro_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
@@ -39,10 +38,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const AuthenticationWrapper(),
       routes: {
-        '/register': (context) => RegistroScreen(),
-        // '/register-1': (context) => const RegistroDatosPersonales(),
-        // '/register-2': (context) => const RegistroDatosMedicos(),
-        // '/register-3': (context) => const RegistroUsuario(),
+        // '/register': (context) => RegistroScreen(),
+        '/register-1': (context) => const RegistroDatosPersonales(),
+        '/register-2': (context) => const RegistroDatosMedicos(),
+        '/register-3': (context) => const RegistroUsuario(),
         '/login': (context) => const VentanaInicioSeccion(),
         '/profile': (context) => const VentanaPerfil(),
         '/home': (context) => const Inicio(),
