@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/validaciones.dart'; // Importa las validaciones
 import 'package:app_planes/services/auth_service.dart'; // Importa el servicio de autenticación
+import 'package:flutter/services.dart'; // Importa para PlatformException
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -33,6 +34,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       _formKey.currentState!.save();
 
       try {
+        print('Registrando usuario...:' + correo + ' ' + contrasena);
+        // Mover la creación de usuario DENTRO del try
         UserCredential userCredential =
             await _authService.registrarUsuario(correo, contrasena);
 
@@ -42,7 +45,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
         // Guardar los datos del usuario
         await _authService.guardarDatosUsuario(userCredential, registroUsuario);
 
-        // Mostrar alerta de verificación de correo
+        // Mostrar alerta de éxito
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -54,9 +57,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 TextButton(
                   child: Text("Continuar"),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Cerrar el diálogo
-                    Navigator.pushReplacementNamed(
-                        context, '/login'); // Ir al login
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                 ),
               ],
@@ -64,10 +66,39 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           },
         );
       } on FirebaseAuthException catch (e) {
-        // Manejo de errores de Firebase
+        String errorMessage;
+        switch (e.code) {
+          // Usa el código de la excepción
+          case 'email-already-in-use':
+            errorMessage = "El correo ya está registrado.";
+            break;
+          case 'weak-password':
+            errorMessage = "La contraseña es muy débil.";
+            break;
+          case 'invalid-email':
+            errorMessage = "Correo inválido.";
+            break;
+          default:
+            errorMessage = "Error: ${e.message}";
+        }
+
+        // Mostrar error al usuario
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error al registrar usuario: ${e.message}")),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
         );
+      } on PlatformException catch (e) {
+        // <-- Captura también PlatformException por si acaso
+        if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text("El correo ya está registrado (Plataforma)")),
+          );
+        }
+      } catch (e) {
+        // Manejo de otros errores
       }
     }
   }

@@ -1,6 +1,7 @@
 import 'package:app_planes/screens/Register/register_datos_medicos.dart';
 import 'package:app_planes/screens/Register/register_user.dart';
 import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
+import 'package:app_planes/screens/registro_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
@@ -18,16 +19,10 @@ import 'screens/start_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    // Manejo de errores en la inicialización de Firebase
-    print('Error al inicializar Firebase: $e');
-  }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  // Cargar los alimentos en la base de datos
   runApp(const MyApp());
 }
 
@@ -42,11 +37,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: AuthenticationWrapper(),
+      home: const AuthenticationWrapper(),
       routes: {
-        '/register-1': (context) => const RegistroDatosPersonales(),
-        '/register-2': (context) => const RegistroDatosMedicos(),
-        '/register-3': (context) => const RegistroUsuario(),
+        '/register': (context) => RegistroScreen(),
+        // '/register-1': (context) => const RegistroDatosPersonales(),
+        // '/register-2': (context) => const RegistroDatosMedicos(),
+        // '/register-3': (context) => const RegistroUsuario(),
         '/login': (context) => const VentanaInicioSeccion(),
         '/profile': (context) => const VentanaPerfil(),
         '/home': (context) => const Inicio(),

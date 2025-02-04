@@ -59,7 +59,8 @@ class ArranqueApp2 extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/register-1');
+                    resetRegistroUsuario();
+                    Navigator.pushReplacementNamed(context, '/register');
                   },
                   child: Text(
                     "Empecemos",
@@ -75,6 +76,7 @@ class ArranqueApp2 extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
+                        resetRegistroUsuario();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -179,7 +181,7 @@ class ArranqueApp extends StatelessWidget {
                   ),
                   onPressed: () {
                     resetRegistroUsuario();
-                    Navigator.pushReplacementNamed(context, '/register-1');
+                    Navigator.pushReplacementNamed(context, '/register');
                   },
                   child: Text(
                     "Empecemos",

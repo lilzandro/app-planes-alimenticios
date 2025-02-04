@@ -6,6 +6,7 @@ import 'package:app_planes/utils/calculo_imc.dart';
 import 'package:app_planes/utils/calculo_tmb.dart';
 import 'package:app_planes/utils/calcular_calorias_diarias.dart';
 import 'package:app_planes/utils/plan_alimenticio_patologias.dart';
+import 'package:flutter/services.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,10 +14,25 @@ class AuthService {
 
   Future<UserCredential> registrarUsuario(
       String correo, String contrasena) async {
-    return await _auth.createUserWithEmailAndPassword(
-      email: correo,
-      password: contrasena,
-    );
+    try {
+      return await _auth.createUserWithEmailAndPassword(
+        email: correo,
+        password: contrasena,
+      );
+    } on PlatformException catch (e) {
+      // <-- Captura PlatformException
+      if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        // Código exacto del error
+        throw FirebaseAuthException(
+          code: 'email-already-in-use', // Lo convertimos al código estándar
+          message: 'El correo ya está registrado.',
+        );
+      } else {
+        rethrow;
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> enviarCorreoVerificacion(User user) async {

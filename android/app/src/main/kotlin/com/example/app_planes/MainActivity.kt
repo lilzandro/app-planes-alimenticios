@@ -1,4 +1,4 @@
-package com.planes.app
+package com.example.app_planes
 
 import io.flutter.embedding.android.FlutterActivity
 
