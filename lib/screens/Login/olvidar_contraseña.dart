@@ -1,3 +1,4 @@
+import 'package:app_planes/services/auth_service.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class RecuperarContrasena extends StatefulWidget {
 class _RecuperarContrasenaState extends State<RecuperarContrasena> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
 
   String email = '';
   String feedbackMessage = '';
@@ -85,6 +87,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
               _construirCampoEmail(),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
               if (feedbackMessage.isNotEmpty) _construirMensajeFeedback(),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
               _construirBotonEnviar(),
             ],
           ),
@@ -162,16 +165,22 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
     });
 
     try {
+      bool usuarioExistente =
+          await _authService.verificarUsuarioExistente(email);
+      if (!usuarioExistente) {
+        setState(() {
+          feedbackMessage =
+              'Error no se encontró una cuenta con este correo electrónico.';
+        });
+        return;
+      }
       await _auth.sendPasswordResetEmail(email: email);
       setState(() {
         feedbackMessage =
             'Correo de recuperación enviado. Revisa tu bandeja de entrada.';
       });
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        feedbackMessage =
-            'Error al enviar el correo. ${e.message ?? "Inténtalo de nuevo"}';
-      });
+      print(e);
     } finally {
       setState(() {
         isLoading = false;
