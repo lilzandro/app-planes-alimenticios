@@ -22,6 +22,7 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
   String errorMessage = '';
   bool _obscurePassword = true;
   bool showVerificationButton = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -203,6 +204,9 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
       ),
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
+          setState(() {
+            isLoading = true;
+          });
           try {
             // Verificar si el correo electrónico existe
             bool usuarioExistente =
@@ -244,10 +248,20 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
             setState(() {
               errorMessage = 'Error al iniciar sesión';
             });
+          } finally {
+            setState(() {
+              isLoading = false;
+            });
           }
         }
       },
-      child: Text('Iniciar Sesión'),
+      child: isLoading
+          ? const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Color(0xFFEAF8E7),
+              ),
+            )
+          : const Text('Iniciar Sesión'),
     );
   }
 
