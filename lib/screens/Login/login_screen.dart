@@ -1,6 +1,7 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
-import 'package:app_planes/utils/olvidar_contrase%C3%B1a.dart';
+import 'package:app_planes/screens/Login/olvidar_contrase%C3%B1a.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
+import 'package:app_planes/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class VentanaInicioSeccion extends StatefulWidget {
 }
 
 class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthService _authService = AuthService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -204,9 +205,9 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
         if (_formKey.currentState!.validate()) {
           try {
             // Verificar si el correo electrónico existe
-            List<String> signInMethods =
-                await _auth.fetchSignInMethodsForEmail(email);
-            if (signInMethods.isEmpty) {
+            bool usuarioExistente =
+                await _authService.verificarUsuarioExistente(email);
+            if (!usuarioExistente) {
               setState(() {
                 errorMessage =
                     'No se encontró una cuenta con este correo electrónico.';
@@ -216,10 +217,7 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
 
             // Intentar iniciar sesión
             UserCredential userCredential =
-                await _auth.signInWithEmailAndPassword(
-              email: email,
-              password: password,
-            );
+                await _authService.iniciarSesion(email, password);
 
             if (!userCredential.user!.emailVerified) {
               setState(() {
@@ -264,20 +262,12 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
       ),
       onPressed: () async {
         try {
-          User? user = _auth.currentUser;
-          if (user != null && !user.emailVerified) {
-            await user.sendEmailVerification();
-            setState(() {
-              errorMessage =
-                  'Correo de verificación enviado. Por favor, revisa tu bandeja de entrada.';
-              showVerificationButton = false;
-            });
-          } else {
-            setState(() {
-              errorMessage =
-                  'No se pudo enviar el correo de verificación. El usuario no está autenticado o ya está verificado.';
-            });
-          }
+          await _authService.enviarCorreoVerificacionActual();
+          setState(() {
+            errorMessage =
+                'Correo de verificación enviado. Por favor, revisa tu bandeja de entrada.';
+            showVerificationButton = false;
+          });
         } catch (e) {
           print('Error: $e'); // Depuración
           setState(() {

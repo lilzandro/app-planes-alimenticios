@@ -20,11 +20,9 @@ class AuthService {
         password: contrasena,
       );
     } on PlatformException catch (e) {
-      // <-- Captura PlatformException
       if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        // Código exacto del error
         throw FirebaseAuthException(
-          code: 'email-already-in-use', // Lo convertimos al código estándar
+          code: 'email-already-in-use',
           message: 'El correo ya está registrado.',
         );
       } else {
@@ -75,9 +73,7 @@ class AuthService {
     if (registroUsuario.diabetesTipo1) {
       plan = await crearPlanAlimenticioDiabetesTipo1(registroUsuario);
     } else {
-      // Aquí puedes agregar más condiciones para otras patologías
-      plan = await crearPlanAlimenticioDiabetesTipo1(
-          registroUsuario); // Por ahora, usa la misma función
+      plan = await crearPlanAlimenticioDiabetesTipo1(registroUsuario);
     }
 
     // Guardar el plan alimenticio en Firestore
@@ -123,8 +119,7 @@ class AuthService {
       'indiceMasaCorporal': registroUsuario.indiceMasaCorporal,
       'tasaMetabolicaBasal': registroUsuario.tasaMetabolicaBasal,
       'caloriasDiarias': registroUsuario.caloriasDiarias,
-      'planAlimenticioId':
-          planRef.id, // Guardar la referencia del plan alimenticio
+      'planAlimenticioId': planRef.id,
       'tipoInsulina': registroUsuario.tipoInsulina,
       'cantidadInsulina': registroUsuario.cantidadInsulina,
       'relacionInsulinaCarbohidratos':
@@ -146,5 +141,17 @@ class AuthService {
     final List<String> signInMethods =
         await _auth.fetchSignInMethodsForEmail(correo);
     return signInMethods.isNotEmpty;
+  }
+
+  Future<UserCredential> iniciarSesion(String email, String password) async {
+    return await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  Future<void> enviarCorreoVerificacionActual() async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
   }
 }
