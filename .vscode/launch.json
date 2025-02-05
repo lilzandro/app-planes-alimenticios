@@ -7,7 +7,8 @@
         {
             "name": "app_planes",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "flutterMode": "debug"
         },
         {
             "name": "app_planes (profile mode)",

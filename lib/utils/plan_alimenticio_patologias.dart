@@ -4,11 +4,10 @@ import 'package:app_planes/services/database_service.dart';
 
 Map<String, double> dividirCalorias(double caloriasDiarias) {
   return {
-    'desayuno': caloriasDiarias * 0.20,
-    'merienda1': caloriasDiarias * 0.10,
+    'desayuno': caloriasDiarias * 0.25,
     'almuerzo': caloriasDiarias * 0.35,
-    'merienda2': caloriasDiarias * 0.10,
-    'cena': caloriasDiarias * 0.25,
+    'cena': caloriasDiarias * 0.30,
+    'merienda1': caloriasDiarias * 0.10,
   };
 }
 
@@ -19,11 +18,10 @@ Map<String, double> dividirCarbohidratos(double caloriasDiarias) {
   print('Carbohidratos diarios: $carbohidratosDiarios');
 
   return {
-    'desayuno': carbohidratosDiarios * 0.20,
-    'merienda1': carbohidratosDiarios * 0.10,
+    'desayuno': carbohidratosDiarios * 0.25,
     'almuerzo': carbohidratosDiarios * 0.35,
-    'cena': carbohidratosDiarios * 0.25,
-    'merienda2': carbohidratosDiarios * 0.10,
+    'cena': carbohidratosDiarios * 0.30,
+    'merienda1': carbohidratosDiarios * 0.10,
     'carbohidratos': carbohidratosDiarios
   };
 }
@@ -105,36 +103,30 @@ PlanAlimenticioModel repartirAlimentos(
     List<Map<String, dynamic>> merienda1Alimentos,
     List<Map<String, dynamic>> almuerzoAlimentos,
     List<Map<String, dynamic>> cenaAlimentos,
-    List<Map<String, dynamic>> merienda2Alimentos,
     Map<String, double> caloriasPorComida,
     Map<String, double> carbohidratosPorComida) {
   var desayunoResult = llenarComidaConAlimentos(desayunoAlimentos,
       caloriasPorComida['desayuno']!, carbohidratosPorComida['desayuno']!);
-  var merienda1Result = llenarComidaConAlimentos(merienda1Alimentos,
-      caloriasPorComida['merienda1']!, carbohidratosPorComida['merienda1']!);
   var almuerzoResult = llenarComidaConAlimentos(almuerzoAlimentos,
       caloriasPorComida['almuerzo']!, carbohidratosPorComida['almuerzo']!);
-  var merienda2Result = llenarComidaConAlimentos(merienda2Alimentos,
-      caloriasPorComida['merienda2']!, carbohidratosPorComida['merienda2']!);
   var cenaResult = llenarComidaConAlimentos(cenaAlimentos,
       caloriasPorComida['cena']!, carbohidratosPorComida['cena']!);
+  var merienda1Result = llenarComidaConAlimentos(merienda1Alimentos,
+      caloriasPorComida['merienda1']!, carbohidratosPorComida['merienda1']!);
 
   return PlanAlimenticioModel(
     desayuno: desayunoResult[0],
     merienda1: merienda1Result[0],
     almuerzo: almuerzoResult[0],
-    merienda2: merienda2Result[0],
     cena: cenaResult[0],
     caloriasDesayuno: desayunoResult[1],
     caloriasMerienda1: merienda1Result[1],
     caloriasAlmuerzo: almuerzoResult[1],
-    caloriasMerienda2: merienda2Result[1],
     caloriasCena: cenaResult[1],
     carbohidratosDesayuno: desayunoResult[2],
-    carbohidratosMerienda1: merienda1Result[2],
     carbohidratosAlmuerzo: almuerzoResult[2],
-    carbohidratosMerienda2: merienda2Result[2],
     carbohidratosCena: cenaResult[2],
+    carbohidratosMerienda1: merienda1Result[2],
     carbohidratosDiarios: carbohidratosPorComida['carbohidratos']!,
   );
 }
@@ -153,38 +145,25 @@ Future<PlanAlimenticioModel> crearPlanAlimenticioDiabetesTipo1(
       alimentos,
       usuario,
       'desayuno');
-  List<Map<String, dynamic>> merienda1Alimentos = await seleccionarAlimentos(
-      caloriasPorComida['merienda1']!,
-      carbohidratosPorComida['merienda1']!,
-      alimentos,
-      usuario,
-      'merienda');
   List<Map<String, dynamic>> almuerzoAlimentos = await seleccionarAlimentos(
       caloriasPorComida['almuerzo']!,
       carbohidratosPorComida['almuerzo']!,
       alimentos,
       usuario,
       'almuerzo');
-  List<Map<String, dynamic>> merienda2Alimentos = await seleccionarAlimentos(
-      caloriasPorComida['merienda2']!,
-      carbohidratosPorComida['merienda2']!,
-      alimentos,
-      usuario,
-      'merienda');
   List<Map<String, dynamic>> cenaAlimentos = await seleccionarAlimentos(
       caloriasPorComida['cena']!,
       carbohidratosPorComida['cena']!,
       alimentos,
       usuario,
       'cena');
+  List<Map<String, dynamic>> merienda1Alimentos = await seleccionarAlimentos(
+      caloriasPorComida['merienda1']!,
+      carbohidratosPorComida['merienda1']!,
+      alimentos,
+      usuario,
+      'merienda');
 
-  return repartirAlimentos(
-    desayunoAlimentos,
-    merienda1Alimentos,
-    almuerzoAlimentos,
-    cenaAlimentos,
-    merienda2Alimentos,
-    caloriasPorComida,
-    carbohidratosPorComida,
-  );
+  return repartirAlimentos(desayunoAlimentos, almuerzoAlimentos, cenaAlimentos,
+      merienda1Alimentos, caloriasPorComida, carbohidratosPorComida);
 }
