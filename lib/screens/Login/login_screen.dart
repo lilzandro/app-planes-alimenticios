@@ -1,6 +1,7 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/utils/olvidar_contrase%C3%B1a.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class VentanaInicioSeccion extends StatefulWidget {
@@ -12,13 +13,14 @@ class VentanaInicioSeccion extends StatefulWidget {
 }
 
 class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String email = '';
   String password = '';
   String errorMessage = '';
   bool _obscurePassword = true;
+  bool showVerificationButton = false;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +94,9 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
               _construirCampoContrasena(),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
               if (errorMessage.isNotEmpty) _construirMensajeError(),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
+              if (showVerificationButton) _construirBotonVerificarCorreo(),
+
               // Espacio adicional
             ],
           ),
@@ -182,9 +187,6 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
     if (value == null || value.isEmpty) {
       return 'Por favor ingresa tu contraseña';
     }
-    if (value.length < 6) {
-      return 'La contraseña debe tener al menos 6 caracteres';
-    }
     return null;
   }
 
@@ -200,17 +202,97 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
       ),
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          Navigator.pushNamed(context, '/home'); // Ir a la siguiente pantalla
+          try {
+            // Verificar si el correo electrónico existe
+            List<String> signInMethods =
+                await _auth.fetchSignInMethodsForEmail(email);
+            if (signInMethods.isEmpty) {
+              setState(() {
+                errorMessage =
+                    'No se encontró una cuenta con este correo electrónico.';
+              });
+              return;
+            }
+
+            // Intentar iniciar sesión
+            UserCredential userCredential =
+                await _auth.signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
+
+            if (!userCredential.user!.emailVerified) {
+              setState(() {
+                errorMessage =
+                    'Tu correo electrónico no ha sido verificado. Por favor, verifica tu correo para inciar sesión.';
+                showVerificationButton = true;
+              });
+            } else {
+              Navigator.pushNamed(
+                  context, '/home'); // Ir a la siguiente pantalla
+            }
+          } on FirebaseAuthException catch (e) {
+            print('FirebaseAuthException code: ${e.code}'); // Depuración
+            setState(() {
+              if (e.code == 'wrong-password') {
+                errorMessage =
+                    'La contraseña es incorrecta. Por favor, intenta de nuevo.';
+              } else {
+                errorMessage = 'Error al iniciar sesión';
+              }
+            });
+          } catch (e) {
+            print('Error: $e'); // Depuración
+            setState(() {
+              errorMessage = 'Error al iniciar sesión';
+            });
+          }
         }
       },
       child: Text('Iniciar Sesión'),
     );
   }
 
+  Widget _construirBotonVerificarCorreo() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF023336),
+        foregroundColor: Color(0xFFEAF8E7),
+        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      ),
+      onPressed: () async {
+        try {
+          User? user = _auth.currentUser;
+          if (user != null && !user.emailVerified) {
+            await user.sendEmailVerification();
+            setState(() {
+              errorMessage =
+                  'Correo de verificación enviado. Por favor, revisa tu bandeja de entrada.';
+              showVerificationButton = false;
+            });
+          } else {
+            setState(() {
+              errorMessage =
+                  'No se pudo enviar el correo de verificación. El usuario no está autenticado o ya está verificado.';
+            });
+          }
+        } catch (e) {
+          print('Error: $e'); // Depuración
+          setState(() {
+            errorMessage = 'Error al enviar el correo de verificación.';
+          });
+        }
+      },
+      child: Text('Verificar Correo'),
+    );
+  }
+
   Widget _construirMensajeError() {
     return Text(
       errorMessage,
-      style: const TextStyle(color: Colors.red),
+      style: const TextStyle(color: Color(0xFFBB3026)),
     );
   }
 
