@@ -66,7 +66,8 @@ class AuthService {
       tmb,
       registroUsuario.nivelActividad ?? 'Sedentario',
     );
-    registroUsuario.caloriasDiarias = caloriasDiarias.toStringAsFixed(2);
+    registroUsuario.caloriasDiarias =
+        int.tryParse(caloriasDiarias.toStringAsFixed(0));
 
     // Crear el plan alimenticio dependiendo de la patología
     PlanAlimenticioModel plan;

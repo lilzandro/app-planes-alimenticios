@@ -9,7 +9,7 @@ class RegistroUsuarioModel {
   bool diabetesTipo1 = false;
   bool diabetesTipo2 = false;
   bool hipertension = false;
-  String? nivelGlucosa;
+  int? nivelGlucosa;
   String? usoInsulina;
   String? presionArterial;
   String? observaciones;
@@ -17,7 +17,7 @@ class RegistroUsuarioModel {
   List<String> alergiasIntolerancias = [];
   String? indiceMasaCorporal;
   String? tasaMetabolicaBasal;
-  String? caloriasDiarias;
+  int? caloriasDiarias;
   String? cantidadInsulina;
   String? tipoInsulina;
   String? relacionInsulinaCarbohidratos;

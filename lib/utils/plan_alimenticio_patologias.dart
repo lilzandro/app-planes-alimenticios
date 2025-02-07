@@ -133,7 +133,8 @@ PlanAlimenticioModel repartirAlimentos(
 
 Future<PlanAlimenticioModel> crearPlanAlimenticioDiabetesTipo1(
     RegistroUsuarioModel usuario) async {
-  double caloriasDiarias = double.parse(usuario.caloriasDiarias ?? '0');
+  double caloriasDiarias =
+      double.parse(usuario.caloriasDiarias?.toString() ?? '0');
   Map<String, double> caloriasPorComida = dividirCalorias(caloriasDiarias);
   Map<String, double> carbohidratosPorComida =
       dividirCarbohidratos(caloriasDiarias);

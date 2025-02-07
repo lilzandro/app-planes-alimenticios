@@ -6,13 +6,13 @@ final Map<String, dynamic> diabetes1Body = {
     "accept": {
       "all": [
         {
-          "diet": ["BALANCED", "HIGH_FIBER"]
+          "diet": ["BALANCED"]
         }
       ]
     },
     "fit": {
       "ENERC_KCAL": {"min": 1000, "max": 2000},
-      "FIBTG": {"min": 5, "max": 30}
+      "FIBTG": {"min": 5, "max": 10}
     },
     "sections": {
       "Breakfast": {
@@ -77,4 +77,12 @@ final Map<String, dynamic> diabetes1Body = {
       }
     }
   }
+};
+
+const Map<String, dynamic> diabetes2Body = {
+  // Add the appropriate key-value pairs here
+};
+
+const Map<String, dynamic> hipertensionBody = {
+  // Add the appropriate key-value pairs here
 };

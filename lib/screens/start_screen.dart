@@ -110,7 +110,7 @@ void resetRegistroUsuario() {
   registroUsuario.diabetesTipo1 = false;
   registroUsuario.diabetesTipo2 = false;
   registroUsuario.hipertension = false;
-  registroUsuario.nivelGlucosa = '';
+  registroUsuario.nivelGlucosa = null;
   registroUsuario.usoInsulina = '';
   registroUsuario.presionArterial = '';
   registroUsuario.observaciones = '';
@@ -118,7 +118,7 @@ void resetRegistroUsuario() {
   registroUsuario.alergiasIntolerancias = [];
   registroUsuario.indiceMasaCorporal = '';
   registroUsuario.tasaMetabolicaBasal = '';
-  registroUsuario.caloriasDiarias = '';
+  registroUsuario.caloriasDiarias = null;
   registroUsuario.cantidadInsulina = '';
   registroUsuario.tipoInsulina = '';
 }

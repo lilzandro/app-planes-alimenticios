@@ -29,7 +29,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   final List<String> opcionesAlergias = [
     'Sin lácteo',
     'Sin huevo',
-    'Sin pesca',
+    'Sin pescado',
     'Sin gluten'
   ];
 
@@ -143,8 +143,9 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                 construirCampoTexto(
                   labelText: "Nivel de Glucosa (mg/dL)",
                   keyboardType: TextInputType.number,
-                  initialValue: registroUsuario.nivelGlucosa,
-                  onChanged: (value) => registroUsuario.nivelGlucosa = value,
+                  initialValue: registroUsuario.nivelGlucosa?.toString(),
+                  onChanged: (value) =>
+                      registroUsuario.nivelGlucosa = int.tryParse(value),
                   validator: validarNivelGlucosa,
                 ),
               ]),

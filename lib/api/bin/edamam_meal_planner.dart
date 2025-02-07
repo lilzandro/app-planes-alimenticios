@@ -1,82 +1,111 @@
 import 'package:app_planes/api/apiMeal/edamam_api.dart';
 import 'package:app_planes/api/apiMeal/json_body.dart';
 import 'package:app_planes/api/apiMeal/recipe.dart';
+import 'package:flutter/material.dart';
 
-void main() async {
-  // Informacion de la API de Edamam
-  const appId = 'cb83cc1d'; // Api Id de Edamam
-  const appKey = 'e49c624129d83c7e70ba79cbf52d3edb'; // Api Key
-  const baseUrl =
-      'https://api.edamam.com/api/meal-planner/v1/$appId/select?app_id=$appId&app_key=$appKey&type=edamam-generic'; // Url del Meal Planner
-  const userApi =
-      'lizandro2929'; // Api User que usualmente se coloca en los headers
+class EdamamService {
+  final String appId;
+  final String appKey;
+  final String baseUrl;
+  final String userApi;
 
-  // Creamos la clase que se encargara de interactuar con la API de Edamam
-  final edamamMealApi = EdamamMealApi(appId, appKey, baseUrl, userApi);
+  EdamamService(this.appId, this.appKey, this.baseUrl, this.userApi);
 
-  // El json que se enviara para el Meal Planner
-  final mealBody = diabetes1Body;
-//
-  // Creamos la clase que se encargara de interactuar con la API de recetas
-  final edamamRecipeApi = EdamamRecipeApi(userApi);
+  Future<Map<String, List<Map<String, dynamic>>>> createMealPlan(
+      BuildContext context,
+      int caloriasDiarias,
+      String patologia,
+      int? nivelGlucosa,
+      List<String>? alergias) async {
+    final edamamMealApi = EdamamMealApi(appId, appKey, baseUrl, userApi);
 
-  dynamic planData;
-  Map<String, List<Map<String, dynamic>>> recipeData = {};
+    int minC = (caloriasDiarias * 0.8).toInt();
+    int maxC = caloriasDiarias;
+    print("MINIMO" + minC.toString() + "MAXIMO" + maxC.toString());
 
-  try {
-    // Creamos el plan alimenticio
-    planData = await edamamMealApi.createMealPlan(mealBody);
-  } catch (e) {
-    // Si hay un error, lo imprimimos
-    print(e);
-  }
-
-  try {
-    // Iteramos sobre cada tipo de comida del plan
-    for (var entry in planData.entries) {
-      // Obtenemos el tipo de comida y los platillos correspondientes
-      String mealType = entry.key;
-      List<String> dishes = entry.value;
-
-      // Inicializamos la lista de recetas para este tipo de comida
-      recipeData[mealType] = [];
-
-      // Iteramos sobre cada platillo
-      for (var dish in dishes) {
-        // Obtenemos la receta correspondiente
-        Map<String, dynamic> recipe = await edamamRecipeApi
-            .getRecipe('$dish?app_id=$appId&app_key=$appKey');
-
-        // Agregamos la receta a la lista de recetas para este tipo de comida
-        recipeData[mealType]?.add(recipe);
-      }
+    Map<String, dynamic> mealBody;
+    switch (patologia) {
+      case 'Diabetes Tipo 1':
+        print("diabetes1Body");
+        mealBody = Map<String, dynamic>.from(diabetes1Body);
+        mealBody['plan']['fit']['ENERC_KCAL'] = {
+          "min": minC,
+          "max": maxC,
+        };
+        if (nivelGlucosa != null && nivelGlucosa < 70) {
+          mealBody['plan']['fit']['FIBTG'] = {
+            "min": 1,
+            "max": 5,
+          };
+        } else {
+          mealBody['plan']['fit']['FIBTG'] = {
+            "min": 5,
+            "max": 30,
+          };
+          mealBody['plan']['accept']['all'][0]
+              ['diet'] = ["BALANCED", "HIGH_FIBER"];
+        }
+        if (alergias != null && alergias.isNotEmpty) {
+          mealBody['plan']['accept']['all'].add({
+            "health": alergias,
+          });
+        }
+        break;
+      case 'Diabetes Tipo 2':
+        print("diabetes2Body");
+        mealBody = Map<String, dynamic>.from(diabetes2Body);
+        break;
+      case 'Hipertensión':
+        print("hipertensionBody");
+        mealBody = Map<String, dynamic>.from(hipertensionBody);
+        break;
+      default:
+        throw Exception('Patología desconocida: $patologia');
     }
 
-    // Ejemplo de pedir datos, un json de retorno de la api de ejemplo esta
-    // en el archivo ejemplo_retorno_api_recipe_api.json
+    dynamic planData;
+    Map<String, List<Map<String, dynamic>>> recipeData = {};
 
-    // ejemplo de como pedir el nombre
-    print("NOMBRE DE LA RECETA");
-    print(recipeData['Snack']?[0]['recipe']['label']);
-    print('\n');
+    print(mealBody);
 
-    //ejemplo de como pedir todos los nutrientes
-    print("TODOS LOS NUTRIENTES");
-    print(recipeData['Snack']?[0]['recipe']['totalNutrients']);
-    print('\n');
+    try {
+      planData = await edamamMealApi.createMealPlan(mealBody);
+    } catch (e) {
+      print('Error al crear el plan alimenticio: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al crear el plan alimenticio.' + e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return {};
+    }
 
-    //ejemplo de como pedir un nutriente
-    print("ENERC_KCAL");
-    print(recipeData['Snack']?[0]['recipe']['totalNutrients']['ENERC_KCAL']);
-    print('\n');
+    final edamamRecipeApi = EdamamRecipeApi(userApi);
+    try {
+      for (var entry in planData.entries) {
+        String mealType = entry.key;
+        List<String> dishes = entry.value;
 
-    //ejemplo de pedir un nutriente con exactamente la cantidad
-    print("ENERC_KCAL CON UNIDAD");
-    print(recipeData['Snack']?[0]['recipe']['totalNutrients']['ENERC_KCAL']
-        ['quantity']);
-    print('\n');
-  } catch (e) {
-    // Si hay un error, lo imprimimos
-    print(e);
+        recipeData[mealType] = [];
+
+        for (var dish in dishes) {
+          Map<String, dynamic> recipe = await edamamRecipeApi
+              .getRecipe('$dish?app_id=$appId&app_key=$appKey');
+          recipeData[mealType]?.add(recipe);
+        }
+      }
+    } catch (e) {
+      print('Error al obtener las recetas: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al obtener las recetas.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return {};
+    }
+
+    return recipeData;
   }
 }
