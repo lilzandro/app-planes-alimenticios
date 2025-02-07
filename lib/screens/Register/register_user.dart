@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/validaciones.dart'; // Importa las validaciones
 import 'package:app_planes/services/auth_service.dart'; // Importa el servicio de autenticación
-import 'package:flutter/services.dart'; // Importa para PlatformException
+import 'package:flutter/services.dart';
+import 'package:app_planes/api/apiMeal/edamam_api.dart'; // Importa la API de Edamam
+import 'package:app_planes/api/apiMeal/json_body.dart'; // Importa el cuerpo JSON para la API de Edamam
+import 'package:app_planes/api/apiMeal/recipe.dart'; // Importa la API de recetas de Edamam
 
 class RegistroUsuario extends StatefulWidget {
   const RegistroUsuario({super.key});
@@ -35,7 +38,88 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
 
       try {
         print('Registrando usuario...:' + correo + ' ' + contrasena);
-        // Mover la creación de usuario DENTRO del try
+
+        // Llama a la API de Edamam para crear un plan alimenticio
+        const appId = 'cb83cc1d'; // Api Id de Edamam
+        const appKey = 'e49c624129d83c7e70ba79cbf52d3edb'; // Api Key
+        const baseUrl =
+            'https://api.edamam.com/api/meal-planner/v1/$appId/select?app_id=$appId&app_key=$appKey&type=edamam-generic'; // Url del Meal Planner
+        const userApi =
+            'lizandro2929'; // Api User que usualmente se coloca en los headers
+
+        final edamamMealApi = EdamamMealApi(appId, appKey, baseUrl, userApi);
+        final mealBody = diabetes1Body;
+
+        dynamic planData;
+        Map<String, List<Map<String, dynamic>>> recipeData = {};
+
+        try {
+          planData = await edamamMealApi.createMealPlan(mealBody);
+        } catch (e) {
+          print('Error al crear el plan alimenticio: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error al crear el plan alimenticio.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+
+        // Iteramos sobre cada tipo de comida del plan
+        final edamamRecipeApi = EdamamRecipeApi(userApi);
+        try {
+          for (var entry in planData.entries) {
+            // Obtenemos el tipo de comida y los platillos correspondientes
+            String mealType = entry.key;
+            List<String> dishes = entry.value;
+
+            // Inicializamos la lista de recetas para este tipo de comida
+            recipeData[mealType] = [];
+
+            // Iteramos sobre cada platillo
+            for (var dish in dishes) {
+              // Obtenemos la receta correspondiente
+              Map<String, dynamic> recipe = await edamamRecipeApi
+                  .getRecipe('$dish?app_id=$appId&app_key=$appKey');
+
+              // Agregamos la receta a la lista de recetas para este tipo de comida
+              recipeData[mealType]?.add(recipe);
+            }
+          }
+
+          // Ejemplo de pedir datos, un json de retorno de la api de ejemplo esta
+          // en el archivo ejemplo_retorno_api_recipe_api.json
+
+          // ejemplo de como pedir el nombre
+          print("NOMBRE DE LA RECETA");
+          print(recipeData['Snack']?[0]['recipe']['label']);
+          print('\n');
+
+          //ejemplo de como pedir todos los nutrientes
+          print("TODOS LOS NUTRIENTES");
+          print(recipeData['Snack']?[0]['recipe']['totalNutrients']);
+          print('\n');
+
+          //ejemplo de como pedir un nutriente
+          print("ENERC_KCAL");
+          print(recipeData['Snack']?[0]['recipe']['totalNutrients']
+              ['ENERC_KCAL']);
+          print('\n');
+        } catch (e) {
+          print('Error al obtener las recetas: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error al obtener las recetas.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+
+        // Aquí puedes usar el planData y recipeData como necesites, por ejemplo, mostrarlo en la UI
+
+        // Registra al usuario
         UserCredential userCredential =
             await _authService.registrarUsuario(correo, contrasena);
 

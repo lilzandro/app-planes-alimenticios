@@ -36,9 +36,27 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveContainer(
-      buildBlocks: (context) => _construirBloques(context),
-      backgroundColor: const Color(0xFFEAF8E7),
+    return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Color(0xFFEAF8E7),
+          surfaceTintColor: Color(0xFFEAF8E7),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Color(0xFF023336),
+            onPressed: () {
+              Navigator.pushReplacementNamed(
+                  context, '/start'); // Volver a datos personales
+            },
+          )),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ResponsiveContainer(
+          buildBlocks: (context) => _construirBloques(context),
+          backgroundColor: const Color(0xFFEAF8E7),
+        ),
+      ),
     );
   }
 
@@ -47,17 +65,6 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
 
     return [
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-      AppBar(
-          backgroundColor: const Color(0xFFEAF8E7),
-          surfaceTintColor: Color(0xFFEAF8E7),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Color(0xFF023336),
-            onPressed: () {
-              Navigator.pushReplacementNamed(
-                  context, '/start'); // Navega hacia atrás
-            },
-          )),
       Center(
         child: Container(
           width: screenSize.width * 0.9,
