@@ -6,13 +6,12 @@ final Map<String, dynamic> diabetes1Body = {
     "accept": {
       "all": [
         {
-          "diet": ["BALANCED"]
+          "diet": ["BALANCED", "HIGH_FIBER"]
         }
       ]
     },
     "fit": {
       "ENERC_KCAL": {"min": 1000, "max": 2000},
-      "FIBTG": {"min": 5, "max": 10}
     },
     "sections": {
       "Breakfast": {

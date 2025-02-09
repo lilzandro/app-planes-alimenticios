@@ -37,28 +37,32 @@ class EdamamService {
             "min": 1,
             "max": 5,
           };
+          // Reiniciar las listas y mapas correspondientes
+          mealBody['plan']['accept']['all'][0]['diet'] = ["BALANCED"];
         } else {
-          mealBody['plan']['fit']['FIBTG'] = {
-            "min": 5,
-            "max": 30,
-          };
+          mealBody['plan']['fit'].remove('FIBTG');
           mealBody['plan']['accept']['all'][0]
               ['diet'] = ["BALANCED", "HIGH_FIBER"];
         }
         if (alergias != null && alergias.isNotEmpty) {
+          mealBody['plan']['accept']['all'].removeWhere((element) =>
+              element is Map<String, dynamic> && element.containsKey('health'));
           mealBody['plan']['accept']['all'].add({
             "health": alergias,
           });
+        } else {
+          mealBody['plan']['accept']['all'].removeWhere((element) =>
+              element is Map<String, dynamic> && element.containsKey('health'));
         }
         break;
       case 'Diabetes Tipo 2':
         print("diabetes2Body");
         mealBody = Map<String, dynamic>.from(diabetes2Body);
-        break;
+
       case 'Hipertensión':
         print("hipertensionBody");
         mealBody = Map<String, dynamic>.from(hipertensionBody);
-        break;
+
       default:
         throw Exception('Patología desconocida: $patologia');
     }

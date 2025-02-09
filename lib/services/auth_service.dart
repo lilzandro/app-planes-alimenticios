@@ -1,11 +1,7 @@
+import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
-import 'package:app_planes/models/planAlimenticioModel.dart';
-import 'package:app_planes/utils/calculo_imc.dart';
-import 'package:app_planes/utils/calculo_tmb.dart';
-import 'package:app_planes/utils/calcular_calorias_diarias.dart';
-import 'package:app_planes/utils/plan_alimenticio_patologias.dart';
 import 'package:flutter/services.dart';
 
 class AuthService {
@@ -43,47 +39,14 @@ class AuthService {
   }
 
   Future<void> guardarDatosUsuario(UserCredential userCredential,
-      RegistroUsuarioModel registroUsuario) async {
-    // Calcular el IMC
-    double imc = calcularIMC(
-      registroUsuario.peso ?? 0.0,
-      (registroUsuario.estatura ?? 0.0) / 100, // Convertir cm a m
-    );
-    registroUsuario.indiceMasaCorporal = imc.toStringAsFixed(2);
-
-    // Calcular la TMB
-    int edad = calcularEdad(registroUsuario.fechaNacimiento!);
-    double tmb = calcularTMB(
-      registroUsuario.sexo ?? 'Hombre',
-      registroUsuario.peso ?? 0.0,
-      registroUsuario.estatura ?? 0.0,
-      edad,
-    );
-    registroUsuario.tasaMetabolicaBasal = tmb.toStringAsFixed(2);
-
-    // Calcular las calorías diarias
-    double caloriasDiarias = calcularCaloriasDiarias(
-      tmb,
-      registroUsuario.nivelActividad ?? 'Sedentario',
-    );
-    registroUsuario.caloriasDiarias =
-        int.tryParse(caloriasDiarias.toStringAsFixed(0));
-
-    // Crear el plan alimenticio dependiendo de la patología
-    PlanAlimenticioModel plan;
-    if (registroUsuario.diabetesTipo1) {
-      plan = await crearPlanAlimenticioDiabetesTipo1(registroUsuario);
-    } else {
-      plan = await crearPlanAlimenticioDiabetesTipo1(registroUsuario);
-    }
-
+      RegistroUsuarioModel registroUsuario, PlanAlimenticioModel plan) async {
     // Guardar el plan alimenticio en Firestore
     DocumentReference planRef =
         await _firestore.collection('planesAlimenticios').add({
-      'desayuno': plan.desayuno,
-      'merienda1': plan.merienda1,
-      'almuerzo': plan.almuerzo,
-      'cena': plan.cena,
+      'desayuno': plan.desayuno.map((e) => e.toJson()).toList(),
+      'merienda1': plan.merienda1.map((e) => e.toJson()).toList(),
+      'almuerzo': plan.almuerzo.map((e) => e.toJson()).toList(),
+      'cena': plan.cena.map((e) => e.toJson()).toList(),
       'caloriasDesayuno': plan.caloriasDesayuno,
       'caloriasMerienda1': plan.caloriasMerienda1,
       'caloriasAlmuerzo': plan.caloriasAlmuerzo,
@@ -101,7 +64,7 @@ class AuthService {
       'nombre': registroUsuario.nombre,
       'apellido': registroUsuario.apellido,
       'fechaNacimiento': registroUsuario.fechaNacimiento?.toIso8601String(),
-      'edad': edad,
+      'edad': calcularEdad(registroUsuario.fechaNacimiento!),
       'estatura': registroUsuario.estatura,
       'peso': registroUsuario.peso,
       'sexo': registroUsuario.sexo,

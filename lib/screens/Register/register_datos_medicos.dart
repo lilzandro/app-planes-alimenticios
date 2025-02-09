@@ -27,10 +27,9 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
   ];
 
   final List<String> opcionesAlergias = [
-    'Sin lácteo',
-    'Sin huevo',
-    'Sin pescado',
-    'Sin gluten'
+    'Libre de huevo',
+    'Libre de pescado',
+    'Libre de gluten',
   ];
 
   @override

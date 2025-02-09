@@ -1,3 +1,4 @@
+import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/utils/calcular_calorias_diarias.dart';
 import 'package:app_planes/utils/calculo_imc.dart';
 import 'package:app_planes/utils/calculo_tmb.dart';
@@ -35,10 +36,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
 
   List<String> convertirAlergias(List<String> alergias) {
     const alergiasMap = {
-      'Sin huevo': 'EGG_FREE',
-      'Sin lácteo': 'DAIRY_FREE',
-      'Sin gluten': 'GLUTEN_FREE',
-      'Sin pescado': 'FISH_FREE',
+      'Libre de huevo': 'EGG_FREE',
+      'Libre de gluten': 'GLUTEN_FREE',
+      'Libre de pescado': 'FISH_FREE',
       // Agrega más mapeos según sea necesario
     };
 
@@ -50,13 +50,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       _formKey.currentState!.save();
 
       try {
-        print('Registrando usuario...:' + correo + ' ' + contrasena);
-
-        const appId = 'cb83cc1d';
-        const appKey = 'e49c624129d83c7e70ba79cbf52d3edb';
+        const appId = 'b7503255';
+        const appKey = 'b16f42432da7a84f616ee939dd8a1112';
         const baseUrl =
             'https://api.edamam.com/api/meal-planner/v1/$appId/select?app_id=$appId&app_key=$appKey&type=edamam-generic';
-        const userApi = 'lizandro2929';
+        const userApi = 'karenpps';
 
         final edamamService = EdamamService(appId, appKey, baseUrl, userApi);
 
@@ -98,6 +96,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             convertirAlergias(registroUsuario.alergiasIntolerancias);
 
         print('alergiasConvertidas: $alergiasConvertidas');
+        print('nivel glucosa: ${registroUsuario.nivelGlucosa}');
 
         final recipeData = await edamamService.createMealPlan(
             context,
@@ -108,20 +107,85 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
 
         if (recipeData.isEmpty) return;
 
+        final planAlimenticio = PlanAlimenticioModel(
+          desayuno: [],
+          merienda1: [],
+          almuerzo: [],
+          cena: [],
+          caloriasDesayuno: 0,
+          caloriasMerienda1: 0,
+          caloriasAlmuerzo: 0,
+          caloriasCena: 0,
+          carbohidratosDesayuno: 0,
+          carbohidratosMerienda1: 0,
+          carbohidratosAlmuerzo: 0,
+          carbohidratosCena: 0,
+          carbohidratosDiarios: 0,
+        );
+
+        recipeData.forEach((mealType, recipes) {
+          for (int i = 0; i < recipes.length; i++) {
+            final receta = recipes[i]['recipe'];
+            final yield = receta['yield'];
+
+            final nutrientes = receta['totalNutrients'];
+            nutrientes.forEach((key, value) {
+              if (value['quantity'] != null && yield != null && yield > 0) {
+                value['quantity'] = value['quantity'] / yield;
+              }
+            });
+
+            final planDiario = PlanDiario(
+              nombreReceta: receta['label'],
+              imagenReceta: receta['image'],
+              ingredientes: List<String>.from(receta['ingredientLines']),
+              informacionIngredientes:
+                  List<Map<String, dynamic>>.from(receta['ingredients'] ?? []),
+              nutrientes: receta['totalNutrients'],
+              energiaKcal: receta['totalNutrients']['ENERC_KCAL']['quantity'],
+              proporcionComida: receta['yield'],
+            );
+
+            switch (mealType) {
+              case 'Breakfast':
+                planAlimenticio.desayuno.add(planDiario);
+                break;
+              case 'Lunch':
+                planAlimenticio.almuerzo.add(planDiario);
+                break;
+              case 'Dinner':
+                planAlimenticio.cena.add(planDiario);
+                break;
+              case 'Snack':
+                planAlimenticio.merienda1.add(planDiario);
+                break;
+            }
+          }
+        });
+
+        recipeData.forEach((mealType, recipes) {
+          print("Número de recetas para $mealType: ${recipes.length}");
+          for (int i = 0; i < recipes.length; i++) {
+            print(
+                "Receta ${i + 1} para $mealType: ${recipes[i]['recipe']['label']}");
+          }
+        });
+        recipeData.forEach((mealType, recipes) {
+          print("Número de recetas para $mealType: ${recipes.length}");
+          for (int i = 0; i < recipes.length; i++) {
+            print(
+                "Receta ${i + 1} para $mealType: ${recipes[i]['recipe']['uri']}");
+          }
+        });
+
+        print('\n');
         // ejemplo de como pedir el nombre
-        print("NOMBRE DE LA RECETA");
-        print(recipeData['Breakfast']?[1]['recipe']['label']);
+        print("NOMBRE peso de la comida");
+        print(recipeData['Breakfast']?[0]['recipe']['totalWeight']);
         print('\n');
 
-        //ejemplo de como pedir todos los nutrientes
-        print("TODOS LOS NUTRIENTES");
-        print(recipeData['Breakfast']?[1]['recipe']['totalNutrients']);
-        print('\n');
-
-        //ejemplo de como pedir un nutriente
-        print("ENERC_KCAL");
-        print(recipeData['Breakfast']?[1]['recipe']['totalNutrients']
-            ['ENERC_KCAL']);
+        print("NOMBRE peso de la comida");
+        print(recipeData['Breakfast']?[0]['recipe']['totalWeight']);
         print('\n');
 
         // Aquí puedes usar el recipeData como necesites, por ejemplo, mostrarlo en la UI
@@ -134,7 +198,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
         await _authService.enviarCorreoVerificacion(userCredential.user!);
 
         // Guardar los datos del usuario
-        await _authService.guardarDatosUsuario(userCredential, registroUsuario);
+        await _authService.guardarDatosUsuario(
+            userCredential, registroUsuario, planAlimenticio);
 
         // Mostrar alerta de éxito
         showDialog(

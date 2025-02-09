@@ -1,8 +1,8 @@
 class PlanAlimenticioModel {
-  List<String> desayuno;
-  List<String> merienda1;
-  List<String> almuerzo;
-  List<String> cena;
+  List<PlanDiario> desayuno;
+  List<PlanDiario> merienda1;
+  List<PlanDiario> almuerzo;
+  List<PlanDiario> cena;
   double caloriasDesayuno;
   double caloriasMerienda1;
   double caloriasAlmuerzo;
@@ -12,12 +12,6 @@ class PlanAlimenticioModel {
   double carbohidratosAlmuerzo;
   double carbohidratosCena;
   double carbohidratosDiarios;
-  // double fibraDesayuno;
-  // double fibraMerienda1;
-  // double fibraAlmuerzo;
-  // double fibraMerienda2;
-  // double fibraCena;
-  // double fibraDiaria;
 
   PlanAlimenticioModel({
     required this.desayuno,
@@ -33,11 +27,52 @@ class PlanAlimenticioModel {
     required this.carbohidratosAlmuerzo,
     required this.carbohidratosCena,
     required this.carbohidratosDiarios,
-    // required this.fibraDesayuno,
-    // required this.fibraMerienda1,
-    // required this.fibraAlmuerzo,
-    // required this.fibraMerienda2,
-    // required this.fibraCena,
-    // required this.fibraDiaria,
   });
+}
+
+class PlanDiario {
+  final String nombreReceta;
+  final String imagenReceta;
+  final List<String> ingredientes;
+  final List<Map<String, dynamic>> informacionIngredientes;
+  final Map<String, dynamic> nutrientes;
+  final double energiaKcal;
+  final double proporcionComida;
+
+  PlanDiario({
+    required this.nombreReceta,
+    required this.imagenReceta,
+    required this.ingredientes,
+    required this.informacionIngredientes,
+    required this.nutrientes,
+    required this.energiaKcal,
+    required this.proporcionComida,
+  });
+
+  // Método para convertir una instancia de PlanDiario a un mapa (JSON)
+  Map<String, dynamic> toJson() {
+    return {
+      'nombreReceta': nombreReceta,
+      'imagenReceta': imagenReceta,
+      'ingredientes': ingredientes,
+      'informacionIngredientes': informacionIngredientes,
+      'nutrientes': nutrientes,
+      'energiaKcal': energiaKcal,
+      'proporcionComida': proporcionComida,
+    };
+  }
+
+  // Método para crear una instancia de PlanDiario desde un mapa (JSON)
+  factory PlanDiario.fromJson(Map<String, dynamic> json) {
+    return PlanDiario(
+      nombreReceta: json['nombreReceta'],
+      imagenReceta: json['imagenReceta'],
+      ingredientes: List<String>.from(json['ingredientes']),
+      informacionIngredientes:
+          List<Map<String, dynamic>>.from(json['informacionIngredientes']),
+      nutrientes: Map<String, dynamic>.from(json['nutrientes']),
+      energiaKcal: json['energiaKcal'],
+      proporcionComida: json['proporcionComida'],
+    );
+  }
 }
