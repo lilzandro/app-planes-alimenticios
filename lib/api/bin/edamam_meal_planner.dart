@@ -76,11 +76,24 @@ class EdamamService {
       planData = await edamamMealApi.createMealPlan(mealBody);
     } catch (e) {
       print('Error al crear el plan alimenticio: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al crear el plan alimenticio.' + e.toString()),
-          backgroundColor: Colors.red,
-        ),
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(
+                "Ocurrió un error al crear el plan de alimentación. Por favor, inténtelo de nuevo."),
+            actions: [
+              TextButton(
+                child: Text("Aceptar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
       );
       return {};
     }

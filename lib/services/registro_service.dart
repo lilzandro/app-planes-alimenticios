@@ -20,6 +20,33 @@ class RegistroService {
       formKey.currentState!.save();
 
       try {
+        // Verificar si el correo ya está en uso
+        bool usuarioExistente =
+            await _authService.verificarUsuarioExistente(correo);
+        if (usuarioExistente) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Correo en uso"),
+                content: Text(
+                    "El correo ya está registrado. Por favor, use otro correo."),
+                actions: [
+                  TextButton(
+                    child: Text("Aceptar"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+          return;
+        }
+
+        mostrarDialogoCarga(context);
+
         const appId = 'b7503255';
         const appKey = 'b16f42432da7a84f616ee939dd8a1112';
         const baseUrl =
@@ -70,6 +97,33 @@ class RegistroService {
             patologia,
             registroUsuario.nivelGlucosa,
             alergiasConvertidas);
+
+        //  recipeData.forEach((mealType, recipes) {
+//           print("Número de recetas para $mealType: ${recipes.length}");
+//           for (int i = 0; i < recipes.length; i++) {
+//             print(
+//                 "Receta ${i + 1} para $mealType: ${recipes[i]['recipe']['label']}");
+//           }
+//         });
+//         recipeData.forEach((mealType, recipes) {
+//           print("Número de recetas para $mealType: ${recipes.length}");
+//           for (int i = 0; i < recipes.length; i++) {
+//             print(
+//                 "Receta ${i + 1} para $mealType: ${recipes[i]['recipe']['uri']}");
+//           }
+//         });
+
+//         print('\n');
+//         // ejemplo de como pedir el nombre
+//         print("NOMBRE peso de la comida");
+//         print(recipeData['Breakfast']?[0]['recipe']['totalWeight']);
+//         print('\n');
+
+//         print("NOMBRE peso de la comida");
+//         print(recipeData['Breakfast']?[0]['recipe']['totalWeight']);
+//         print('\n');
+
+//         // Aquí puedes usar el recipeData como necesites, por ejemplo, mostrarlo en la UI
 
         if (recipeData.isEmpty) return;
 
@@ -161,6 +215,7 @@ class RegistroService {
           },
         );
       } on FirebaseAuthException catch (e) {
+        Navigator.of(context).pop();
         String errorMessage;
         switch (e.code) {
           case 'email-already-in-use':
@@ -205,4 +260,28 @@ class RegistroService {
       }
     }
   }
+}
+
+void mostrarDialogoCarga(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            Text(
+              "Estamos creando tu plan de alimentación...",
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

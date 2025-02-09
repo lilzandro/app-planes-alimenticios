@@ -154,30 +154,3 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     );
   }
 }
-
-//  recipeData.forEach((mealType, recipes) {
-//           print("Número de recetas para $mealType: ${recipes.length}");
-//           for (int i = 0; i < recipes.length; i++) {
-//             print(
-//                 "Receta ${i + 1} para $mealType: ${recipes[i]['recipe']['label']}");
-//           }
-//         });
-//         recipeData.forEach((mealType, recipes) {
-//           print("Número de recetas para $mealType: ${recipes.length}");
-//           for (int i = 0; i < recipes.length; i++) {
-//             print(
-//                 "Receta ${i + 1} para $mealType: ${recipes[i]['recipe']['uri']}");
-//           }
-//         });
-
-//         print('\n');
-//         // ejemplo de como pedir el nombre
-//         print("NOMBRE peso de la comida");
-//         print(recipeData['Breakfast']?[0]['recipe']['totalWeight']);
-//         print('\n');
-
-//         print("NOMBRE peso de la comida");
-//         print(recipeData['Breakfast']?[0]['recipe']['totalWeight']);
-//         print('\n');
-
-//         // Aquí puedes usar el recipeData como necesites, por ejemplo, mostrarlo en la UI
