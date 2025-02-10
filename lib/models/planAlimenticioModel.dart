@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class PlanAlimenticioModel {
   List<PlanDiario> desayuno;
   List<PlanDiario> merienda1;
@@ -13,23 +15,23 @@ class PlanAlimenticioModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'desayuno': desayuno.map((e) => e.toJson()).toList(),
-      'merienda1': merienda1.map((e) => e.toJson()).toList(),
-      'almuerzo': almuerzo.map((e) => e.toJson()).toList(),
-      'cena': cena.map((e) => e.toJson()).toList(),
+      'desayuno': jsonEncode(desayuno.map((e) => e.toJson()).toList()),
+      'merienda1': jsonEncode(merienda1.map((e) => e.toJson()).toList()),
+      'almuerzo': jsonEncode(almuerzo.map((e) => e.toJson()).toList()),
+      'cena': jsonEncode(cena.map((e) => e.toJson()).toList()),
     };
   }
 
   factory PlanAlimenticioModel.fromJson(Map<String, dynamic> json) {
     return PlanAlimenticioModel(
       desayuno: List<PlanDiario>.from(
-          json['desayuno'].map((e) => PlanDiario.fromJson(e))),
+          jsonDecode(json['desayuno']).map((e) => PlanDiario.fromJson(e))),
       merienda1: List<PlanDiario>.from(
-          json['merienda1'].map((e) => PlanDiario.fromJson(e))),
+          jsonDecode(json['merienda1']).map((e) => PlanDiario.fromJson(e))),
       almuerzo: List<PlanDiario>.from(
-          json['almuerzo'].map((e) => PlanDiario.fromJson(e))),
+          jsonDecode(json['almuerzo']).map((e) => PlanDiario.fromJson(e))),
       cena: List<PlanDiario>.from(
-          json['cena'].map((e) => PlanDiario.fromJson(e))),
+          jsonDecode(json['cena']).map((e) => PlanDiario.fromJson(e))),
     );
   }
 }
@@ -53,28 +55,26 @@ class PlanDiario {
     required this.proporcionComida,
   });
 
-  // Método para convertir una instancia de PlanDiario a un mapa (JSON)
   Map<String, dynamic> toJson() {
     return {
       'nombreReceta': nombreReceta,
       'imagenReceta': imagenReceta,
-      'ingredientes': ingredientes,
-      'informacionIngredientes': informacionIngredientes,
-      'nutrientes': nutrientes,
+      'ingredientes': jsonEncode(ingredientes),
+      'informacionIngredientes': jsonEncode(informacionIngredientes),
+      'nutrientes': jsonEncode(nutrientes),
       'energiaKcal': energiaKcal,
       'proporcionComida': proporcionComida,
     };
   }
 
-  // Método para crear una instancia de PlanDiario desde un mapa (JSON)
   factory PlanDiario.fromJson(Map<String, dynamic> json) {
     return PlanDiario(
       nombreReceta: json['nombreReceta'],
       imagenReceta: json['imagenReceta'],
-      ingredientes: List<String>.from(json['ingredientes']),
-      informacionIngredientes:
-          List<Map<String, dynamic>>.from(json['informacionIngredientes']),
-      nutrientes: Map<String, dynamic>.from(json['nutrientes']),
+      ingredientes: List<String>.from(jsonDecode(json['ingredientes'])),
+      informacionIngredientes: List<Map<String, dynamic>>.from(
+          jsonDecode(json['informacionIngredientes'])),
+      nutrientes: Map<String, dynamic>.from(jsonDecode(json['nutrientes'])),
       energiaKcal: json['energiaKcal'],
       proporcionComida: json['proporcionComida'],
     );

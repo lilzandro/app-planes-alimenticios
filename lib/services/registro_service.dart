@@ -6,9 +6,11 @@ import 'package:app_planes/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/calculos.dart';
+import 'package:app_planes/database/databaseHelper.dart';
 
 class RegistroService {
   final AuthService _authService = AuthService();
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   Future<void> registrarUsuario(
       BuildContext context,
@@ -178,6 +180,12 @@ class RegistroService {
         UserCredential userCredential =
             await _authService.registrarUsuario(correo, contrasena);
 
+        // Guardar el plan alimenticio en la base de datos con el userId
+        await _databaseHelper.insertPlanAlimenticio(
+            userCredential.user!.uid, planAlimenticio);
+
+        await contarPlanesGuardados();
+
         // Enviar correo de verificación
         await _authService.enviarCorreoVerificacion(userCredential.user!);
 
@@ -186,6 +194,7 @@ class RegistroService {
             userCredential, registroUsuario, planAlimenticio);
 
         // Mostrar alerta de éxito
+        Navigator.of(context).pop();
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -250,6 +259,36 @@ class RegistroService {
         }
       }
     }
+  }
+
+  Future<void> verificarPlanAlimenticioGuardado(String userId) async {
+    final planAlimenticio = await _databaseHelper.getPlanAlimenticio(userId);
+    if (planAlimenticio != null) {
+      print("Plan alimenticio guardado:");
+      print("Desayuno:");
+      planAlimenticio.desayuno.forEach((planDiario) {
+        print(planDiario.nombreReceta);
+      });
+      print("Merienda 1:");
+      planAlimenticio.merienda1.forEach((planDiario) {
+        print(planDiario.nombreReceta);
+      });
+      print("Almuerzo:");
+      planAlimenticio.almuerzo.forEach((planDiario) {
+        print(planDiario.nombreReceta);
+      });
+      print("Cena:");
+      planAlimenticio.cena.forEach((planDiario) {
+        print(planDiario.nombreReceta);
+      });
+    } else {
+      print("No se encontró ningún plan alimenticio guardado.");
+    }
+  }
+
+  Future<void> contarPlanesGuardados() async {
+    final count = await _databaseHelper.countPlans();
+    print("Total de planes alimenticios guardados: $count");
   }
 }
 
