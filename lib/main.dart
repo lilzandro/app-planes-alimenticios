@@ -66,8 +66,15 @@ class AuthenticationWrapper extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasData) {
-          // Usuario autenticado, redirige a Home
-          return const Inicio();
+          // Usuario autenticado, verifica si el correo está verificado
+          User? user = snapshot.data;
+          if (user != null && user.emailVerified) {
+            // Correo verificado, redirige a Home
+            return const Inicio();
+          } else {
+            // Correo no verificado, redirige a pantalla inicial
+            return const ArranqueApp();
+          }
         } else {
           // Usuario no autenticado, redirige a pantalla inicial
           return const ArranqueApp();
