@@ -132,15 +132,6 @@ class RegistroService {
           merienda1: [],
           almuerzo: [],
           cena: [],
-          caloriasDesayuno: 0,
-          caloriasMerienda1: 0,
-          caloriasAlmuerzo: 0,
-          caloriasCena: 0,
-          carbohidratosDesayuno: 0,
-          carbohidratosMerienda1: 0,
-          carbohidratosAlmuerzo: 0,
-          carbohidratosCena: 0,
-          carbohidratosDiarios: 0,
         );
 
         recipeData.forEach((mealType, recipes) {

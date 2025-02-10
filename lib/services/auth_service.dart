@@ -47,16 +47,7 @@ class AuthService {
       'merienda1': plan.merienda1.map((e) => e.toJson()).toList(),
       'almuerzo': plan.almuerzo.map((e) => e.toJson()).toList(),
       'cena': plan.cena.map((e) => e.toJson()).toList(),
-      'caloriasDesayuno': plan.caloriasDesayuno,
-      'caloriasMerienda1': plan.caloriasMerienda1,
-      'caloriasAlmuerzo': plan.caloriasAlmuerzo,
-      'caloriasCena': plan.caloriasCena,
       'usuarioId': userCredential.user!.uid,
-      'carbohidratosDesayuno': plan.carbohidratosDesayuno,
-      'carbohidratosMerienda1': plan.carbohidratosMerienda1,
-      'carbohidratosAlmuerzo': plan.carbohidratosAlmuerzo,
-      'carbohidratosCena': plan.carbohidratosCena,
-      'carbohidratosDiarios': plan.carbohidratosDiarios,
     });
 
     // Guardar los datos del usuario en Firestore

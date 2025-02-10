@@ -1,6 +1,5 @@
 import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
-import 'package:app_planes/services/database_service.dart';
 
 Map<String, double> dividirCalorias(double caloriasDiarias) {
   return {
@@ -119,52 +118,5 @@ PlanAlimenticioModel repartirAlimentos(
     merienda1: merienda1Result[0],
     almuerzo: almuerzoResult[0],
     cena: cenaResult[0],
-    caloriasDesayuno: desayunoResult[1],
-    caloriasMerienda1: merienda1Result[1],
-    caloriasAlmuerzo: almuerzoResult[1],
-    caloriasCena: cenaResult[1],
-    carbohidratosDesayuno: desayunoResult[2],
-    carbohidratosAlmuerzo: almuerzoResult[2],
-    carbohidratosCena: cenaResult[2],
-    carbohidratosMerienda1: merienda1Result[2],
-    carbohidratosDiarios: carbohidratosPorComida['carbohidratos']!,
   );
-}
-
-Future<PlanAlimenticioModel> crearPlanAlimenticioDiabetesTipo1(
-    RegistroUsuarioModel usuario) async {
-  double caloriasDiarias =
-      double.parse(usuario.caloriasDiarias?.toString() ?? '0');
-  Map<String, double> caloriasPorComida = dividirCalorias(caloriasDiarias);
-  Map<String, double> carbohidratosPorComida =
-      dividirCarbohidratos(caloriasDiarias);
-  DatabaseService dbService = DatabaseService();
-  List<Map<String, dynamic>> alimentos = await dbService.cargarAlimentos();
-  List<Map<String, dynamic>> desayunoAlimentos = await seleccionarAlimentos(
-      caloriasPorComida['desayuno']!,
-      carbohidratosPorComida['desayuno']!,
-      alimentos,
-      usuario,
-      'desayuno');
-  List<Map<String, dynamic>> almuerzoAlimentos = await seleccionarAlimentos(
-      caloriasPorComida['almuerzo']!,
-      carbohidratosPorComida['almuerzo']!,
-      alimentos,
-      usuario,
-      'almuerzo');
-  List<Map<String, dynamic>> cenaAlimentos = await seleccionarAlimentos(
-      caloriasPorComida['cena']!,
-      carbohidratosPorComida['cena']!,
-      alimentos,
-      usuario,
-      'cena');
-  List<Map<String, dynamic>> merienda1Alimentos = await seleccionarAlimentos(
-      caloriasPorComida['merienda1']!,
-      carbohidratosPorComida['merienda1']!,
-      alimentos,
-      usuario,
-      'merienda');
-
-  return repartirAlimentos(desayunoAlimentos, almuerzoAlimentos, cenaAlimentos,
-      merienda1Alimentos, caloriasPorComida, carbohidratosPorComida);
 }

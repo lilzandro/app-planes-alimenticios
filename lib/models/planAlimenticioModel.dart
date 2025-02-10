@@ -3,31 +3,35 @@ class PlanAlimenticioModel {
   List<PlanDiario> merienda1;
   List<PlanDiario> almuerzo;
   List<PlanDiario> cena;
-  double caloriasDesayuno;
-  double caloriasMerienda1;
-  double caloriasAlmuerzo;
-  double caloriasCena;
-  double carbohidratosDesayuno;
-  double carbohidratosMerienda1;
-  double carbohidratosAlmuerzo;
-  double carbohidratosCena;
-  double carbohidratosDiarios;
 
   PlanAlimenticioModel({
     required this.desayuno,
     required this.merienda1,
     required this.almuerzo,
     required this.cena,
-    required this.caloriasDesayuno,
-    required this.caloriasAlmuerzo,
-    required this.caloriasCena,
-    required this.caloriasMerienda1,
-    required this.carbohidratosDesayuno,
-    required this.carbohidratosMerienda1,
-    required this.carbohidratosAlmuerzo,
-    required this.carbohidratosCena,
-    required this.carbohidratosDiarios,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'desayuno': desayuno.map((e) => e.toJson()).toList(),
+      'merienda1': merienda1.map((e) => e.toJson()).toList(),
+      'almuerzo': almuerzo.map((e) => e.toJson()).toList(),
+      'cena': cena.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  factory PlanAlimenticioModel.fromJson(Map<String, dynamic> json) {
+    return PlanAlimenticioModel(
+      desayuno: List<PlanDiario>.from(
+          json['desayuno'].map((e) => PlanDiario.fromJson(e))),
+      merienda1: List<PlanDiario>.from(
+          json['merienda1'].map((e) => PlanDiario.fromJson(e))),
+      almuerzo: List<PlanDiario>.from(
+          json['almuerzo'].map((e) => PlanDiario.fromJson(e))),
+      cena: List<PlanDiario>.from(
+          json['cena'].map((e) => PlanDiario.fromJson(e))),
+    );
+  }
 }
 
 class PlanDiario {
