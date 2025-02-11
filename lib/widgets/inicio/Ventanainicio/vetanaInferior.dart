@@ -1,8 +1,8 @@
 import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:app_planes/widgets/planAlimenticio/percent_indicators.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
-import 'package:percent_indicator/percent_indicator.dart'; // Si usas percent_indicator.
 
 /// Función para mostrar el BottomSheet.
 void showMealBottomSheet({
@@ -55,7 +55,8 @@ void showMealBottomSheet({
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        buildLinearPercentIndicator("Calorías", 80, 500),
+                        buildLinearPercentIndicator("Calorías",
+                            nutrientes['ENERC_KCAL']?['quantity'] ?? 0.0),
                       ],
                     ),
                     SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
@@ -63,11 +64,21 @@ void showMealBottomSheet({
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         buildCircularPercentIndicator(
-                            11, 25, "Proteínas", const Color(0xFF8AA64D)),
+                            nutrientes['PROCNT']?['quantity'] ?? 0.0,
+                            "Proteínas",
+                            const Color(0xFF8AA64D)),
                         buildCircularPercentIndicator(
-                            11, 25, "Carbohidratos", const Color(0xFF4D7EA6)),
+                            nutrientes['CHOCDF']?['quantity'] ?? 0.0,
+                            "Carbohidratos",
+                            const Color(0xFF4D7EA6)),
                         buildCircularPercentIndicator(
-                            11, 25, "Grasas", const Color(0xFFA64D7C)),
+                            nutrientes['FAT']?['quantity'] ?? 0.0,
+                            "Grasas",
+                            const Color(0xFFA64D7C)),
+                        buildCircularPercentIndicator(
+                            nutrientes['FIBTG']?['quantity'] ?? 0.0,
+                            "Fibra dietetica",
+                            const Color.fromARGB(255, 107, 77, 166)),
                       ],
                     ),
                     SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
@@ -182,70 +193,6 @@ Widget _buildSeparator(double anchoPantalla) {
     width: anchoPantalla * .9,
     height: .8,
     color: const Color(0xFF4DA674).withOpacity(0.5),
-  );
-}
-
-Widget buildLinearPercentIndicator(
-    String nombre, double nivelDeProgreso, double metaProgreso) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        "${nivelDeProgreso}g / $metaProgreso Kcal",
-        style: TextStyle(
-          fontFamily: 'Comfortaa',
-          color: Color(0xFF023336),
-          fontWeight: FontWeight.bold,
-          fontSize: 10,
-        ),
-      ),
-      LinearPercentIndicator(
-        width: 120,
-        lineHeight: 6,
-        percent: nivelDeProgreso / 100,
-        barRadius: Radius.circular(20),
-        progressColor: Color(0xFF4DA674),
-        backgroundColor: Color(0xFF4DA674).withOpacity(0.5),
-      ),
-    ],
-  );
-}
-
-Widget buildCircularPercentIndicator(
-    double nivelDeProgreso, double metaProgreso, String label, Color color) {
-  Color progressColor = color;
-  TextStyle textStyleBase = TextStyle(
-    fontFamily: 'Comfortaa',
-    color: progressColor,
-  );
-
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      CircularPercentIndicator(
-        radius: 30,
-        lineWidth: 5,
-        percent: nivelDeProgreso / 100,
-        progressColor: progressColor,
-        backgroundColor: progressColor.withOpacity(0.5),
-        circularStrokeCap: CircularStrokeCap.round,
-        center: Text(
-          "  $nivelDeProgreso\n /$metaProgreso",
-          style: textStyleBase.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-              color: Color(0xFF023336)),
-        ),
-      ),
-      const SizedBox(height: 8),
-      Text(
-        label,
-        style: textStyleBase.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 10,
-            color: Color(0xFF023336)),
-      ),
-    ],
   );
 }
 

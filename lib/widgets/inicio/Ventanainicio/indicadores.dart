@@ -1,5 +1,3 @@
-// indicadores.dart
-
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart'; // Importa la librería de LinearPercentIndicator y CircularPercentIndicator
