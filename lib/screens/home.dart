@@ -1,3 +1,4 @@
+import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/screens/VentanaPlanAlimentacion/ventana_plan_alimentacion.dart';
 import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
@@ -5,7 +6,9 @@ import 'package:app_planes/screens/ventanaInicio/ventana_inicio.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
 class Inicio extends StatefulWidget {
-  const Inicio({super.key});
+  final PlanAlimenticioModel? planAlimenticio;
+
+  const Inicio({super.key, this.planAlimenticio});
 
   @override
   _InicioState createState() => _InicioState();
@@ -16,7 +19,9 @@ class _InicioState extends State<Inicio> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const VentanaInicio(),
-    const VentanaPlanAlimentacion(),
+    const VentanaPlanAlimentacion(
+      planAlimenticio: null,
+    ),
     const VentanaPerfil(),
   ];
 
@@ -25,6 +30,14 @@ class _InicioState extends State<Inicio> {
       _selectedIndex = index;
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlanAlimenticio();
+  }
+
+  Future<void> _loadPlanAlimenticio() async {}
 
   @override
   Widget build(BuildContext context) {

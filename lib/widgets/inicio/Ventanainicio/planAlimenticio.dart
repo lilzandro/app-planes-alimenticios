@@ -3,12 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 String? selectedMeal; // Variable para almacenar la comida seleccionada
 
 // Contenedor con botones y plan alimenticio
 Widget buildPlanAlimenticio(
-    BuildContext context, String selectedMeal, Function setState) {
+  BuildContext context,
+  String selectedMeal,
+  Function setState,
+  PlanAlimenticioModel? planAlimenticio,
+  userId,
+) {
+  // Agregar print para verificar si llega el plan alimenticio
+  print('Plan alimenticio recibido: $planAlimenticio');
+
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: const BoxDecoration(
@@ -43,26 +53,97 @@ Widget buildPlanAlimenticio(
               Padding(
                 padding: const EdgeInsets.all(1.5),
               ),
-
-              // DESAYUNO
-              _buildExpandableOption('Desayuno', Colors.transparent,
-                  'assets/desayuno.png', selectedMeal, setState, context),
+              // DESAYUN
+              _buildExpandableOption(
+                'Desayuno',
+                Colors.transparent,
+                planAlimenticio?.desayuno.isNotEmpty == true
+                    ? planAlimenticio!.desayuno[0].imagenReceta
+                    : 'assets/desayuno.png',
+                'assets/desayuno.png',
+                selectedMeal,
+                setState,
+                context,
+                planAlimenticio?.desayuno.isNotEmpty == true
+                    ? planAlimenticio!.desayuno[0].nombreReceta
+                    : 'No disponible',
+                planAlimenticio?.desayuno.isNotEmpty == true
+                    ? planAlimenticio!.desayuno[0].energiaKcal
+                    : 0,
+                planAlimenticio?.desayuno.isNotEmpty == true
+                    ? planAlimenticio!.desayuno[0].nutrientes
+                    : {},
+              ),
 
               _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
               // Almuerzo
-              _buildExpandableOption('Almuerzo', Colors.transparent,
-                  'assets/almuerzo.png', selectedMeal, setState, context),
+              _buildExpandableOption(
+                'Almuerzo',
+                Colors.transparent,
+                planAlimenticio?.almuerzo.isNotEmpty == true
+                    ? planAlimenticio!.almuerzo[0].imagenReceta
+                    : 'assets/almuerzo.png',
+                'assets/almuerzo.png',
+                selectedMeal,
+                setState,
+                context,
+                planAlimenticio?.almuerzo.isNotEmpty == true
+                    ? planAlimenticio!.almuerzo[0].nombreReceta
+                    : 'No disponible',
+                planAlimenticio?.almuerzo.isNotEmpty == true
+                    ? planAlimenticio!.almuerzo[0].energiaKcal
+                    : 0,
+                planAlimenticio?.desayuno.isNotEmpty == true
+                    ? planAlimenticio!.desayuno[0].nutrientes
+                    : {},
+              ),
               _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
               // Merienda
-              _buildExpandableOption('Merienda', Colors.transparent,
-                  'assets/merienda.png', selectedMeal, setState, context),
+              _buildExpandableOption(
+                'Merienda',
+                Colors.transparent,
+                planAlimenticio?.merienda1.isNotEmpty == true
+                    ? planAlimenticio!.merienda1[0].imagenReceta
+                    : 'assets/merienda.png',
+                'assets/merienda.png',
+                selectedMeal,
+                setState,
+                context,
+                planAlimenticio?.merienda1.isNotEmpty == true
+                    ? planAlimenticio!.merienda1[0].nombreReceta
+                    : 'No disponible',
+                planAlimenticio?.merienda1.isNotEmpty == true
+                    ? planAlimenticio!.merienda1[0].energiaKcal
+                    : 0,
+                planAlimenticio?.merienda1.isNotEmpty == true
+                    ? planAlimenticio!.merienda1[0].nutrientes
+                    : {},
+              ),
               _buildSeparator(DimensionesDePantalla.anchoPantalla),
 
               // Cena
-              _buildExpandableOption('Cena', Colors.transparent,
-                  'assets/cena.png', selectedMeal, setState, context),
+              _buildExpandableOption(
+                'Cena',
+                Colors.transparent,
+                planAlimenticio?.cena.isNotEmpty == true
+                    ? planAlimenticio!.cena[0].imagenReceta
+                    : 'assets/cena.png',
+                'assets/cena.png',
+                selectedMeal,
+                setState,
+                context,
+                planAlimenticio?.cena.isNotEmpty == true
+                    ? planAlimenticio!.cena[0].nombreReceta
+                    : 'No disponible',
+                planAlimenticio?.cena.isNotEmpty == true
+                    ? planAlimenticio!.cena[0].energiaKcal
+                    : 0,
+                planAlimenticio?.cena.isNotEmpty == true
+                    ? planAlimenticio!.cena[0].nutrientes
+                    : {},
+              ),
             ],
           ),
         ),
@@ -134,10 +215,17 @@ Widget _buildExpandableOption(
   String mealName,
   Color color,
   String imagePath,
+  String imageEr,
   String selectedMeal,
   Function setState,
   BuildContext context,
+  String receta,
+  double calorias,
+  Map<String, dynamic> nutrientes,
 ) {
+  // Agregar print para verificar si llega la receta
+  print('Receta para $mealName: $receta');
+
   return GestureDetector(
     onTap: () {
       // Abrir el BottomSheet al hacer clic
@@ -145,8 +233,13 @@ Widget _buildExpandableOption(
         context: context,
         mealName: mealName,
         imagePath: imagePath,
+        imageEr: imageEr,
         selectedMeal: selectedMeal,
         color: color,
+        planDiario: [],
+        receta: receta,
+        calorias: calorias,
+        nutrientes: nutrientes,
       );
     },
     child: Container(
@@ -157,11 +250,35 @@ Widget _buildExpandableOption(
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          Image.asset(
-            imagePath,
-            height: DimensionesDePantalla.anchoPantalla * .2,
-            width: DimensionesDePantalla.anchoPantalla * .22,
-          ),
+          imagePath.startsWith('http')
+              ? Padding(
+                  padding: EdgeInsets.only(
+                      left: DimensionesDePantalla.anchoPantalla * .03,
+                      right: DimensionesDePantalla.anchoPantalla * .03),
+                  // Espacio a la derecha de la imagen
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: imagePath,
+                      height: DimensionesDePantalla.anchoPantalla * .15,
+                      width: DimensionesDePantalla.anchoPantalla * .16,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.asset(
+                        imageEr, // Ruta de tu imagen local
+                        height: DimensionesDePantalla.anchoPantalla * .15,
+                        width: DimensionesDePantalla.anchoPantalla * .16,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+              : Image.asset(
+                  imagePath,
+                  height: DimensionesDePantalla.anchoPantalla * .2,
+                  width: DimensionesDePantalla.anchoPantalla * .22,
+                  fit: BoxFit.cover,
+                ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,9 +292,9 @@ Widget _buildExpandableOption(
                   fontSize: 14,
                 ),
               ),
-              const Text(
-                'Alimentos',
-                style: TextStyle(
+              Text(
+                receta,
+                style: const TextStyle(
                   fontFamily: 'Comfortaa',
                   color: Color(0xFF023336),
                   fontSize: 10,

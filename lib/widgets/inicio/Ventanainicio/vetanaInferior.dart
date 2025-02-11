@@ -1,3 +1,5 @@
+import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:percent_indicator/percent_indicator.dart'; // Si usas percent_indicator.
@@ -9,6 +11,11 @@ void showMealBottomSheet({
   required String imagePath,
   required String selectedMeal,
   required Color color,
+  required List<PlanDiario> planDiario,
+  required String imageEr,
+  required String receta,
+  required double calorias,
+  required Map<String, dynamic> nutrientes,
 }) {
   showModalBottomSheet(
     context: context,
@@ -74,11 +81,50 @@ void showMealBottomSheet({
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
-                          Image.asset(
-                            imagePath,
-                            height: DimensionesDePantalla.anchoPantalla * .2,
-                            width: DimensionesDePantalla.anchoPantalla * .22,
-                          ),
+                          imagePath.startsWith('http')
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      left:
+                                          DimensionesDePantalla.anchoPantalla *
+                                              .03,
+                                      right:
+                                          DimensionesDePantalla.anchoPantalla *
+                                              .03),
+                                  // Espacio a la derecha de la imagen
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl: imagePath,
+                                      height:
+                                          DimensionesDePantalla.anchoPantalla *
+                                              .15,
+                                      width:
+                                          DimensionesDePantalla.anchoPantalla *
+                                              .16,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        imageEr, // Ruta de tu imagen local
+                                        height: DimensionesDePantalla
+                                                .anchoPantalla *
+                                            .15,
+                                        width: DimensionesDePantalla
+                                                .anchoPantalla *
+                                            .16,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Image.asset(
+                                  imagePath,
+                                  height:
+                                      DimensionesDePantalla.anchoPantalla * .2,
+                                  width:
+                                      DimensionesDePantalla.anchoPantalla * .22,
+                                  fit: BoxFit.cover,
+                                ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,9 +138,9 @@ void showMealBottomSheet({
                                   fontSize: 14,
                                 ),
                               ),
-                              const Text(
-                                'Alimentos',
-                                style: TextStyle(
+                              Text(
+                                receta,
+                                style: const TextStyle(
                                   fontFamily: 'Comfortaa',
                                   color: Color(0xFF023336),
                                   fontSize: 10,
@@ -107,7 +153,7 @@ void showMealBottomSheet({
                     ),
                     SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
                     _buildSeparator(DimensionesDePantalla.anchoPantalla),
-                    _buildInformacionNutricional(),
+                    _buildInformacionNutricional(nutrientes),
                   ],
                 ),
               ),
@@ -203,38 +249,13 @@ Widget buildCircularPercentIndicator(
   );
 }
 
-Widget _buildInformacionNutricional() {
-  // Datos de ejemplo de alimentos
-  List<Map<String, dynamic>> alimentos = [
-    {
-      'nombre': 'Pollo a la parrilla',
-      'calorias': 150,
-      'proteinas': 25,
-      'carbohidratos': 0,
-      'grasas': 5
-    },
-    {
-      'nombre': 'Arroz integral',
-      'calorias': 200,
-      'proteinas': 5,
-      'carbohidratos': 45,
-      'grasas': 2
-    },
-    {
-      'nombre': 'Zanahoria',
-      'calorias': 35,
-      'proteinas': 1,
-      'carbohidratos': 8,
-      'grasas': 0
-    },
-  ];
-
-  // Clasificación de alimentos por categorías
-  Map<String, List<Map<String, dynamic>>> categorias = {
-    'Calorías': alimentos,
-    'Proteínas': alimentos.where((a) => a['proteinas'] > 0).toList(),
-    'Carbohidratos': alimentos.where((a) => a['carbohidratos'] > 0).toList(),
-    'Grasas': alimentos.where((a) => a['grasas'] > 0).toList(),
+Widget _buildInformacionNutricional(Map<String, dynamic> nutrientes) {
+  // Clasificación de nutrientes por categorías
+  Map<String, double> categorias = {
+    'Calorías': nutrientes['ENERC_KCAL']?['quantity'] ?? 0.0,
+    'Proteínas': nutrientes['PROCNT']?['quantity'] ?? 0.0,
+    'Carbohidratos': nutrientes['CHOCDF']?['quantity'] ?? 0.0,
+    'Grasas': nutrientes['FAT']?['quantity'] ?? 0.0,
   };
 
   // Colores para cada categoría
@@ -281,8 +302,7 @@ Widget _buildInformacionNutricional() {
 }
 
 // Método auxiliar para renderizar una categoría y sus alimentos
-Widget _buildCategoria(
-    String categoria, Color color, List<Map<String, dynamic>> alimentos) {
+Widget _buildCategoria(String categoria, Color color, double valor) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -305,58 +325,30 @@ Widget _buildCategoria(
         height: 2,
         color: color, // Color de la línea
       ),
-      Column(
-        children: alimentos
-            .map((alimento) => _buildDetallePorCategoria(alimento, categoria))
-            .toList(),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              categoria,
+              style: const TextStyle(
+                fontFamily: 'Comfortaa',
+                fontSize: 12,
+                color: Color(0xFF023336),
+              ),
+            ),
+            Text(
+              '$valor g',
+              style: const TextStyle(
+                fontFamily: 'Comfortaa',
+                fontSize: 12,
+                color: Color(0xFF6B6B6B),
+              ),
+            ),
+          ],
+        ),
       ),
     ],
-  );
-}
-
-// Método auxiliar para renderizar los valores específicos de cada alimento según la categoría
-Widget _buildDetallePorCategoria(
-    Map<String, dynamic> alimento, String categoria) {
-  String valorNutricional;
-  switch (categoria) {
-    case 'Calorías':
-      valorNutricional = '${alimento['calorias']} kcal';
-      break;
-    case 'Proteínas':
-      valorNutricional = '${alimento['proteinas']} g';
-      break;
-    case 'Carbohidratos':
-      valorNutricional = '${alimento['carbohidratos']} g';
-      break;
-    case 'Grasas':
-      valorNutricional = '${alimento['grasas']} g';
-      break;
-    default:
-      valorNutricional = 'N/A';
-  }
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          alimento['nombre'] ?? 'Sin nombre',
-          style: const TextStyle(
-            fontFamily: 'Comfortaa',
-            fontSize: 12,
-            color: Color(0xFF023336),
-          ),
-        ),
-        Text(
-          valorNutricional,
-          style: const TextStyle(
-            fontFamily: 'Comfortaa',
-            fontSize: 12,
-            color: Color(0xFF6B6B6B),
-          ),
-        ),
-      ],
-    ),
   );
 }

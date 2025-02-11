@@ -1,20 +1,24 @@
+import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:app_planes/screens/home.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/screens/Login/olvidar_contrase%C3%B1a.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/services/auth_service.dart';
+import 'package:app_planes/database/databaseHelper.dart' as db_helper2;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VentanaInicioSeccion extends StatefulWidget {
   const VentanaInicioSeccion({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _VentanaInicioSesionState createState() => _VentanaInicioSesionState();
 }
 
 class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
   final AuthService _authService = AuthService();
+  final db_helper2.DatabaseHelper _databaseHelper = db_helper2.DatabaseHelper();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -23,6 +27,7 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
   bool _obscurePassword = true;
   bool showVerificationButton = false;
   bool isLoading = false;
+  PlanAlimenticioModel? planAlimenticio;
 
   @override
   Widget build(BuildContext context) {
@@ -230,8 +235,32 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
                 showVerificationButton = true;
               });
             } else {
-              Navigator.pushNamed(
-                  context, '/home'); // Ir a la siguiente pantalla
+              print(
+                  'Usuario autenticado: ${userCredential.user!.uid}'); // Depuración
+
+              // Guardar el userId en shared_preferences
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.setString('userId', userCredential.user!.uid);
+
+              // Buscar el plan alimenticio del usuario en la base de datos local
+              planAlimenticio = await _databaseHelper
+                  .getPlanAlimenticio(userCredential.user!.uid);
+
+              if (planAlimenticio != null) {
+                print(
+                    'Plan alimenticio encontrado: ${planAlimenticio!.desayuno}'); // Depuración
+              } else {
+                print(
+                    'No se encontró un plan alimenticio para este usuario'); // Depuración
+              }
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Inicio(planAlimenticio: planAlimenticio),
+                ),
+              ); // Ir a la siguiente pantalla
             }
           } on FirebaseAuthException catch (e) {
             print('FirebaseAuthException code: ${e.code}'); // Depuración

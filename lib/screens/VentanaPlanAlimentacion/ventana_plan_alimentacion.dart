@@ -4,9 +4,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:intl/intl.dart';
 import 'package:app_planes/screens/VentanaPlanAlimentacion/plan_dia.dart';
+import 'package:app_planes/models/planAlimenticioModel.dart';
 
 class VentanaPlanAlimentacion extends StatefulWidget {
-  const VentanaPlanAlimentacion({super.key});
+  final PlanAlimenticioModel? planAlimenticio;
+
+  const VentanaPlanAlimentacion({super.key, required this.planAlimenticio});
 
   @override
   _VentanaPlanAlimentacionState createState() =>
@@ -216,6 +219,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                               builder: (context) => DayDetailScreen.planDia(
                                 dayString: dayString,
                                 daysOfWeek: daysOfWeek[index],
+                                planAlimenticio: widget.planAlimenticio!,
                               ),
                             ),
                           );

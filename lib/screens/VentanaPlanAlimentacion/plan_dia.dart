@@ -2,14 +2,19 @@ import 'package:app_planes/widgets/inicio/Ventanainicio/vetanaInferior.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/utils/linea.dart';
+import 'package:app_planes/models/planAlimenticioModel.dart';
 
 class DayDetailScreen extends StatelessWidget {
   final String dayString;
-
   final String daysOfWeek;
+  final PlanAlimenticioModel planAlimenticio;
 
-  const DayDetailScreen.planDia(
-      {super.key, required this.dayString, required this.daysOfWeek});
+  const DayDetailScreen.planDia({
+    super.key,
+    required this.dayString,
+    required this.daysOfWeek,
+    required this.planAlimenticio,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,44 +93,48 @@ class DayDetailScreen extends StatelessWidget {
                       ),
                     ),
                     _buildMealSection(
-                        'Desayuno',
-                        'Descripción del desayuno',
-                        'assets/desayuno.png',
-                        const Color(0xFFeaf8e7),
-                        'assets/desayuno.png',
-                        'Desayuno',
-                        () {},
-                        context),
+                      'Desayuno',
+                      'Descripción del desayuno',
+                      'assets/desayuno.png',
+                      const Color(0xFFeaf8e7),
+                      'assets/desayuno.png',
+                      'Desayuno',
+                      planAlimenticio.desayuno,
+                      context,
+                    ),
                     linea(1, .8),
                     _buildMealSection(
-                        'Almuerzo',
-                        'Descripción del almuerzo',
-                        'assets/almuerzo.png',
-                        const Color(0xFFeaf8e7),
-                        'assets/almuerzo.png',
-                        'Almuerzo',
-                        () {},
-                        context),
+                      'Almuerzo',
+                      'Descripción del almuerzo',
+                      'assets/almuerzo.png',
+                      const Color(0xFFeaf8e7),
+                      'assets/almuerzo.png',
+                      'Almuerzo',
+                      planAlimenticio.almuerzo,
+                      context,
+                    ),
                     linea(1, .8),
                     _buildMealSection(
-                        'Cena',
-                        'Descripción de la cena',
-                        'assets/cena.png',
-                        const Color(0xFFeaf8e7),
-                        'assets/cena.png',
-                        'Cena',
-                        () {},
-                        context),
+                      'Cena',
+                      'Descripción de la cena',
+                      'assets/cena.png',
+                      const Color(0xFFeaf8e7),
+                      'assets/cena.png',
+                      'Cena',
+                      planAlimenticio.cena,
+                      context,
+                    ),
                     linea(1, .8),
                     _buildMealSection(
-                        'Merienda',
-                        'Descripción de la merienda',
-                        'assets/merienda.png',
-                        const Color(0xFFeaf8e7),
-                        'assets/merienda.png',
-                        'Merienda',
-                        () {},
-                        context),
+                      'Merienda',
+                      'Descripción de la merienda',
+                      'assets/merienda.png',
+                      const Color(0xFFeaf8e7),
+                      'assets/merienda.png',
+                      'Merienda',
+                      planAlimenticio.merienda1,
+                      context,
+                    ),
                   ],
                 ),
               ),
@@ -143,7 +152,7 @@ class DayDetailScreen extends StatelessWidget {
     Color color,
     String imagePath,
     String selectedMeal,
-    Function setState,
+    List<PlanDiario> planDiario,
     BuildContext context,
   ) {
     return Padding(
@@ -153,9 +162,10 @@ class DayDetailScreen extends StatelessWidget {
         children: [
           SizedBox(width: DimensionesDePantalla.pantallaSize * 0.03),
           SizedBox(
-              height: DimensionesDePantalla.pantallaSize *
-                  0.16, // Ancho fijo para el nombre de la comida
-              child: Column(children: [
+            height: DimensionesDePantalla.pantallaSize *
+                0.16, // Ancho fijo para el nombre de la comida
+            child: Column(
+              children: [
                 Image.asset(
                   imgComida,
                   height: DimensionesDePantalla.anchoPantalla * .2,
@@ -180,6 +190,11 @@ class DayDetailScreen extends StatelessWidget {
                         imagePath: imgComida,
                         selectedMeal: selectedMeal,
                         color: color,
+                        planDiario: planDiario,
+                        imageEr: '',
+                        receta: '',
+                        calorias: 0.0,
+                        nutrientes: {},
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -194,7 +209,9 @@ class DayDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              ])),
+              ],
+            ),
+          ),
           SizedBox(width: DimensionesDePantalla.pantallaSize * 0.03),
           SizedBox(
             height: DimensionesDePantalla.pantallaSize *

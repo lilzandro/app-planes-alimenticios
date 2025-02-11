@@ -150,7 +150,7 @@ class RegistroService {
 
             final planDiario = PlanDiario(
               nombreReceta: receta['label'],
-              imagenReceta: receta['image'],
+              imagenReceta: receta['images']['THUMBNAIL']['url'],
               ingredientes: List<String>.from(receta['ingredientLines']),
               informacionIngredientes:
                   List<Map<String, dynamic>>.from(receta['ingredients'] ?? []),
