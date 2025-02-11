@@ -16,6 +16,7 @@ void showMealBottomSheet({
   required String receta,
   required double gramosComida,
   required Map<String, dynamic> nutrientes,
+  required double proporcionComida,
 }) {
   showModalBottomSheet(
     context: context,
@@ -142,7 +143,7 @@ void showMealBottomSheet({
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  receta,
+                                  '$receta - ${(gramosComida / proporcionComida).toInt()} gramos',
                                   style: const TextStyle(
                                     fontFamily: 'Comfortaa',
                                     fontWeight: FontWeight.bold,

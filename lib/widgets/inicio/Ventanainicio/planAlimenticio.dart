@@ -114,6 +114,7 @@ Widget _buildExpandableOption(
   final String receta = mealData?.nombreReceta ?? 'No disponible';
   final double gramosComida = mealData?.gramosComida ?? 0;
   final Map<String, dynamic> nutrientes = mealData?.nutrientes ?? {};
+  final double proporcionComida = mealData?.proporcionComida ?? 0;
 
   print('Receta para $mealName: $receta');
 
@@ -130,6 +131,7 @@ Widget _buildExpandableOption(
         receta: receta,
         gramosComida: gramosComida,
         nutrientes: nutrientes,
+        proporcionComida: proporcionComida,
       );
     },
     child: Container(

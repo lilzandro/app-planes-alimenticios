@@ -195,6 +195,7 @@ class DayDetailScreen extends StatelessWidget {
                         receta: '',
                         gramosComida: 0.0,
                         nutrientes: {},
+                        proporcionComida: 0.0,
                       );
                     },
                     style: ElevatedButton.styleFrom(
