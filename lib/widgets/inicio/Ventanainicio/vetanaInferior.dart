@@ -14,7 +14,7 @@ void showMealBottomSheet({
   required List<PlanDiario> planDiario,
   required String imageEr,
   required String receta,
-  required double calorias,
+  required double gramosComida,
   required Map<String, dynamic> nutrientes,
 }) {
   showModalBottomSheet(
@@ -136,29 +136,23 @@ void showMealBottomSheet({
                                       DimensionesDePantalla.anchoPantalla * .22,
                                   fit: BoxFit.cover,
                                 ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                mealName,
-                                style: const TextStyle(
-                                  fontFamily: 'Comfortaa',
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF023336),
-                                  fontSize: 14,
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  receta,
+                                  style: const TextStyle(
+                                    fontFamily: 'Comfortaa',
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF023336),
+                                    fontSize: 15,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                receta,
-                                style: const TextStyle(
-                                  fontFamily: 'Comfortaa',
-                                  color: Color(0xFF023336),
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -197,20 +191,56 @@ Widget _buildSeparator(double anchoPantalla) {
 }
 
 Widget _buildInformacionNutricional(Map<String, dynamic> nutrientes) {
-  // Clasificación de nutrientes por categorías
-  Map<String, double> categorias = {
-    'Calorías': nutrientes['ENERC_KCAL']?['quantity'] ?? 0.0,
-    'Proteínas': nutrientes['PROCNT']?['quantity'] ?? 0.0,
-    'Carbohidratos': nutrientes['CHOCDF']?['quantity'] ?? 0.0,
-    'Grasas': nutrientes['FAT']?['quantity'] ?? 0.0,
+  // Clasificación de nutrientes por categorías y subcategorías
+  Map<String, Map<String, double>> categorias = {
+    'Grasas': {
+      'Total': nutrientes['FAT']?['quantity'] ?? 0.0,
+      'Saturated': nutrientes['FASAT']?['quantity'] ?? 0.0,
+      'Trans': nutrientes['FATRN']?['quantity'] ?? 0.0,
+      'Monounsaturated': nutrientes['FAMS']?['quantity'] ?? 0.0,
+      'Polyunsaturated': nutrientes['FAPU']?['quantity'] ?? 0.0,
+    },
+    'Carbohidratos y Azúcares': {
+      'Carbohydrates (net)': nutrientes['CHOCDF']?['quantity'] ?? 0.0,
+      'Sugars': nutrientes['SUGAR']?['quantity'] ?? 0.0,
+    },
+    'Minerales': {
+      'Cholesterol': nutrientes['CHOLE']?['quantity'] ?? 0.0,
+      'Sodium': nutrientes['NA']?['quantity'] ?? 0.0,
+      'Calcium': nutrientes['CA']?['quantity'] ?? 0.0,
+      'Magnesium': nutrientes['MG']?['quantity'] ?? 0.0,
+      'Potassium': nutrientes['K']?['quantity'] ?? 0.0,
+      'Iron': nutrientes['FE']?['quantity'] ?? 0.0,
+      'Zinc': nutrientes['ZN']?['quantity'] ?? 0.0,
+      'Phosphorus': nutrientes['P']?['quantity'] ?? 0.0,
+    },
+    'Vitaminas': {
+      'Vitamin A': nutrientes['VITA_RAE']?['quantity'] ?? 0.0,
+      'Vitamin C': nutrientes['VITC']?['quantity'] ?? 0.0,
+      'Thiamin (B1)': nutrientes['THIA']?['quantity'] ?? 0.0,
+      'Riboflavin (B2)': nutrientes['RIBF']?['quantity'] ?? 0.0,
+      'Niacin (B3)': nutrientes['NIA']?['quantity'] ?? 0.0,
+      'Vitamin B6': nutrientes['VITB6A']?['quantity'] ?? 0.0,
+      'Folate equivalent (total)': nutrientes['FOLDFE']?['quantity'] ?? 0.0,
+      'Folate (food)': nutrientes['FOLFD']?['quantity'] ?? 0.0,
+      'Folic acid': nutrientes['FOLAC']?['quantity'] ?? 0.0,
+      'Vitamin B12': nutrientes['VITB12']?['quantity'] ?? 0.0,
+      'Vitamin D': nutrientes['VITD']?['quantity'] ?? 0.0,
+      'Vitamin E': nutrientes['TOCPHA']?['quantity'] ?? 0.0,
+      'Vitamin K': nutrientes['VITK1']?['quantity'] ?? 0.0,
+    },
+    'Otros': {
+      'Water': nutrientes['WATER']?['quantity'] ?? 0.0,
+    },
   };
 
   // Colores para cada categoría
   Map<String, Color> categoriaColores = {
-    'Calorías': Color(0xFF4DA674),
-    'Proteínas': Color(0xFF8AA64D),
-    'Carbohidratos': Color(0xFF4D7EA6),
     'Grasas': Color(0xFFA64D7C),
+    'Carbohidratos y Azúcares': Color(0xFF4D7EA6),
+    'Minerales': Color(0xFF8AA64D),
+    'Vitaminas': Color(0xFF4DA674),
+    'Otros': Color(0xFF6B6B6B),
   };
 
   return Container(
@@ -239,63 +269,51 @@ Widget _buildInformacionNutricional(Map<String, dynamic> nutrientes) {
           ),
         ),
         const SizedBox(height: 10),
-        ...categorias.entries.map((entry) {
-          return _buildCategoria(
-              entry.key, categoriaColores[entry.key]!, entry.value);
-        }),
+        ...categorias.entries.map((categoriaEntry) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                categoriaEntry.key,
+                style: TextStyle(
+                  fontFamily: 'Comfortaa',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: categoriaColores[categoriaEntry.key],
+                ),
+              ),
+              const SizedBox(height: 5),
+              ...categoriaEntry.value.entries.map((subCategoriaEntry) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        subCategoriaEntry.key,
+                        style: const TextStyle(
+                          fontFamily: 'Comfortaa',
+                          fontSize: 12,
+                          color: Color(0xFF023336),
+                        ),
+                      ),
+                      Text(
+                        '${subCategoriaEntry.value.toStringAsFixed(1)} g',
+                        style: const TextStyle(
+                          fontFamily: 'Comfortaa',
+                          fontSize: 12,
+                          color: Color(0xFF6B6B6B),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+              const SizedBox(height: 10),
+            ],
+          );
+        }).toList(),
       ],
     ),
-  );
-}
-
-// Método auxiliar para renderizar una categoría y sus alimentos
-Widget _buildCategoria(String categoria, Color color, double valor) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Text(
-          categoria,
-          style: const TextStyle(
-            fontFamily: 'Comfortaa',
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF023336),
-          ),
-        ),
-      ),
-      // Línea de separación con color según la categoría
-      Container(
-        width: DimensionesDePantalla.anchoPantalla *
-            0.4, // Asegura que la línea ocupe todo el ancho
-        height: 2,
-        color: color, // Color de la línea
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              categoria,
-              style: const TextStyle(
-                fontFamily: 'Comfortaa',
-                fontSize: 12,
-                color: Color(0xFF023336),
-              ),
-            ),
-            Text(
-              '$valor g',
-              style: const TextStyle(
-                fontFamily: 'Comfortaa',
-                fontSize: 12,
-                color: Color(0xFF6B6B6B),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
   );
 }

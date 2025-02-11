@@ -155,7 +155,7 @@ class RegistroService {
               informacionIngredientes:
                   List<Map<String, dynamic>>.from(receta['ingredients'] ?? []),
               nutrientes: receta['totalNutrients'],
-              energiaKcal: receta['totalNutrients']['ENERC_KCAL']['quantity'],
+              gramosComida: receta['totalWeight'],
               proporcionComida: receta['yield'],
             );
 

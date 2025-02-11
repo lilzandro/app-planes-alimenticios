@@ -112,7 +112,7 @@ Widget _buildExpandableOption(
 ) {
   final String imagePath = mealData?.imagenReceta ?? 'assets/$mealName.png';
   final String receta = mealData?.nombreReceta ?? 'No disponible';
-  final double calorias = mealData?.energiaKcal ?? 0;
+  final double gramosComida = mealData?.gramosComida ?? 0;
   final Map<String, dynamic> nutrientes = mealData?.nutrientes ?? {};
 
   print('Receta para $mealName: $receta');
@@ -128,7 +128,7 @@ Widget _buildExpandableOption(
         color: Colors.transparent,
         planDiario: [],
         receta: receta,
-        calorias: calorias,
+        gramosComida: gramosComida,
         nutrientes: nutrientes,
       );
     },
@@ -140,7 +140,7 @@ Widget _buildExpandableOption(
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          _buildMealImage(imagePath),
+          _buildMealImage(imagePath, mealName),
           _buildMealInfo(mealName, receta),
         ],
       ),
@@ -148,7 +148,7 @@ Widget _buildExpandableOption(
   );
 }
 
-Widget _buildMealImage(String imagePath) {
+Widget _buildMealImage(String imagePath, String mealName) {
   return Padding(
     padding: EdgeInsets.symmetric(
         horizontal: DimensionesDePantalla.anchoPantalla * .03),
@@ -161,7 +161,7 @@ Widget _buildMealImage(String imagePath) {
               fit: BoxFit.cover,
               placeholder: (context, url) => CircularProgressIndicator(),
               errorWidget: (context, url, error) => Image.asset(
-                'assets/error.png',
+                'assets/$mealName.png',
                 height: DimensionesDePantalla.anchoPantalla * .15,
                 width: DimensionesDePantalla.anchoPantalla * .16,
                 fit: BoxFit.cover,

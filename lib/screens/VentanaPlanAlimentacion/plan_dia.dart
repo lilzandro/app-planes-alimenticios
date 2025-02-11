@@ -193,7 +193,7 @@ class DayDetailScreen extends StatelessWidget {
                         planDiario: planDiario,
                         imageEr: '',
                         receta: '',
-                        calorias: 0.0,
+                        gramosComida: 0.0,
                         nutrientes: {},
                       );
                     },

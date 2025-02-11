@@ -22,10 +22,10 @@ Widget buildCircularPercentIndicator(
         backgroundColor: color.withOpacity(0.5),
         circularStrokeCap: CircularStrokeCap.round,
         center: Text(
-          "  ${nivelDeProgreso.toStringAsFixed(1)}  ",
+          "  ${nivelDeProgreso.toStringAsFixed(1)}g  ",
           style: textStyleBase.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 15,
           ),
         ),
       ),
@@ -51,7 +51,7 @@ Widget buildLinearPercentIndicator(String nombre, double nivelDeProgreso) {
             fontFamily: 'Comfortaa', color: Color(0xFFEAF8E7), fontSize: 12),
       ),
       Text(
-        "${nivelDeProgreso.toInt()}",
+        "${nivelDeProgreso.toInt()} Kcal",
         style: TextStyle(
           fontFamily: 'Comfortaa',
           color: Color(0xFF023336),
@@ -73,7 +73,6 @@ Widget buildLinearPercentIndicator(String nombre, double nivelDeProgreso) {
           fontFamily: 'Comfortaa',
           color: Color(0xFF023336),
           fontSize: 15,
-          fontWeight: FontWeight.bold,
         ),
       ),
     ],

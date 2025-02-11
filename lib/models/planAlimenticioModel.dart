@@ -42,7 +42,7 @@ class PlanDiario {
   final List<String> ingredientes;
   final List<Map<String, dynamic>> informacionIngredientes;
   final Map<String, dynamic> nutrientes;
-  final double energiaKcal;
+  final double gramosComida;
   final double proporcionComida;
 
   PlanDiario({
@@ -51,7 +51,7 @@ class PlanDiario {
     required this.ingredientes,
     required this.informacionIngredientes,
     required this.nutrientes,
-    required this.energiaKcal,
+    required this.gramosComida,
     required this.proporcionComida,
   });
 
@@ -62,7 +62,7 @@ class PlanDiario {
       'ingredientes': jsonEncode(ingredientes),
       'informacionIngredientes': jsonEncode(informacionIngredientes),
       'nutrientes': jsonEncode(nutrientes),
-      'energiaKcal': energiaKcal,
+      'gramosComida': gramosComida,
       'proporcionComida': proporcionComida,
     };
   }
@@ -75,8 +75,8 @@ class PlanDiario {
       informacionIngredientes: List<Map<String, dynamic>>.from(
           jsonDecode(json['informacionIngredientes'])),
       nutrientes: Map<String, dynamic>.from(jsonDecode(json['nutrientes'])),
-      energiaKcal: json['energiaKcal'],
-      proporcionComida: json['proporcionComida'],
+      gramosComida: (json['gramosComida'] ?? 0.0).toDouble(),
+      proporcionComida: (json['proporcionComida'] ?? 0.0).toDouble(),
     );
   }
 }
