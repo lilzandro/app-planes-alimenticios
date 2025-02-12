@@ -1,3 +1,4 @@
+import 'package:app_planes/services/database_service.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -17,6 +18,25 @@ class VentanaPlanAlimentacion extends StatefulWidget {
 }
 
 class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
+  PlanAlimenticioModel? _planAlimenticio;
+  Widget? _calendarWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlanAlimenticio();
+  }
+
+  String? userId;
+
+  Future<void> _loadPlanAlimenticio() async {
+    _planAlimenticio = await PlanAlimenticioService.loadPlanAlimenticio();
+    setState(() {
+      _calendarWidget =
+          _buildCalendarWidget(_planAlimenticio?.desayuno.length ?? 0);
+    });
+  }
+
   final List<String> days = [
     'Lunes',
     'Martes',
@@ -29,12 +49,14 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
 
   @override
   Widget build(BuildContext context) {
+    int cantidadComidas = _planAlimenticio?.desayuno.length ?? 0;
+    print('Cantidad de comidas: $cantidadComidas');
     return ResponsiveContainer(
-        buildBlocks: (context) => _buildBlocks(context),
+        buildBlocks: (context) => _buildBlocks(context, cantidadComidas),
         backgroundColor: Color(0xFFEAF8E7));
   }
 
-  List<Widget> _buildBlocks(BuildContext context) {
+  List<Widget> _buildBlocks(BuildContext context, int cantidadComidas) {
     return [
       // Encabezado
       SizedBox(
@@ -64,7 +86,9 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       ),
       // Calendario
 
-      _buildCalendarWidget(),
+      _calendarWidget ??
+          Container(), // Usa el widget almacenado o un contenedor vacío si aún no está cargado
+
       Container(
         width: DimensionesDePantalla.anchoPantalla * .9,
         height: .8,
@@ -158,7 +182,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     ];
   }
 
-  Widget _buildCalendarWidget() {
+  Widget _buildCalendarWidget(int cantidadComidas) {
     final List<String> daysOfWeek = [
       'Lunes',
       'Martes',
@@ -199,7 +223,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                   mainAxisSpacing: DimensionesDePantalla.pantallaSize * 0.02,
                   childAspectRatio: 1,
                 ),
-                itemCount: daysOfWeek.length,
+                itemCount: cantidadComidas,
                 itemBuilder: (context, index) {
                   // Calcular la fecha correspondiente a cada día de la semana
                   DateTime dayDate = startOfWeek.add(Duration(days: index));

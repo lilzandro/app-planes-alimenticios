@@ -1,9 +1,8 @@
-import 'package:app_planes/database/databaseHelper.dart';
+import 'package:app_planes/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/indicadores.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/planAlimenticio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_planes/models/planAlimenticioModel.dart';
 
 class VentanaInicio extends StatefulWidget {
@@ -26,22 +25,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
   String? userId;
 
   Future<void> _loadPlanAlimenticio() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('userId');
-    if (userId != null) {
-      DatabaseHelper _databaseHelper = DatabaseHelper();
-      _planAlimenticio = await _databaseHelper.getPlanAlimenticio(userId!);
-      if (_planAlimenticio != null) {
-        print('Recetas del desayuno:');
-        _planAlimenticio!.desayuno.forEach((planDiario) {
-          print(planDiario.nombreReceta);
-        });
-      } else {
-        print('No se encontró un plan alimenticio para este usuario');
-      }
-    } else {
-      print('No se encontró el userId en shared_preferences');
-    }
+    _planAlimenticio = await PlanAlimenticioService.loadPlanAlimenticio();
     setState(() {});
   }
 

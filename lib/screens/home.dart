@@ -17,27 +17,30 @@ class Inicio extends StatefulWidget {
 class _InicioState extends State<Inicio> {
   int _selectedIndex = 0;
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const VentanaInicio(),
-    const VentanaPlanAlimentacion(
-      planAlimenticio: null,
-    ),
-    const VentanaPerfil(),
-  ];
+  late List<Widget> _widgetOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlanAlimenticio();
+    _widgetOptions = <Widget>[
+      const VentanaInicio(),
+      VentanaPlanAlimentacion(
+        planAlimenticio: widget.planAlimenticio,
+      ),
+      const VentanaPerfil(),
+    ];
+  }
+
+  Future<void> _loadPlanAlimenticio() async {
+    // Aquí puedes cargar el plan alimenticio si es necesario
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPlanAlimenticio();
-  }
-
-  Future<void> _loadPlanAlimenticio() async {}
 
   @override
   Widget build(BuildContext context) {
