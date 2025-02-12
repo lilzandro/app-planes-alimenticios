@@ -57,7 +57,6 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   List<Widget> _buildBlocks(BuildContext context, int cantidadComidas,
       PlanAlimenticioModel planAlimenticio) {
     return [
-      // Encabezado
       SizedBox(
         height: DimensionesDePantalla.pantallaSize * 0.17,
         child: Column(
@@ -69,119 +68,118 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                 'Plan Semanal\n de Alimentación',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF023336)),
+                  fontFamily: 'Comfortaa',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF023336),
+                ),
               ),
             ),
           ],
         ),
       ),
-      Container(
-        width: DimensionesDePantalla.anchoPantalla * .9,
-        height: .8,
-        color: const Color(0xFF4DA674).withOpacity(0.5),
-      ),
-      // Calendario
+      Divider(color: const Color(0xFF4DA674).withOpacity(0.5), thickness: 0.8),
       _buildCalendarWidget(cantidadComidas, planAlimenticio),
-
-      Container(
-        width: DimensionesDePantalla.anchoPantalla * .9,
-        height: .8,
-        color: const Color(0xFF4DA674).withOpacity(0.5),
-      ),
-
+      Divider(color: const Color(0xFF4DA674).withOpacity(0.5), thickness: 0.8),
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-
-      Container(
-          padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0),
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              Text(
-                'Menú manual',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF023336)),
-              ),
-              Text(
-                'Realiza tus propias recetas',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    fontSize: 15,
-                    color: Color(0xFF023336)),
-              ),
-            ],
-          )),
-      SizedBox(
-        height: DimensionesDePantalla.anchoPantalla * 0.05,
-      ),
-      Container(
-          height: DimensionesDePantalla.anchoPantalla * .12,
-          width: DimensionesDePantalla.anchoPantalla * 0.6,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(45, 0, 0, 0),
-                blurRadius: 4.0,
-                offset: Offset(0, 0), // Desplazamiento de la sombra
-              ),
-            ],
-            // Esquinas redondeadas
-          ),
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF023336),
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(15.0), // Esquinas redondeadas
-              ),
-            ),
-            child: Text("Crear menú manual",
-                style: TextStyle(
-                  fontFamily: 'Comfortaa',
-                  color: Color(0xFFEAF8E7),
-                )),
-          )),
-      SizedBox(
-        height: DimensionesDePantalla.anchoPantalla * 0.07,
-      ),
-
-      // Carrusel
-      CarouselSlider(
-        options: CarouselOptions(
-            height: DimensionesDePantalla.pantallaSize * 0.18,
-            autoPlay: true,
-            viewportFraction: 0.5),
-        items: [1, 2, 3, 4, 5].map((i) {
-          return Builder(
-            builder: (BuildContext context) {
-              return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(color: Color(0xFFC1E6BA)),
-                  child: Text(
-                    'text $i',
-                    style: TextStyle(fontSize: 16.0),
-                  ));
-            },
-          );
-        }).toList(),
-      )
+      _buildManualMenuSection(),
+      SizedBox(height: DimensionesDePantalla.anchoPantalla * 0.05),
+      _buildCreatePlanButton(),
+      SizedBox(height: DimensionesDePantalla.anchoPantalla * 0.07),
+      _buildCarousel(),
     ];
+  }
+
+  Widget _buildManualMenuSection() {
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Text(
+            'Menú manual',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Comfortaa',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF023336),
+            ),
+          ),
+          Text(
+            'Realiza tus propias recetas',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Comfortaa',
+              fontSize: 15,
+              color: Color(0xFF023336),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCreatePlanButton() {
+    return Container(
+      height: DimensionesDePantalla.anchoPantalla * .12,
+      width: DimensionesDePantalla.anchoPantalla * 0.6,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.0),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(45, 0, 0, 0),
+            blurRadius: 4.0,
+            offset: Offset(0, 0),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(0xFF023336),
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+        ),
+        child: Text(
+          "Crear plan nuevo",
+          style: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: Color(0xFFEAF8E7),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: DimensionesDePantalla.pantallaSize * 0.18,
+        autoPlay: true,
+        viewportFraction: 0.5,
+      ),
+      items: [1, 2, 3, 4, 5].map((i) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(color: Color(0xFFC1E6BA)),
+              child: Text(
+                'text $i',
+                style: TextStyle(fontSize: 16.0),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
   }
 
   Widget _buildCalendarWidget(
       int cantidadComidas, PlanAlimenticioModel planAlimenticio) {
-    // Obtener la fecha de la primera receta de cada comida
     DateTime startOfWeek = planAlimenticio.desayuno.isNotEmpty
         ? planAlimenticio.desayuno.first.fecha
         : DateTime.now();
@@ -200,10 +198,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.025),
-              // Usa un Container o SizedBox para definir el tamaño fijo
               GridView.builder(
-                shrinkWrap:
-                    true, // Asegura que el GridView se ajusta al tamaño del contenedor
+                shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   crossAxisSpacing: DimensionesDePantalla.pantallaSize * 0.01,
@@ -212,17 +208,13 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                 ),
                 itemCount: cantidadComidas,
                 itemBuilder: (context, index) {
-                  // Calcular la fecha correspondiente a cada día de la semana
                   DateTime dayDate = startOfWeek.add(Duration(days: index));
-
-                  // Formatear la fecha para mostrar solo el día
                   String dayString = DateFormat('d').format(dayDate);
                   String dayOfWeekString =
                       DateFormat('EEEE', 'es_ES').format(dayDate);
 
                   return Stack(
-                    clipBehavior: Clip
-                        .none, // Permite mostrar contenido fuera de los límites
+                    clipBehavior: Clip.none,
                     children: [
                       InkWell(
                         onTap: () {
@@ -241,14 +233,11 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFeaf8e7), // Fondo blanco
+                            color: const Color(0xFFeaf8e7),
                             borderRadius: BorderRadius.circular(
-                              DimensionesDePantalla.pantallaSize * 0.012,
-                            ),
+                                DimensionesDePantalla.pantallaSize * 0.012),
                             border: Border.all(
-                              color: const Color(0xFF023336),
-                              width: 2,
-                            ), // Borde verde
+                                color: const Color(0xFF023336), width: 2),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -262,10 +251,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                                 decoration: BoxDecoration(
                                   border: const Border(
                                     bottom: BorderSide(
-                                      color:
-                                          Color(0xFF023336), // Color del borde
-                                      width: 2.0, // Grosor del borde
-                                    ),
+                                        color: Color(0xFF023336), width: 2.0),
                                   ),
                                   color: const Color(0xFF4da674),
                                   borderRadius: const BorderRadius.only(
@@ -274,10 +260,10 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                                   ),
                                 ),
                                 child: Text(
-                                  dayOfWeekString, // Mostrar el nombre del día
+                                  dayOfWeekString,
                                   style: const TextStyle(
                                     fontFamily: 'Comfortaa',
-                                    color: Color(0xFFeaf8e7), // Texto blanco
+                                    color: Color(0xFFeaf8e7),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 11,
                                   ),
@@ -286,10 +272,9 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    dayString, // Mostrar la fecha calculada
+                                    dayString,
                                     style: TextStyle(
-                                      color: const Color(
-                                          0xFF023336), // Texto verde
+                                      color: const Color(0xFF023336),
                                       fontWeight: FontWeight.bold,
                                       fontSize:
                                           DimensionesDePantalla.pantallaSize *
@@ -302,7 +287,6 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                           ),
                         ),
                       ),
-                      // Gancho decorativo
                       _positionGancho(0.008, 0.015, 0.075),
                       _positionGancho(0.008, 0.075, 0.015),
                     ],
@@ -326,7 +310,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
         height: DimensionesDePantalla.pantallaSize * 0.015,
         width: DimensionesDePantalla.pantallaSize * 0.01,
         decoration: BoxDecoration(
-          color: const Color(0xFF023336), // Color del gancho
+          color: const Color(0xFF023336),
           shape: BoxShape.rectangle,
         ),
       ),
