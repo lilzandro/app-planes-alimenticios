@@ -136,6 +136,8 @@ class RegistroService {
           cena: [],
         );
 
+        DateTime currentDate = DateTime.now();
+
         recipeData.forEach((mealType, recipes) {
           for (int i = 0; i < recipes.length; i++) {
             final receta = recipes[i]['recipe'];
@@ -157,6 +159,7 @@ class RegistroService {
               nutrientes: receta['totalNutrients'],
               gramosComida: receta['totalWeight'],
               proporcionComida: receta['yield'],
+              fecha: currentDate.add(Duration(days: i)),
             );
 
             switch (mealType) {
