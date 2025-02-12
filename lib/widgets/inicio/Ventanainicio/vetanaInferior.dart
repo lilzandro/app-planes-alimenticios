@@ -3,6 +3,7 @@ import 'package:app_planes/widgets/planAlimenticio/percent_indicators.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:app_planes/widgets/inicio/Ventanainicio/infoNutricional.dart';
 
 /// Función para mostrar el BottomSheet.
 void showMealBottomSheet({
@@ -159,7 +160,7 @@ void showMealBottomSheet({
                     ),
                     SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
                     _buildSeparator(DimensionesDePantalla.anchoPantalla),
-                    _buildInformacionNutricional(nutrientes),
+                    buildInformacionNutricional(nutrientes),
                   ],
                 ),
               ),
@@ -188,133 +189,5 @@ Widget _buildSeparator(double anchoPantalla) {
     width: anchoPantalla * .9,
     height: .8,
     color: const Color(0xFF4DA674).withOpacity(0.5),
-  );
-}
-
-Widget _buildInformacionNutricional(Map<String, dynamic> nutrientes) {
-  // Clasificación de nutrientes por categorías y subcategorías
-  Map<String, Map<String, double>> categorias = {
-    'Grasas': {
-      'Total': nutrientes['FAT']?['quantity'] ?? 0.0,
-      'Saturated': nutrientes['FASAT']?['quantity'] ?? 0.0,
-      'Trans': nutrientes['FATRN']?['quantity'] ?? 0.0,
-      'Monounsaturated': nutrientes['FAMS']?['quantity'] ?? 0.0,
-      'Polyunsaturated': nutrientes['FAPU']?['quantity'] ?? 0.0,
-    },
-    'Carbohidratos y Azúcares': {
-      'Carbohydrates (net)': nutrientes['CHOCDF']?['quantity'] ?? 0.0,
-      'Sugars': nutrientes['SUGAR']?['quantity'] ?? 0.0,
-    },
-    'Minerales': {
-      'Cholesterol': nutrientes['CHOLE']?['quantity'] ?? 0.0,
-      'Sodium': nutrientes['NA']?['quantity'] ?? 0.0,
-      'Calcium': nutrientes['CA']?['quantity'] ?? 0.0,
-      'Magnesium': nutrientes['MG']?['quantity'] ?? 0.0,
-      'Potassium': nutrientes['K']?['quantity'] ?? 0.0,
-      'Iron': nutrientes['FE']?['quantity'] ?? 0.0,
-      'Zinc': nutrientes['ZN']?['quantity'] ?? 0.0,
-      'Phosphorus': nutrientes['P']?['quantity'] ?? 0.0,
-    },
-    'Vitaminas': {
-      'Vitamin A': nutrientes['VITA_RAE']?['quantity'] ?? 0.0,
-      'Vitamin C': nutrientes['VITC']?['quantity'] ?? 0.0,
-      'Thiamin (B1)': nutrientes['THIA']?['quantity'] ?? 0.0,
-      'Riboflavin (B2)': nutrientes['RIBF']?['quantity'] ?? 0.0,
-      'Niacin (B3)': nutrientes['NIA']?['quantity'] ?? 0.0,
-      'Vitamin B6': nutrientes['VITB6A']?['quantity'] ?? 0.0,
-      'Folate equivalent (total)': nutrientes['FOLDFE']?['quantity'] ?? 0.0,
-      'Folate (food)': nutrientes['FOLFD']?['quantity'] ?? 0.0,
-      'Folic acid': nutrientes['FOLAC']?['quantity'] ?? 0.0,
-      'Vitamin B12': nutrientes['VITB12']?['quantity'] ?? 0.0,
-      'Vitamin D': nutrientes['VITD']?['quantity'] ?? 0.0,
-      'Vitamin E': nutrientes['TOCPHA']?['quantity'] ?? 0.0,
-      'Vitamin K': nutrientes['VITK1']?['quantity'] ?? 0.0,
-    },
-    'Otros': {
-      'Water': nutrientes['WATER']?['quantity'] ?? 0.0,
-    },
-  };
-
-  // Colores para cada categoría
-  Map<String, Color> categoriaColores = {
-    'Grasas': Color(0xFFA64D7C),
-    'Carbohidratos y Azúcares': Color(0xFF4D7EA6),
-    'Minerales': Color(0xFF8AA64D),
-    'Vitaminas': Color(0xFF4DA674),
-    'Otros': Color(0xFF6B6B6B),
-  };
-
-  return Container(
-    padding: const EdgeInsets.all(16.0),
-    decoration: BoxDecoration(
-      color: const Color(0xFFEAF8E7),
-      borderRadius: BorderRadius.circular(20.0),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 6.0,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "Información Nutricional",
-          style: TextStyle(
-            fontFamily: 'Comfortaa',
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF023336),
-          ),
-        ),
-        const SizedBox(height: 10),
-        ...categorias.entries.map((categoriaEntry) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                categoriaEntry.key,
-                style: TextStyle(
-                  fontFamily: 'Comfortaa',
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: categoriaColores[categoriaEntry.key],
-                ),
-              ),
-              const SizedBox(height: 5),
-              ...categoriaEntry.value.entries.map((subCategoriaEntry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        subCategoriaEntry.key,
-                        style: const TextStyle(
-                          fontFamily: 'Comfortaa',
-                          fontSize: 12,
-                          color: Color(0xFF023336),
-                        ),
-                      ),
-                      Text(
-                        '${subCategoriaEntry.value.toStringAsFixed(1)} g',
-                        style: const TextStyle(
-                          fontFamily: 'Comfortaa',
-                          fontSize: 12,
-                          color: Color(0xFF6B6B6B),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-              const SizedBox(height: 10),
-            ],
-          );
-        }).toList(),
-      ],
-    ),
   );
 }

@@ -3,6 +3,7 @@ import 'package:app_planes/screens/Register/register_user.dart';
 import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 // Importaciones Firebase
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +22,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await initializeDateFormatting('es_ES', null);
   runApp(const MyApp());
 }
 

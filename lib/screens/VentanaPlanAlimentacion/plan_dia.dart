@@ -1,4 +1,5 @@
 import 'package:app_planes/widgets/inicio/Ventanainicio/vetanaInferior.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/utils/linea.dart';
@@ -8,16 +9,68 @@ class DayDetailScreen extends StatelessWidget {
   final String dayString;
   final String daysOfWeek;
   final PlanAlimenticioModel planAlimenticio;
+  final DateTime selectedDate;
 
   const DayDetailScreen.planDia({
     super.key,
     required this.dayString,
     required this.daysOfWeek,
     required this.planAlimenticio,
+    required this.selectedDate,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Filtrar las comidas por la fecha seleccionada
+    PlanDiario? desayuno = planAlimenticio.desayuno
+        .firstWhere((comida) => comida.fecha == selectedDate,
+            orElse: () => PlanDiario(
+                  nombreReceta: '',
+                  imagenReceta: '',
+                  ingredientes: [],
+                  informacionIngredientes: [],
+                  nutrientes: {},
+                  gramosComida: 0.0,
+                  proporcionComida: 0.0,
+                  fecha: selectedDate,
+                ));
+    PlanDiario? almuerzo = planAlimenticio.almuerzo
+        .firstWhere((comida) => comida.fecha == selectedDate,
+            orElse: () => PlanDiario(
+                  nombreReceta: '',
+                  imagenReceta: '',
+                  ingredientes: [],
+                  informacionIngredientes: [],
+                  nutrientes: {},
+                  gramosComida: 0.0,
+                  proporcionComida: 0.0,
+                  fecha: selectedDate,
+                ));
+    PlanDiario? cena = planAlimenticio.cena
+        .firstWhere((comida) => comida.fecha == selectedDate,
+            orElse: () => PlanDiario(
+                  nombreReceta: '',
+                  imagenReceta: '',
+                  ingredientes: [],
+                  informacionIngredientes: [],
+                  nutrientes: {},
+                  gramosComida: 0.0,
+                  proporcionComida: 0.0,
+                  fecha: selectedDate,
+                ));
+    PlanDiario? merienda = planAlimenticio.merienda1
+        .firstWhere((comida) => comida.fecha == selectedDate,
+            orElse: () => PlanDiario(
+                  nombreReceta: '',
+                  imagenReceta: '',
+                  ingredientes: [],
+                  informacionIngredientes: [],
+                  nutrientes: {},
+                  gramosComida: 0.0,
+                  proporcionComida: 0.0,
+                  fecha: selectedDate,
+                ));
+
     return Scaffold(
       backgroundColor: const Color(0xFFeaf8e7),
       appBar: AppBar(
@@ -32,12 +85,14 @@ class DayDetailScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _buildCalendarWidget(context),
+        child:
+            _buildCalendarWidget(context, desayuno, almuerzo, cena, merienda),
       ),
     );
   }
 
-  Widget _buildCalendarWidget(BuildContext context) {
+  Widget _buildCalendarWidget(BuildContext context, PlanDiario? desayuno,
+      PlanDiario? almuerzo, PlanDiario? cena, PlanDiario? merienda) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -92,49 +147,60 @@ class DayDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    _buildMealSection(
-                      'Desayuno',
-                      'Descripción del desayuno',
-                      'assets/desayuno.png',
-                      const Color(0xFFeaf8e7),
-                      'assets/desayuno.png',
-                      'Desayuno',
-                      planAlimenticio.desayuno,
-                      context,
-                    ),
-                    linea(1, .8),
-                    _buildMealSection(
-                      'Almuerzo',
-                      'Descripción del almuerzo',
-                      'assets/almuerzo.png',
-                      const Color(0xFFeaf8e7),
-                      'assets/almuerzo.png',
-                      'Almuerzo',
-                      planAlimenticio.almuerzo,
-                      context,
-                    ),
-                    linea(1, .8),
-                    _buildMealSection(
-                      'Cena',
-                      'Descripción de la cena',
-                      'assets/cena.png',
-                      const Color(0xFFeaf8e7),
-                      'assets/cena.png',
-                      'Cena',
-                      planAlimenticio.cena,
-                      context,
-                    ),
-                    linea(1, .8),
-                    _buildMealSection(
-                      'Merienda',
-                      'Descripción de la merienda',
-                      'assets/merienda.png',
-                      const Color(0xFFeaf8e7),
-                      'assets/merienda.png',
-                      'Merienda',
-                      planAlimenticio.merienda1,
-                      context,
-                    ),
+                    if (desayuno != null &&
+                        desayuno.nombreReceta.isNotEmpty) ...[
+                      _buildMealSection(
+                        'Desayuno',
+                        'Descripción del desayuno',
+                        desayuno.imagenReceta,
+                        const Color(0xFFeaf8e7),
+                        desayuno.imagenReceta,
+                        'Desayuno',
+                        [desayuno],
+                        context,
+                      ),
+                      linea(1, .8),
+                    ],
+                    if (almuerzo != null &&
+                        almuerzo.nombreReceta.isNotEmpty) ...[
+                      _buildMealSection(
+                        'Almuerzo',
+                        'Descripción del almuerzo',
+                        almuerzo.imagenReceta,
+                        const Color(0xFFeaf8e7),
+                        almuerzo.imagenReceta,
+                        'Almuerzo',
+                        [almuerzo],
+                        context,
+                      ),
+                      linea(1, .8),
+                    ],
+                    if (cena != null && cena.nombreReceta.isNotEmpty) ...[
+                      _buildMealSection(
+                        'Cena',
+                        'Descripción de la cena',
+                        cena.imagenReceta,
+                        const Color(0xFFeaf8e7),
+                        cena.imagenReceta,
+                        'Cena',
+                        [cena],
+                        context,
+                      ),
+                      linea(1, .8),
+                    ],
+                    if (merienda != null &&
+                        merienda.nombreReceta.isNotEmpty) ...[
+                      _buildMealSection(
+                        'Merienda',
+                        'Descripción de la merienda',
+                        merienda.imagenReceta,
+                        const Color(0xFFeaf8e7),
+                        merienda.imagenReceta,
+                        'Merienda',
+                        [merienda],
+                        context,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -166,10 +232,28 @@ class DayDetailScreen extends StatelessWidget {
                 0.16, // Ancho fijo para el nombre de la comida
             child: Column(
               children: [
-                Image.asset(
-                  imgComida,
-                  height: DimensionesDePantalla.anchoPantalla * .2,
-                  width: DimensionesDePantalla.anchoPantalla * .22,
+                ClipOval(
+                  child: imagePath.startsWith('http')
+                      ? CachedNetworkImage(
+                          imageUrl: imagePath,
+                          height: DimensionesDePantalla.anchoPantalla * .2,
+                          width: DimensionesDePantalla.anchoPantalla * .22,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            'assets/$mealName.png',
+                            height: DimensionesDePantalla.anchoPantalla * .2,
+                            width: DimensionesDePantalla.anchoPantalla * .22,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Image.asset(
+                          imagePath,
+                          height: DimensionesDePantalla.anchoPantalla * .15,
+                          width: DimensionesDePantalla.anchoPantalla * .16,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 Text(
                   mealName,

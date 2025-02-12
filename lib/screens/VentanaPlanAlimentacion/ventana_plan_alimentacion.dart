@@ -18,45 +18,44 @@ class VentanaPlanAlimentacion extends StatefulWidget {
 }
 
 class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
-  PlanAlimenticioModel? _planAlimenticio;
-  Widget? _calendarWidget;
+  Future<PlanAlimenticioModel?>? _futurePlanAlimenticio;
 
   @override
   void initState() {
     super.initState();
-    _loadPlanAlimenticio();
+    _futurePlanAlimenticio = _loadPlanAlimenticio();
   }
 
-  String? userId;
-
-  Future<void> _loadPlanAlimenticio() async {
-    _planAlimenticio = await PlanAlimenticioService.loadPlanAlimenticio();
-    setState(() {
-      _calendarWidget =
-          _buildCalendarWidget(_planAlimenticio?.desayuno.length ?? 0);
-    });
+  Future<PlanAlimenticioModel?> _loadPlanAlimenticio() async {
+    return await PlanAlimenticioService.loadPlanAlimenticio();
   }
-
-  final List<String> days = [
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-    'Domingo',
-  ];
 
   @override
   Widget build(BuildContext context) {
-    int cantidadComidas = _planAlimenticio?.desayuno.length ?? 0;
-    print('Cantidad de comidas: $cantidadComidas');
-    return ResponsiveContainer(
-        buildBlocks: (context) => _buildBlocks(context, cantidadComidas),
-        backgroundColor: Color(0xFFEAF8E7));
+    return FutureBuilder<PlanAlimenticioModel?>(
+      future: _futurePlanAlimenticio,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error al cargar el plan alimenticio'));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('Plan alimenticio no disponible'));
+        } else {
+          PlanAlimenticioModel planAlimenticio = snapshot.data!;
+          int cantidadComidas = planAlimenticio.desayuno.length;
+          return ResponsiveContainer(
+            buildBlocks: (context) =>
+                _buildBlocks(context, cantidadComidas, planAlimenticio),
+            backgroundColor: Color(0xFFEAF8E7),
+          );
+        }
+      },
+    );
   }
 
-  List<Widget> _buildBlocks(BuildContext context, int cantidadComidas) {
+  List<Widget> _buildBlocks(BuildContext context, int cantidadComidas,
+      PlanAlimenticioModel planAlimenticio) {
     return [
       // Encabezado
       SizedBox(
@@ -85,9 +84,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
         color: const Color(0xFF4DA674).withOpacity(0.5),
       ),
       // Calendario
-
-      _calendarWidget ??
-          Container(), // Usa el widget almacenado o un contenedor vacío si aún no está cargado
+      _buildCalendarWidget(cantidadComidas, planAlimenticio),
 
       Container(
         width: DimensionesDePantalla.anchoPantalla * .9,
@@ -182,22 +179,12 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     ];
   }
 
-  Widget _buildCalendarWidget(int cantidadComidas) {
-    final List<String> daysOfWeek = [
-      'Lunes',
-      'Martes',
-      'Miércoles',
-      'Jueves',
-      'Viernes',
-      'Sábado',
-      'Domingo'
-    ];
-
-    // Obtener la fecha actual
-    DateTime today = DateTime.now();
-
-    // Encontrar el lunes de la semana actual
-    DateTime startOfWeek = today.subtract(Duration(days: today.weekday - 1));
+  Widget _buildCalendarWidget(
+      int cantidadComidas, PlanAlimenticioModel planAlimenticio) {
+    // Obtener la fecha de la primera receta de cada comida
+    DateTime startOfWeek = planAlimenticio.desayuno.isNotEmpty
+        ? planAlimenticio.desayuno.first.fecha
+        : DateTime.now();
 
     return Stack(
       clipBehavior: Clip.none,
@@ -230,6 +217,8 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
 
                   // Formatear la fecha para mostrar solo el día
                   String dayString = DateFormat('d').format(dayDate);
+                  String dayOfWeekString =
+                      DateFormat('EEEE', 'es_ES').format(dayDate);
 
                   return Stack(
                     clipBehavior: Clip
@@ -242,8 +231,9 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                             MaterialPageRoute(
                               builder: (context) => DayDetailScreen.planDia(
                                 dayString: dayString,
-                                daysOfWeek: daysOfWeek[index],
-                                planAlimenticio: widget.planAlimenticio!,
+                                daysOfWeek: dayOfWeekString,
+                                planAlimenticio: planAlimenticio,
+                                selectedDate: dayDate,
                               ),
                             ),
                           );
@@ -284,8 +274,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
                                   ),
                                 ),
                                 child: Text(
-                                  daysOfWeek[
-                                      index], // Mostrar el nombre del día
+                                  dayOfWeekString, // Mostrar el nombre del día
                                   style: const TextStyle(
                                     fontFamily: 'Comfortaa',
                                     color: Color(0xFFeaf8e7), // Texto blanco
