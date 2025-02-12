@@ -129,10 +129,15 @@ Widget _buildExpandableOption(
   final Map<String, dynamic> nutrientes = mealData?.nutrientes ?? {};
   final double proporcionComida = mealData?.proporcionComida ?? 0;
 
-  print('Receta para $mealName: $receta');
+  print('VplanAli Receta para $mealName: $receta');
 
   return GestureDetector(
     onTap: () {
+      if (mealData == null ||
+          !gramosComida.isFinite ||
+          !proporcionComida.isFinite) {
+        return;
+      }
       showMealBottomSheet(
         context: context,
         mealName: mealName,
