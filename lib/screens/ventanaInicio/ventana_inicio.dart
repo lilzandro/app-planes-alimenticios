@@ -59,8 +59,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
       // CONTENEDOR DE PROGRESO
       buildProgressContainer(),
       // CONTENEDOR DEL PLAN ALIMENTICIO
-      buildPlanAlimenticio(
-          context, selectedMeal, setState, _planAlimenticio, userId),
+      buildPlanAlimenticio(context, selectedMeal, setState, _planAlimenticio,
+          userId, DateTime.now()),
     ];
   }
 }

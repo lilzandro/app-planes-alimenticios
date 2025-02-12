@@ -12,9 +12,10 @@ Widget buildPlanAlimenticio(
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
   userId,
+  DateTime selectedDate, // nuevo parámetro para el día a mostrar
 ) {
   print('Plan alimenticio recibido: $planAlimenticio');
-
+  print(selectedDate);
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: const BoxDecoration(
@@ -24,10 +25,10 @@ Widget buildPlanAlimenticio(
     ),
     child: Column(
       children: [
-        _buildButtonRow(),
+        _buildButtonRow(selectedDate),
         const SizedBox(height: 20),
         _buildMealPlanContainer(
-            context, selectedMeal, setState, planAlimenticio),
+            context, selectedMeal, setState, planAlimenticio, selectedDate),
         const SizedBox(height: 20),
         _buildImageContainer('assets/verduras.jpg', 'Bloque 2'),
         const SizedBox(height: 20),
@@ -37,16 +38,27 @@ Widget buildPlanAlimenticio(
   );
 }
 
-Widget _buildButtonRow() {
+Widget _buildButtonRow(selectedDate) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
       _buildButton(icon: Icons.arrow_back, '', () {}),
-      _buildButton('Hoy', () {},
+      _buildButton(' Hoy ${selectedDate.day}', () {},
           isMiddleButton: true, icon: Icons.calendar_today, iconSize: 22),
       _buildButton(icon: Icons.arrow_forward, '', () {}),
     ],
   );
+}
+
+PlanDiario? _mealForDate(List<PlanDiario> mealList, DateTime selectedDate) {
+  try {
+    return mealList.firstWhere((meal) =>
+        meal.fecha.year == selectedDate.year &&
+        meal.fecha.month == selectedDate.month &&
+        meal.fecha.day == selectedDate.day);
+  } catch (e) {
+    return null;
+  }
 }
 
 Widget _buildMealPlanContainer(
@@ -54,6 +66,7 @@ Widget _buildMealPlanContainer(
   String selectedMeal,
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
+  DateTime selectedDate,
 ) {
   return SizedBox(
     height: DimensionesDePantalla.pantallaSize * 0.33,
@@ -61,8 +74,8 @@ Widget _buildMealPlanContainer(
       children: [
         _buildExpandableOption(
           "Desayuno",
-          planAlimenticio?.desayuno.isNotEmpty == true
-              ? planAlimenticio!.desayuno[0]
+          planAlimenticio != null
+              ? _mealForDate(planAlimenticio.desayuno, selectedDate)
               : null,
           selectedMeal,
           setState,
@@ -71,8 +84,8 @@ Widget _buildMealPlanContainer(
         _buildSeparator(),
         _buildExpandableOption(
           "Almuerzo",
-          planAlimenticio?.almuerzo.isNotEmpty == true
-              ? planAlimenticio!.almuerzo[0]
+          planAlimenticio != null
+              ? _mealForDate(planAlimenticio.almuerzo, selectedDate)
               : null,
           selectedMeal,
           setState,
@@ -81,8 +94,8 @@ Widget _buildMealPlanContainer(
         _buildSeparator(),
         _buildExpandableOption(
           "Merienda",
-          planAlimenticio?.merienda1.isNotEmpty == true
-              ? planAlimenticio!.merienda1[0]
+          planAlimenticio != null
+              ? _mealForDate(planAlimenticio.merienda1, selectedDate)
               : null,
           selectedMeal,
           setState,
@@ -91,8 +104,8 @@ Widget _buildMealPlanContainer(
         _buildSeparator(),
         _buildExpandableOption(
           "Cena",
-          planAlimenticio?.cena.isNotEmpty == true
-              ? planAlimenticio!.cena[0]
+          planAlimenticio != null
+              ? _mealForDate(planAlimenticio.cena, selectedDate)
               : null,
           selectedMeal,
           setState,
