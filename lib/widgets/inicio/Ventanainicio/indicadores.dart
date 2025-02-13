@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart'; // Importa la librería de LinearPercentIndicator y CircularPercentIndicator
 
 // Widget para el contenedor con barras de progreso lineales
-Container buildProgressContainer() {
+Container buildProgressContainer(totalCalorias) {
   return Container(
     color: Color(0xFF4da674),
     height: DimensionesDePantalla.pantallaSize * 0.25,
@@ -11,7 +11,7 @@ Container buildProgressContainer() {
       child: Column(
         children: [
           // EL NIVEL DE LA BARRA Y EL NIVEL MAXIMO
-          buildCircularPercentIndicator(150, 0),
+          buildCircularPercentIndicator(100, (totalCalorias).toInt()),
           Padding(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: Row(
@@ -19,7 +19,7 @@ Container buildProgressContainer() {
               children: [
                 buildLinearPercentIndicator("Carbohidratos", 0.8, 120),
                 buildLinearPercentIndicator("Proteinas", 0.8, 120),
-                buildLinearPercentIndicator("Grasas", 0.8, 120),
+                buildLinearPercentIndicator("Grasas", 80, 120),
               ],
             ),
           ),
@@ -43,7 +43,7 @@ Widget buildLinearPercentIndicator(
       LinearPercentIndicator(
         width: 120,
         lineHeight: 6,
-        percent: nivelDeProgreso / 100,
+        percent: nivelDeProgreso / 120,
         barRadius: Radius.circular(20),
         progressColor: Color(0xFFEAF8E7),
         backgroundColor: Color(0xFFEAF8E7).withOpacity(0.5),
@@ -61,18 +61,20 @@ Widget buildLinearPercentIndicator(
 }
 
 // Widget para crear el indicador circular
-Widget buildCircularPercentIndicator(
-    double nivelDeProgreso, double metaProgreso) {
+Widget buildCircularPercentIndicator(int caloriasActuales, int metaCalorias) {
   const Color progressColor = Color(0xFFEAF8E7);
   const TextStyle textStyleBase = TextStyle(
     fontFamily: 'Comfortaa',
     color: progressColor,
   );
 
+  // Calcula el porcentaje, asegurando que se encuentre entre 0 y 1
+  double porcentaje = (caloriasActuales / metaCalorias).clamp(0.0, 1.0);
+
   return CircularPercentIndicator(
     radius: 60,
     lineWidth: 6,
-    percent: nivelDeProgreso / 1000,
+    percent: porcentaje,
     progressColor: progressColor,
     backgroundColor: progressColor.withOpacity(0.5),
     circularStrokeCap: CircularStrokeCap.round,
@@ -80,7 +82,7 @@ Widget buildCircularPercentIndicator(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "${nivelDeProgreso - metaProgreso}",
+          "$caloriasActuales / $metaCalorias",
           style: textStyleBase.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -94,7 +96,7 @@ Widget buildCircularPercentIndicator(
           ),
         ),
         Text(
-          "restantes",
+          "consumidas",
           style: textStyleBase.copyWith(fontSize: 10),
         ),
       ],
