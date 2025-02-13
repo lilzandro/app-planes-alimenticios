@@ -300,6 +300,7 @@ class DayDetailScreen extends StatelessWidget {
                         gramosComida: gramosComida,
                         nutrientes: nutrientes,
                         proporcionComida: proporcionComida,
+                        informacionIngredientes: [],
                       );
                     },
                     style: ElevatedButton.styleFrom(

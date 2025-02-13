@@ -128,6 +128,8 @@ Widget _buildExpandableOption(
   final double gramosComida = mealData?.gramosComida ?? 0;
   final Map<String, dynamic> nutrientes = mealData?.nutrientes ?? {};
   final double proporcionComida = mealData?.proporcionComida ?? 0;
+  final List<Map<String, dynamic>> informacionIngredientes =
+      mealData?.informacionIngredientes ?? [];
 
   print('VplanAli Receta para $mealName: $receta');
 
@@ -150,6 +152,7 @@ Widget _buildExpandableOption(
         gramosComida: gramosComida,
         nutrientes: nutrientes,
         proporcionComida: proporcionComida,
+        informacionIngredientes: informacionIngredientes, // Nuevo parámetro
       );
     },
     child: Container(
@@ -161,7 +164,9 @@ Widget _buildExpandableOption(
       child: Row(
         children: [
           _buildMealImage(imagePath, mealName),
-          _buildMealInfo(mealName, receta),
+          Expanded(
+            child: _buildMealInfo(mealName, receta),
+          ),
         ],
       ),
     ),

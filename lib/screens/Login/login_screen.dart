@@ -43,6 +43,7 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
     return [
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
       Center(
+          child: Expanded(
         child: Container(
           decoration: BoxDecoration(
             color: Color(0xFFEAF8E7),
@@ -62,7 +63,7 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
               right: DimensionesDePantalla.pantallaSize * 0.02),
           child: _construirFormularioInicioSesion(),
         ),
-      ),
+      )),
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
       _construirBotonIniciarSesion(),
       _construirOlvidasteContrasena(),

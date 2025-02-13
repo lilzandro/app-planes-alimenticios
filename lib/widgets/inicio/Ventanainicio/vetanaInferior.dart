@@ -1,4 +1,5 @@
 import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:app_planes/widgets/planAlimenticio/detalle_comida.dart';
 import 'package:app_planes/widgets/planAlimenticio/percent_indicators.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ void showMealBottomSheet({
   required double gramosComida,
   required Map<String, dynamic> nutrientes,
   required double proporcionComida,
+  required List<Map<String, dynamic>> informacionIngredientes,
 }) {
   showModalBottomSheet(
     context: context,
@@ -80,7 +82,7 @@ void showMealBottomSheet({
                         buildCircularPercentIndicator(
                             nutrientes['FIBTG']?['quantity'] ?? 0.0,
                             "Fibra dietetica",
-                            const Color.fromARGB(255, 107, 77, 166)),
+                            const Color(0xFF6B4DA6)),
                       ],
                     ),
                     SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
@@ -92,33 +94,41 @@ void showMealBottomSheet({
                           ? color
                           : const Color.fromARGB(0, 188, 17, 17),
                       alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          imagePath.startsWith('http')
-                              ? Padding(
-                                  padding: EdgeInsets.only(
-                                      left:
-                                          DimensionesDePantalla.anchoPantalla *
-                                              .03,
-                                      right:
-                                          DimensionesDePantalla.anchoPantalla *
-                                              .03),
-                                  // Espacio a la derecha de la imagen
-                                  child: ClipOval(
-                                    child: CachedNetworkImage(
-                                      imageUrl: imagePath,
-                                      height:
-                                          DimensionesDePantalla.anchoPantalla *
-                                              .15,
-                                      width:
-                                          DimensionesDePantalla.anchoPantalla *
-                                              .16,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          Image.asset(
-                                        imageEr, // Ruta de tu imagen local
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetalleComida(
+                                mealName: mealName,
+                                receta: receta,
+                                imagePath: imagePath,
+                                imageEr: imageEr,
+                                gramosComida: gramosComida,
+                                proporcionComida: proporcionComida,
+                                informacionIngredientes:
+                                    informacionIngredientes, // Reemplaza con los ingredientes reales
+                                instrucciones:
+                                    'Instrucciones de preparación aquí', // Reemplaza con las instrucciones reales
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            imagePath.startsWith('http')
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        left: DimensionesDePantalla
+                                                .anchoPantalla *
+                                            .03,
+                                        right: DimensionesDePantalla
+                                                .anchoPantalla *
+                                            .03),
+                                    // Espacio a la derecha de la imagen
+                                    child: ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: imagePath,
                                         height: DimensionesDePantalla
                                                 .anchoPantalla *
                                             .15,
@@ -126,36 +136,50 @@ void showMealBottomSheet({
                                                 .anchoPantalla *
                                             .16,
                                         fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            Image.asset(
+                                          imageEr, // Ruta de tu imagen local
+                                          height: DimensionesDePantalla
+                                                  .anchoPantalla *
+                                              .15,
+                                          width: DimensionesDePantalla
+                                                  .anchoPantalla *
+                                              .16,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
+                                  )
+                                : Image.asset(
+                                    imagePath,
+                                    height:
+                                        DimensionesDePantalla.anchoPantalla *
+                                            .2,
+                                    width: DimensionesDePantalla.anchoPantalla *
+                                        .22,
+                                    fit: BoxFit.cover,
                                   ),
-                                )
-                              : Image.asset(
-                                  imagePath,
-                                  height:
-                                      DimensionesDePantalla.anchoPantalla * .2,
-                                  width:
-                                      DimensionesDePantalla.anchoPantalla * .22,
-                                  fit: BoxFit.cover,
-                                ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '$receta - ${(gramosComida / proporcionComida).toInt()} gramos',
-                                  style: const TextStyle(
-                                    fontFamily: 'Comfortaa',
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF023336),
-                                    fontSize: 15,
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '$receta - ${(gramosComida / proporcionComida).toInt()} gramos',
+                                    style: const TextStyle(
+                                      fontFamily: 'Comfortaa',
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF023336),
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
