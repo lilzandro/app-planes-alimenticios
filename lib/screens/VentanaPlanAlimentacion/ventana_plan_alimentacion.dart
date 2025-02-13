@@ -56,6 +56,16 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
 
   List<Widget> _buildBlocks(BuildContext context, int cantidadComidas,
       PlanAlimenticioModel planAlimenticio) {
+    // Determina la última fecha del plan (en este ejemplo se toma la lista de desayuno)
+    bool showCalendar = true;
+    if (planAlimenticio.desayuno.isNotEmpty) {
+      DateTime lastDate = planAlimenticio.desayuno.last.fecha;
+      // Verifica si hoy ya está después de la última fecha
+      if (DateTime.now().isAfter(lastDate)) {
+        showCalendar = false;
+      }
+    }
+
     return [
       SizedBox(
         height: DimensionesDePantalla.pantallaSize * 0.17,
@@ -79,7 +89,24 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
         ),
       ),
       Divider(color: const Color(0xFF4DA674).withOpacity(0.5), thickness: 0.8),
-      _buildCalendarWidget(cantidadComidas, planAlimenticio),
+      // Si showCalendar es true, se construye el calendario; de lo contrario se muestra un mensaje
+      showCalendar
+          ? _buildCalendarWidget(cantidadComidas, planAlimenticio)
+          : Container(
+              padding:
+                  EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.02),
+              alignment: Alignment.center,
+              child: const Text(
+                'No hay planes que mostrar.\nCrea un nuevo plan.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Comfortaa',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF023336),
+                ),
+              ),
+            ),
       Divider(color: const Color(0xFF4DA674).withOpacity(0.5), thickness: 0.8),
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
       _buildManualMenuSection(),

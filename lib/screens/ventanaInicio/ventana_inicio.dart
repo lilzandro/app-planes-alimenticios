@@ -15,7 +15,10 @@ class VentanaInicio extends StatefulWidget {
 class _VentanaInicioState extends State<VentanaInicio> {
   String selectedMeal = ''; // Variable para almacenar la comida seleccionada
   PlanAlimenticioModel? _planAlimenticio;
-  double _totalCalorias =
+  double _totalCalorias = 0.0;
+  double _totalCarbohidratos = 0.0;
+  double _totalProteinas = 0.0;
+  double _totalGrasas =
       0.0; // Nueva variable para almacenar el total de calorías
 
   @override
@@ -30,59 +33,13 @@ class _VentanaInicioState extends State<VentanaInicio> {
     _planAlimenticio = await PlanAlimenticioService.loadPlanAlimenticio();
     // Se utiliza el método del servicio para imprimir las calorías de cada comida
     PlanAlimenticioService.printCaloriasDeCadaComida(_planAlimenticio);
-    _totalCalorias = _calcularTotalCalorias();
+    TotalesNutrientes totales =
+        PlanAlimenticioService.calcularTotalesNutrientes(_planAlimenticio);
+    _totalCalorias = totales.calorias;
+    _totalCarbohidratos = totales.carbohidratos;
+    _totalProteinas = totales.proteinas;
+    _totalGrasas = totales.grasas;
     setState(() {});
-  }
-
-  double _calcularTotalCalorias() {
-    double total = 0.0;
-    DateTime today = DateTime.now();
-
-    if (_planAlimenticio != null) {
-      // Desayuno
-      var desayunoDelDia = _planAlimenticio!.desayuno.where((meal) =>
-          meal.fecha.day == today.day &&
-          meal.fecha.month == today.month &&
-          meal.fecha.year == today.year);
-      if (desayunoDelDia.isNotEmpty) {
-        var desayuno = desayunoDelDia.first;
-        total +=
-            (desayuno.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
-      }
-
-      // Almuerzo
-      var almuerzoDelDia = _planAlimenticio!.almuerzo.where((meal) =>
-          meal.fecha.day == today.day &&
-          meal.fecha.month == today.month &&
-          meal.fecha.year == today.year);
-      if (almuerzoDelDia.isNotEmpty) {
-        var almuerzo = almuerzoDelDia.first;
-        total +=
-            (almuerzo.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
-      }
-
-      // Merienda
-      var meriendaDelDia = _planAlimenticio!.merienda1.where((meal) =>
-          meal.fecha.day == today.day &&
-          meal.fecha.month == today.month &&
-          meal.fecha.year == today.year);
-      if (meriendaDelDia.isNotEmpty) {
-        var merienda = meriendaDelDia.first;
-        total +=
-            (merienda.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
-      }
-
-      // Cena
-      var cenaDelDia = _planAlimenticio!.cena.where((meal) =>
-          meal.fecha.day == today.day &&
-          meal.fecha.month == today.month &&
-          meal.fecha.year == today.year);
-      if (cenaDelDia.isNotEmpty) {
-        var cena = cenaDelDia.first;
-        total += (cena.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
-      }
-    }
-    return total;
   }
 
   @override
@@ -97,7 +54,8 @@ class _VentanaInicioState extends State<VentanaInicio> {
   List<Widget> _buildBlocks(BuildContext context) {
     return [
       // CONTENEDOR DE PROGRESO (se le pasa el total de calorías)
-      buildProgressContainer(_totalCalorias),
+      buildProgressContainer(
+          _totalCalorias, _totalCarbohidratos, _totalProteinas, _totalGrasas),
       // CONTENEDOR DEL PLAN ALIMENTICIO
       buildPlanAlimenticio(context, selectedMeal, setState, _planAlimenticio,
           userId, DateTime.now()),

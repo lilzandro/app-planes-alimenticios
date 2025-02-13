@@ -3,23 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart'; // Importa la librería de LinearPercentIndicator y CircularPercentIndicator
 
 // Widget para el contenedor con barras de progreso lineales
-Container buildProgressContainer(totalCalorias) {
+Container buildProgressContainer(totalCalorias, double totalCarbohidratos,
+    double totalProteinas, double totalGrasas) {
   return Container(
     color: Color(0xFF4da674),
     height: DimensionesDePantalla.pantallaSize * 0.25,
     child: Center(
       child: Column(
         children: [
+          SizedBox(
+            height: DimensionesDePantalla.pantallaSize * 0.01,
+          ),
           // EL NIVEL DE LA BARRA Y EL NIVEL MAXIMO
-          buildCircularPercentIndicator(100, (totalCalorias).toInt()),
+          buildCircularPercentIndicator(1000, (totalCalorias).toInt()),
           Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10),
+            padding: EdgeInsets.only(top: 20, bottom: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildLinearPercentIndicator("Carbohidratos", 0.8, 120),
-                buildLinearPercentIndicator("Proteinas", 0.8, 120),
-                buildLinearPercentIndicator("Grasas", 80, 120),
+                buildLinearPercentIndicator(
+                    "Carbohidratos", 20, (totalCarbohidratos).toInt()),
+                buildLinearPercentIndicator(
+                    "Proteinas", 20, (totalProteinas).toInt()),
+                buildLinearPercentIndicator(
+                    "Grasas", 20, (totalGrasas).toInt()),
               ],
             ),
           ),
@@ -31,7 +38,9 @@ Container buildProgressContainer(totalCalorias) {
 
 // Widget para crear barras de progreso lineales
 Widget buildLinearPercentIndicator(
-    String nombre, double nivelDeProgreso, double metaProgreso) {
+    String nombre, int nivelDeProgreso, int metaProgreso) {
+  double porcentaje = (nivelDeProgreso / metaProgreso).clamp(0.0, 1.0);
+
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -43,7 +52,7 @@ Widget buildLinearPercentIndicator(
       LinearPercentIndicator(
         width: 120,
         lineHeight: 6,
-        percent: nivelDeProgreso / 120,
+        percent: porcentaje,
         barRadius: Radius.circular(20),
         progressColor: Color(0xFFEAF8E7),
         backgroundColor: Color(0xFFEAF8E7).withOpacity(0.5),
