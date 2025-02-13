@@ -130,7 +130,7 @@ Widget _buildExpandableOption(
   final double proporcionComida = mealData?.proporcionComida ?? 0;
   final List<Map<String, dynamic>> informacionIngredientes =
       mealData?.informacionIngredientes ?? [];
-
+  final List<String> intrucciones = mealData?.intrucciones ?? [];
   print('VplanAli Receta para $mealName: $receta');
 
   return GestureDetector(
@@ -152,7 +152,8 @@ Widget _buildExpandableOption(
         gramosComida: gramosComida,
         nutrientes: nutrientes,
         proporcionComida: proporcionComida,
-        informacionIngredientes: informacionIngredientes, // Nuevo parámetro
+        informacionIngredientes: informacionIngredientes,
+        intrucciones: intrucciones, // Nuevo parámetro
       );
     },
     child: Container(

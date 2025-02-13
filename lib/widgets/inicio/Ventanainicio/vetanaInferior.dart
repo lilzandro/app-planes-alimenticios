@@ -20,6 +20,7 @@ void showMealBottomSheet({
   required Map<String, dynamic> nutrientes,
   required double proporcionComida,
   required List<Map<String, dynamic>> informacionIngredientes,
+  required List<String> intrucciones,
 }) {
   showModalBottomSheet(
     context: context,
@@ -108,8 +109,7 @@ void showMealBottomSheet({
                                 proporcionComida: proporcionComida,
                                 informacionIngredientes:
                                     informacionIngredientes, // Reemplaza con los ingredientes reales
-                                instrucciones:
-                                    'Instrucciones de preparación aquí', // Reemplaza con las instrucciones reales
+                                intrucciones: intrucciones,
                               ),
                             ),
                           );

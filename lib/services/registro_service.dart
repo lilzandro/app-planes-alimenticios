@@ -160,6 +160,7 @@ class RegistroService {
               gramosComida: receta['totalWeight'],
               proporcionComida: receta['yield'],
               fecha: currentDate.add(Duration(days: i)),
+              intrucciones: List<String>.from(receta['instructionLines']),
             );
 
             switch (mealType) {

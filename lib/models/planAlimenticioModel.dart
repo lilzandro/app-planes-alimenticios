@@ -44,7 +44,9 @@ class PlanDiario {
   final Map<String, dynamic> nutrientes;
   final double gramosComida;
   final double proporcionComida;
-  final DateTime fecha; // Nuevo campo de fecha
+  final DateTime fecha;
+  final List<String> intrucciones;
+  // Nuevo campo de fecha
 
   PlanDiario({
     required this.nombreReceta,
@@ -54,7 +56,8 @@ class PlanDiario {
     required this.nutrientes,
     required this.gramosComida,
     required this.proporcionComida,
-    required this.fecha, // Inicializar el nuevo campo
+    required this.fecha,
+    required this.intrucciones,
   });
 
   Map<String, dynamic> toJson() {
@@ -66,7 +69,8 @@ class PlanDiario {
       'nutrientes': jsonEncode(nutrientes),
       'gramosComida': gramosComida,
       'proporcionComida': proporcionComida,
-      'fecha': fecha.toIso8601String(), // Convertir la fecha a string
+      'fecha': fecha.toIso8601String(),
+      'intrucciones': jsonEncode(intrucciones), // Convertir la fecha a string
     };
   }
 
@@ -82,7 +86,9 @@ class PlanDiario {
       proporcionComida: (json['proporcionComida'] ?? 0.0).toDouble(),
       fecha: json['fecha'] != null
           ? DateTime.parse(json['fecha'])
-          : DateTime.now(), // Proporcionar un valor predeterminado
+          : DateTime.now(),
+      intrucciones: List<String>.from(jsonDecode(json['intrucciones'] ??
+          '[]')), // Proporcionar un valor predeterminado
 // Parsear la fecha desde string
     );
   }

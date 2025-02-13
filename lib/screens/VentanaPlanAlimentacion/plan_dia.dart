@@ -33,6 +33,7 @@ class DayDetailScreen extends StatelessWidget {
                   gramosComida: 0.0,
                   proporcionComida: 0.0,
                   fecha: selectedDate,
+                  intrucciones: [],
                 ));
     PlanDiario? almuerzo = planAlimenticio.almuerzo
         .firstWhere((comida) => comida.fecha == selectedDate,
@@ -45,6 +46,7 @@ class DayDetailScreen extends StatelessWidget {
                   gramosComida: 0.0,
                   proporcionComida: 0.0,
                   fecha: selectedDate,
+                  intrucciones: [],
                 ));
     PlanDiario? cena = planAlimenticio.cena
         .firstWhere((comida) => comida.fecha == selectedDate,
@@ -57,6 +59,7 @@ class DayDetailScreen extends StatelessWidget {
                   gramosComida: 0.0,
                   proporcionComida: 0.0,
                   fecha: selectedDate,
+                  intrucciones: [],
                 ));
     PlanDiario? merienda = planAlimenticio.merienda1
         .firstWhere((comida) => comida.fecha == selectedDate,
@@ -69,6 +72,7 @@ class DayDetailScreen extends StatelessWidget {
                   gramosComida: 0.0,
                   proporcionComida: 0.0,
                   fecha: selectedDate,
+                  intrucciones: [],
                 ));
 
     return Scaffold(
@@ -301,6 +305,7 @@ class DayDetailScreen extends StatelessWidget {
                         nutrientes: nutrientes,
                         proporcionComida: proporcionComida,
                         informacionIngredientes: [],
+                        intrucciones: [],
                       );
                     },
                     style: ElevatedButton.styleFrom(
