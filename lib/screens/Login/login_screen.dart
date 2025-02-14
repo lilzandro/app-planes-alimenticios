@@ -73,17 +73,17 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
   Widget _construirFormularioInicioSesion() {
     return Column(
       children: [
-        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
         AppBar(
-            backgroundColor: const Color(0xFFEAF8E7),
-            surfaceTintColor: Color(0xFFEAF8E7),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pushReplacementNamed(
-                    context, '/start'); // Navega hacia atrás
-              },
-            )),
+          backgroundColor: const Color.fromARGB(0, 234, 248, 231),
+          surfaceTintColor: Color(0xFFEAF8E7),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacementNamed(
+                  context, '/start'); // Navega hacia atrás
+            },
+          ),
+        ),
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
         Text(
           "Inicio de Sesión",
@@ -92,7 +92,9 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: DimensionesDePantalla.pantallaSize * 0.12),
+        SizedBox(
+            height: DimensionesDePantalla.pantallaSize *
+                0.08), // Reducir el tamaño del espacio
         Form(
           key: _formKey,
           child: Column(
@@ -100,12 +102,14 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
               _construirCampoEmail(),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
               _construirCampoContrasena(),
-              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
+              SizedBox(
+                  height: DimensionesDePantalla.pantallaSize *
+                      0.02), // Reducir el tamaño del espacio
               if (errorMessage.isNotEmpty) _construirMensajeError(),
-              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
+              SizedBox(
+                  height: DimensionesDePantalla.pantallaSize *
+                      0.01), // Reducir el tamaño del espacio
               if (showVerificationButton) _construirBotonVerificarCorreo(),
-
-              // Espacio adicional
             ],
           ),
         ),

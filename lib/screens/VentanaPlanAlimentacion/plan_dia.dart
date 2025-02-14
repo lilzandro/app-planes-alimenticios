@@ -115,8 +115,7 @@ class DayDetailScreen extends StatelessWidget {
                     DimensionesDePantalla.pantallaSize * 0.03,
                   ),
                   border: Border.all(
-                    color: const Color(0xFF023336), // Color del borde
-                    width: 1.5, // Grosor del borde
+                    width: 3, // Grosor del borde
                   ),
                   // Borde verde
                 ),
@@ -125,9 +124,8 @@ class DayDetailScreen extends StatelessWidget {
                   children: [
                     Container(
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.all(4.0),
                       height: DimensionesDePantalla.pantallaSize * 0.06,
-                      width: DimensionesDePantalla.pantallaSize * 0.4,
+                      width: DimensionesDePantalla.pantallaSize * 0.45,
                       decoration: BoxDecoration(
                         border: const Border(
                           bottom: BorderSide(
@@ -137,8 +135,8 @@ class DayDetailScreen extends StatelessWidget {
                         ),
                         color: const Color(0xFF4da674),
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(26.0),
-                          topRight: Radius.circular(26.0),
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
                         ),
                       ),
                       child: Text(
@@ -246,9 +244,10 @@ class DayDetailScreen extends StatelessWidget {
     double proporcionComida,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: EdgeInsets.symmetric(
+          vertical: DimensionesDePantalla.pantallaSize * 0.01),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(width: DimensionesDePantalla.pantallaSize * 0.03),
           SizedBox(
@@ -324,18 +323,6 @@ class DayDetailScreen extends StatelessWidget {
             ),
           ),
           SizedBox(width: DimensionesDePantalla.pantallaSize * 0.03),
-          SizedBox(
-            height: DimensionesDePantalla.pantallaSize *
-                0.16, // Ancho fijo para la descripción de la comida
-            child: Text(
-              mealDescription,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF023336),
-              ),
-            ),
-          ),
         ],
       ),
     );

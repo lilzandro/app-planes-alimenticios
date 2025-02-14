@@ -7,7 +7,6 @@ Container buildProgressContainer(totalCalorias, double totalCarbohidratos,
     double totalProteinas, double totalGrasas) {
   return Container(
     color: Color(0xFF4da674),
-    height: DimensionesDePantalla.pantallaSize * 0.25,
     child: Center(
       child: Column(
         children: [
