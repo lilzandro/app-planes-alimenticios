@@ -14,8 +14,6 @@ Widget buildPlanAlimenticio(
   userId,
   DateTime selectedDate, // nuevo parámetro para el día a mostrar
 ) {
-  print('Plan alimenticio recibido: $planAlimenticio');
-  print(selectedDate);
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: const BoxDecoration(

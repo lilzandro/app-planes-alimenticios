@@ -1,19 +1,23 @@
+import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/utils/linea.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 
 class EditarInformacionUsuario extends StatelessWidget {
-  const EditarInformacionUsuario({super.key});
+  final RegistroUsuarioModel registroUsuario;
 
-  static void mostrar(BuildContext context) {
+  const EditarInformacionUsuario({super.key, required this.registroUsuario});
+
+  static void mostrar(
+      BuildContext context, RegistroUsuarioModel registroUsuario) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       enableDrag: false,
       backgroundColor: const Color(0xFFEAF8E7),
-      builder: (context) => const FractionallySizedBox(
+      builder: (context) => FractionallySizedBox(
         heightFactor: 1.0,
-        child: EditarInformacionUsuario(),
+        child: EditarInformacionUsuario(registroUsuario: registroUsuario),
       ),
     );
   }
@@ -27,83 +31,87 @@ class EditarInformacionUsuario extends StatelessWidget {
         top: DimensionesDePantalla.pantallaSize * 0.02,
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.1),
-          Text(
-            'Editar Información',
-            style: TextStyle(
-              fontSize: DimensionesDePantalla.pantallaSize * 0.025,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF023336),
-              fontFamily: 'Comfortaa',
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.1),
+            Text(
+              'Editar Información',
+              style: TextStyle(
+                fontSize: DimensionesDePantalla.pantallaSize * 0.025,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF023336),
+                fontFamily: 'Comfortaa',
+              ),
             ),
-          ),
-          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-          linea(1.0, 1.0),
-          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-          _buildTextField('Nombre', 'Lizandro Castillo'),
-          _buildTextField('Patología', 'Diabetes tipo 2'),
-          _buildTextField('Edad', '22 años'),
-          _buildTextField('Estatura', '1.68 m'),
-          _buildTextField('Peso', '55 kg'),
-          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Lógica para guardar cambios
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF023336),
-                  padding: EdgeInsets.symmetric(
-                    vertical: DimensionesDePantalla.pantallaSize * 0.015,
-                    horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            linea(1.0, 1.0),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            _buildTextField('Nombre', registroUsuario.nombre ?? ''),
+            _buildTextField('Apellido', registroUsuario.apellido ?? ''),
+            _buildTextField('Edad', registroUsuario.edad?.toString() ?? ''),
+            _buildTextField(
+                'Estatura', registroUsuario.estatura?.toString() ?? ''),
+            _buildTextField('Peso', registroUsuario.peso?.toString() ?? ''),
+            _buildTextField('Sexo', registroUsuario.sexo ?? ''),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Lógica para guardar cambios
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF023336),
+                    padding: EdgeInsets.symmetric(
+                      vertical: DimensionesDePantalla.pantallaSize * 0.015,
+                      horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-                child: Text(
-                  'Guardar',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontFamily: 'Comfortaa',
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Lógica para cancelar y cerrar
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: EdgeInsets.symmetric(
-                    vertical: DimensionesDePantalla.pantallaSize * 0.015,
-                    horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                  child: Text(
+                    'Guardar',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontFamily: 'Comfortaa',
+                    ),
                   ),
                 ),
-                child: Text(
-                  'Cancelar',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontFamily: 'Comfortaa',
+                ElevatedButton(
+                  onPressed: () {
+                    // Lógica para cancelar y cerrar
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: EdgeInsets.symmetric(
+                      vertical: DimensionesDePantalla.pantallaSize * 0.015,
+                      horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Cancelar',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontFamily: 'Comfortaa',
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-        ],
+              ],
+            ),
+            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+          ],
+        ),
       ),
     );
   }

@@ -30,6 +30,8 @@ class _InicioState extends State<Inicio> {
       ),
       const VentanaPerfil(),
     ];
+
+    print('UID: ${widget.planAlimenticio}');
   }
 
   Future<void> _loadPlanAlimenticio() async {

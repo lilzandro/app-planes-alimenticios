@@ -1,9 +1,12 @@
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/widgets/perfil/editar_informacion_usuario.dart';
 import 'package:app_planes/screens/Login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_planes/models/registro_usuario_model.dart';
 
 class VentanaPerfil extends StatefulWidget {
   const VentanaPerfil({super.key});
@@ -13,6 +16,72 @@ class VentanaPerfil extends StatefulWidget {
 }
 
 class _VentanaPerfilState extends State<VentanaPerfil> {
+  String? userId;
+  User? user;
+  RegistroUsuarioModel? registroUsuario;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+
+    if (userId != null) {
+      _fetchUserFromFirebase(userId!);
+    }
+  }
+
+  Future<void> _fetchUserFromFirebase(String userId) async {
+    try {
+      user = FirebaseAuth.instance.currentUser;
+      if (user != null && user!.uid == userId) {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(userId)
+            .get();
+        if (userDoc.exists) {
+          setState(() {
+            registroUsuario = RegistroUsuarioModel(
+              nombre: userDoc['nombre'],
+              apellido: userDoc['apellido'],
+              edad: userDoc['edad'],
+              estatura: userDoc['estatura'],
+              peso: userDoc['peso'],
+              sexo: userDoc['sexo'],
+              nivelActividad: userDoc['nivelActividad'],
+            );
+          });
+          // Guardar la información del usuario en SharedPreferences
+          await _saveUserToCache(registroUsuario!);
+          print('Usuario encontrado: ${registroUsuario!.nombre}');
+        } else {
+          print('No se encontró el usuario en Firestore');
+        }
+      } else {
+        print('No se encontró el usuario en Firebase');
+      }
+    } catch (e) {
+      print('Error al buscar el usuario en Firebase: $e');
+    }
+  }
+
+  Future<void> _saveUserToCache(RegistroUsuarioModel user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nombre', user.nombre ?? '');
+    await prefs.setString('apellido', user.apellido ?? '');
+    await prefs.setInt('edad', user.edad ?? 0);
+    await prefs.setDouble('estatura', user.estatura ?? 0.0);
+    await prefs.setDouble('peso', user.peso ?? 0.0);
+    await prefs.setString('sexo', user.sexo ?? '');
+    await prefs.setString('nivelActividad', user.nivelActividad ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveContainer(
@@ -80,15 +149,21 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildProfileText(
-              'Lizandro Castillo', DimensionesDePantalla.pantallaSize * 0.02),
-          _buildProfileText('Patología: Diabetes tipo 2',
+              '${registroUsuario?.nombre ?? 'Nombre no disponible'} ${registroUsuario?.apellido ?? ''}',
+              DimensionesDePantalla.pantallaSize * 0.02),
+          _buildProfileText('Edad: ${registroUsuario?.edad ?? 'No disponible'}',
               DimensionesDePantalla.pantallaSize * 0.015),
           _buildProfileText(
-              'Edad: 22 años', DimensionesDePantalla.pantallaSize * 0.015),
+              'Estatura: ${registroUsuario?.estatura ?? 'No disponible'} m',
+              DimensionesDePantalla.pantallaSize * 0.015),
           _buildProfileText(
-              'Estatura: 1.68 m', DimensionesDePantalla.pantallaSize * 0.015),
+              'Peso: ${registroUsuario?.peso ?? 'No disponible'} kg',
+              DimensionesDePantalla.pantallaSize * 0.015),
+          _buildProfileText('Sexo: ${registroUsuario?.sexo ?? 'No disponible'}',
+              DimensionesDePantalla.pantallaSize * 0.015),
           _buildProfileText(
-              'Peso: 55 kg', DimensionesDePantalla.pantallaSize * 0.015),
+              'Nivel de actividad: ${registroUsuario?.nivelActividad ?? 'No disponible'}',
+              DimensionesDePantalla.pantallaSize * 0.015),
         ],
       ),
     );
@@ -121,7 +196,9 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           _progreso(),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
           _buildActionButton("Editar Perfil", () {
-            EditarInformacionUsuario.mostrar(context);
+            if (registroUsuario != null) {
+              EditarInformacionUsuario.mostrar(context, registroUsuario!);
+            }
           }),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
           _buildActionButton("Cerrar Sesión", () {
