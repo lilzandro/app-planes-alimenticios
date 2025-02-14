@@ -102,7 +102,7 @@ String? validarPresionArterial(String? value) {
     return "Ingresa un número válido";
   }
   if (presionArterial < 60) {
-    return "La presión arterial es muy baja. Hay riesgo de insuficiencia en órganos vitales.";
+    return "La presión arterial es muy baja. Hay riesgo de insuficiencia en órganos vitales. Consulte a un médico";
   }
   if (presionArterial > 120) {
     return "La presión arterial es muy alta. Asista a un centro médico.";

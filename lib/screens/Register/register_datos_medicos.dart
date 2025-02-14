@@ -227,44 +227,25 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
               ),
             ),
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            Wrap(
-              spacing: 8.0,
+            Column(
               children: opcionesAlergias.map((String opcion) {
-                return ChoiceChip(
-                  label: Text(opcion),
-                  selected:
-                      registroUsuario.alergiasIntolerancias.contains(opcion),
-                  onSelected: (bool selected) {
+                return RadioListTile<String>(
+                  title: Text(opcion),
+                  value: opcion,
+                  groupValue: registroUsuario.alergiasIntolerancias.isNotEmpty
+                      ? registroUsuario.alergiasIntolerancias.first
+                      : null,
+                  onChanged: (String? value) {
                     setState(() {
-                      if (selected) {
-                        registroUsuario.alergiasIntolerancias.add(opcion);
-                      } else {
-                        registroUsuario.alergiasIntolerancias.remove(opcion);
+                      registroUsuario.alergiasIntolerancias.clear();
+                      if (value != null) {
+                        registroUsuario.alergiasIntolerancias.add(value);
                       }
                     });
                   },
-                  selectedColor: Color(0xFF023336),
-                  backgroundColor: Color(0xFFC1E6BA).withOpacity(0.35),
-                  labelStyle: TextStyle(
-                    color:
-                        registroUsuario.alergiasIntolerancias.contains(opcion)
-                            ? Colors.white
-                            : Color(0xFF023336),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    side: BorderSide(
-                      color:
-                          registroUsuario.alergiasIntolerancias.contains(opcion)
-                              ? Color(0xFF023336)
-                              : Color(0xFFC1E6BA),
-                      width: 1.0,
-                    ),
-                  ),
-                  iconTheme: IconThemeData(
-                    color: Color(
-                        0xFF023336), // Color del icono cuando no está seleccionado
-                  ),
+                  activeColor: Color(0xFF023336),
+                  selected:
+                      registroUsuario.alergiasIntolerancias.contains(opcion),
                 );
               }).toList(),
             ),
