@@ -115,6 +115,7 @@ class DayDetailScreen extends StatelessWidget {
                     DimensionesDePantalla.pantallaSize * 0.03,
                   ),
                   border: Border.all(
+                    color: const Color(0xFF023336),
                     width: 3, // Grosor del borde
                   ),
                   // Borde verde

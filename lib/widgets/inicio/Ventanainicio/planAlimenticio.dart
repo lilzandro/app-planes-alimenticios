@@ -1,3 +1,4 @@
+import 'package:app_planes/services/notification_service.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/vetanaInferior.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
@@ -12,8 +13,11 @@ Widget buildPlanAlimenticio(
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
   userId,
-  DateTime selectedDate, // nuevo parámetro para el día a mostrar
+  DateTime selectedDate,
+  Function(String, bool?) onMealToggle, // nuevo callback
 ) {
+  NotificationService().scheduleMealNotifications(selectedDate);
+
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: const BoxDecoration(
@@ -25,10 +29,10 @@ Widget buildPlanAlimenticio(
       children: [
         _buildButtonRow(selectedDate),
         const SizedBox(height: 20),
-        _buildMealPlanContainer(
-            context, selectedMeal, setState, planAlimenticio, selectedDate),
+        _buildMealPlanContainer(context, selectedMeal, setState,
+            planAlimenticio, selectedDate, onMealToggle),
         const SizedBox(height: 20),
-        _buildImageContainer('assets/verduras.jpg', 'Bloque 2'),
+        _buildImageContainer('assets/verduras.jpg', 'Plan Alimenticio'),
         const SizedBox(height: 20),
         _buildExtraContainer(),
       ],
@@ -65,6 +69,7 @@ Widget _buildMealPlanContainer(
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
   DateTime selectedDate,
+  Function(String, bool?) onMealToggle,
 ) {
   return SizedBox(
     height: DimensionesDePantalla.pantallaSize * 0.33,
@@ -78,6 +83,7 @@ Widget _buildMealPlanContainer(
           selectedMeal,
           setState,
           context,
+          onMealToggle,
         ),
         _buildSeparator(),
         _buildExpandableOption(
@@ -88,16 +94,7 @@ Widget _buildMealPlanContainer(
           selectedMeal,
           setState,
           context,
-        ),
-        _buildSeparator(),
-        _buildExpandableOption(
-          "Merienda",
-          planAlimenticio != null
-              ? _mealForDate(planAlimenticio.merienda1, selectedDate)
-              : null,
-          selectedMeal,
-          setState,
-          context,
+          onMealToggle,
         ),
         _buildSeparator(),
         _buildExpandableOption(
@@ -108,6 +105,18 @@ Widget _buildMealPlanContainer(
           selectedMeal,
           setState,
           context,
+          onMealToggle,
+        ),
+        _buildSeparator(),
+        _buildExpandableOption(
+          "Merienda",
+          planAlimenticio != null
+              ? _mealForDate(planAlimenticio.merienda1, selectedDate)
+              : null,
+          selectedMeal,
+          setState,
+          context,
+          onMealToggle,
         ),
       ],
     ),
@@ -120,6 +129,7 @@ Widget _buildExpandableOption(
   String selectedMeal,
   Function setState,
   BuildContext context,
+  Function(String, bool?) onMealToggle, // callback añadido
 ) {
   final String imagePath = mealData?.imagenReceta ?? 'assets/$mealName.png';
   final String receta = mealData?.nombreReceta ?? 'No disponible';
@@ -157,14 +167,17 @@ Widget _buildExpandableOption(
     child: Container(
       height: DimensionesDePantalla.pantallaSize * .08,
       color: selectedMeal == mealName
-          ? Colors.transparent
+          ? const Color.fromARGB(255, 198, 4, 4)
           : const Color.fromARGB(0, 188, 17, 17),
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
           _buildMealImage(imagePath, mealName),
           Expanded(
-            child: _buildMealInfo(mealName, receta),
+            child:
+                _buildMealInfo(mealName, receta, selectedMeal, (bool? checked) {
+              onMealToggle(mealName, checked);
+            }),
           ),
         ],
       ),
@@ -201,27 +214,44 @@ Widget _buildMealImage(String imagePath, String mealName) {
   );
 }
 
-Widget _buildMealInfo(String mealName, String receta) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.start,
+Widget _buildMealInfo(String mealName, String receta, String selectedMeal,
+    Function(bool?) onChanged) {
+  final Map<String, String> mealTimes = {
+    'Desayuno': '7:00 AM',
+    'Almuerzo': '12:00 PM',
+    'Cena': '7:00 PM',
+    'Merienda': '9:00 PM',
+  };
+  final bool isSelected = mealName == selectedMeal;
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(
-        mealName,
-        style: const TextStyle(
-          fontFamily: 'Comfortaa',
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF023336),
-          fontSize: 14,
-        ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$mealName: ${mealTimes[mealName] ?? ''}',
+            style: const TextStyle(
+              fontFamily: 'Comfortaa',
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF023336),
+              fontSize: 14,
+            ),
+          ),
+          Text(
+            receta,
+            style: const TextStyle(
+              fontFamily: 'Comfortaa',
+              color: Color(0xFF023336),
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
-      Text(
-        receta,
-        style: const TextStyle(
-          fontFamily: 'Comfortaa',
-          color: Color(0xFF023336),
-          fontSize: 10,
-        ),
+      Checkbox(
+        value: isSelected,
+        onChanged: onChanged,
       ),
     ],
   );
@@ -230,7 +260,7 @@ Widget _buildMealInfo(String mealName, String receta) {
 Widget _buildSeparator() {
   return Container(
     width: DimensionesDePantalla.anchoPantalla * .9,
-    height: .8,
+    height: .9,
     color: const Color(0xFF4DA674).withOpacity(0.5),
   );
 }
