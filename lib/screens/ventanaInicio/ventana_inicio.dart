@@ -5,6 +5,8 @@ import 'package:app_planes/widgets/inicio/Ventanainicio/indicadores.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/planAlimenticio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_planes/services/cache_service.dart';
+import 'package:app_planes/utils/calculos.dart';
 
 class VentanaInicio extends StatefulWidget {
   const VentanaInicio({super.key});
@@ -36,7 +38,6 @@ class _VentanaInicioState extends State<VentanaInicio> {
     "Cena": false,
     "Merienda": false,
   };
-
   @override
   void initState() {
     super.initState();
@@ -74,151 +75,27 @@ class _VentanaInicioState extends State<VentanaInicio> {
   }
 
   Future<void> loadMealCompletion() async {
-    final prefs = await SharedPreferences.getInstance();
-    String todayStr = DateTime.now().toIso8601String().split("T")[0];
-    String savedDate = prefs.getString("mealCompletionDate") ?? "";
-
+    Map<String, bool> loadedMealCompletion =
+        await CacheService().loadMealCompletion();
     setState(() {
-      if (savedDate != todayStr) {
-        mealCompletion = {
-          "Desayuno": false,
-          "Almuerzo": false,
-          "Cena": false,
-          "Merienda": false,
-        };
-      } else {
-        mealCompletion = {
-          "Desayuno": prefs.getBool("Desayuno") ?? false,
-          "Almuerzo": prefs.getBool("Almuerzo") ?? false,
-          "Cena": prefs.getBool("Cena") ?? false,
-          "Merienda": prefs.getBool("Merienda") ?? false,
-        };
-      }
+      mealCompletion = loadedMealCompletion;
       _recalcularProgreso();
     });
   }
 
+  Future<void> _saveMealCompletion() async {
+    await CacheService().saveMealCompletion(mealCompletion);
+  }
+
   void _recalcularProgreso() {
-    _caloriasProgreso = 0;
-    _carbohidratosProgreso = 0;
-    _proteinasProgreso = 0;
-    _grasasProgreso = 0;
-    mealCompletion.forEach((key, completed) {
-      if (completed) {
-        _caloriasProgreso += getMealCalories(key);
-        _carbohidratosProgreso += getMealCarbohidratos(key);
-        _proteinasProgreso += getMealProteinas(key);
-        _grasasProgreso += getMealGrasas(key);
-      }
+    Map<String, double> progreso =
+        recalcularProgreso(mealCompletion, _planAlimenticio);
+    setState(() {
+      _caloriasProgreso = progreso['calorias'] ?? 0;
+      _carbohidratosProgreso = progreso['carbohidratos'] ?? 0;
+      _proteinasProgreso = progreso['proteinas'] ?? 0;
+      _grasasProgreso = progreso['grasas'] ?? 0;
     });
-  }
-
-  // Método para obtener el plan diario de la fecha actual.
-  PlanDiario? getMealForDate(List<PlanDiario> mealList, DateTime date) {
-    try {
-      return mealList.firstWhere((meal) =>
-          meal.fecha.year == date.year &&
-          meal.fecha.month == date.month &&
-          meal.fecha.day == date.day);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Calorías reales
-  int getMealCalories(String mealName) {
-    if (_planAlimenticio == null) return 0;
-    DateTime today = DateTime.now();
-    PlanDiario? diario;
-    switch (mealName) {
-      case "Desayuno":
-        diario = getMealForDate(_planAlimenticio!.desayuno, today);
-        break;
-      case "Almuerzo":
-        diario = getMealForDate(_planAlimenticio!.almuerzo, today);
-        break;
-      case "Cena":
-        diario = getMealForDate(_planAlimenticio!.cena, today);
-        break;
-      case "Merienda":
-        diario = getMealForDate(_planAlimenticio!.merienda1, today);
-        break;
-      default:
-        diario = null;
-    }
-    return (diario?.nutrientes['ENERC_KCAL']['quantity'] ?? 0).toInt();
-  }
-
-  // Carbohidratos reales
-  int getMealCarbohidratos(String mealName) {
-    if (_planAlimenticio == null) return 0;
-    DateTime today = DateTime.now();
-    PlanDiario? diario;
-    switch (mealName) {
-      case "Desayuno":
-        diario = getMealForDate(_planAlimenticio!.desayuno, today);
-        break;
-      case "Almuerzo":
-        diario = getMealForDate(_planAlimenticio!.almuerzo, today);
-        break;
-      case "Cena":
-        diario = getMealForDate(_planAlimenticio!.cena, today);
-        break;
-      case "Merienda":
-        diario = getMealForDate(_planAlimenticio!.merienda1, today);
-        break;
-      default:
-        diario = null;
-    }
-    return (diario?.nutrientes['CHOCDF']['quantity'] ?? 0).toInt();
-  }
-
-  // Proteínas reales
-  int getMealProteinas(String mealName) {
-    if (_planAlimenticio == null) return 0;
-    DateTime today = DateTime.now();
-    PlanDiario? diario;
-    switch (mealName) {
-      case "Desayuno":
-        diario = getMealForDate(_planAlimenticio!.desayuno, today);
-        break;
-      case "Almuerzo":
-        diario = getMealForDate(_planAlimenticio!.almuerzo, today);
-        break;
-      case "Cena":
-        diario = getMealForDate(_planAlimenticio!.cena, today);
-        break;
-      case "Merienda":
-        diario = getMealForDate(_planAlimenticio!.merienda1, today);
-        break;
-      default:
-        diario = null;
-    }
-    return (diario?.nutrientes['PROCNT']['quantity'] ?? 0).toInt();
-  }
-
-  // Grasas reales
-  int getMealGrasas(String mealName) {
-    if (_planAlimenticio == null) return 0;
-    DateTime today = DateTime.now();
-    PlanDiario? diario;
-    switch (mealName) {
-      case "Desayuno":
-        diario = getMealForDate(_planAlimenticio!.desayuno, today);
-        break;
-      case "Almuerzo":
-        diario = getMealForDate(_planAlimenticio!.almuerzo, today);
-        break;
-      case "Cena":
-        diario = getMealForDate(_planAlimenticio!.cena, today);
-        break;
-      case "Merienda":
-        diario = getMealForDate(_planAlimenticio!.merienda1, today);
-        break;
-      default:
-        diario = null;
-    }
-    return (diario?.nutrientes['FAT']['quantity'] ?? 0).toInt();
   }
 
   // Actualización al marcar/desmarcar una comida
@@ -227,7 +104,7 @@ class _VentanaInicioState extends State<VentanaInicio> {
       mealCompletion[mealName] = value ?? false;
       _recalcularProgreso();
     });
-    saveMealCompletion();
+    _saveMealCompletion();
   }
 
   @override

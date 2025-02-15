@@ -46,13 +46,12 @@ class PlanAlimenticioService {
       if (desayunoDelDia.isNotEmpty) {
         var desayuno = desayunoDelDia.first;
         totalCalorias +=
-            (desayuno.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
+            (desayuno.nutrientes['ENERC_KCAL']['quantity'] as num).toInt();
         totalCarbohidratos +=
-            (desayuno.nutrientes['CHOCDF']['quantity'] as num).toDouble();
+            (desayuno.nutrientes['CHOCDF']['quantity'] as num).toInt();
         totalProteinas +=
-            (desayuno.nutrientes['PROCNT']['quantity'] as num).toDouble();
-        totalGrasas +=
-            (desayuno.nutrientes['FAT']['quantity'] as num).toDouble();
+            (desayuno.nutrientes['PROCNT']['quantity'] as num).toInt();
+        totalGrasas += (desayuno.nutrientes['FAT']['quantity'] as num).toInt();
       }
 
       // Almuerzo
@@ -63,13 +62,12 @@ class PlanAlimenticioService {
       if (almuerzoDelDia.isNotEmpty) {
         var almuerzo = almuerzoDelDia.first;
         totalCalorias +=
-            (almuerzo.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
+            (almuerzo.nutrientes['ENERC_KCAL']['quantity'] as num).toInt();
         totalCarbohidratos +=
-            (almuerzo.nutrientes['CHOCDF']['quantity'] as num).toDouble();
+            (almuerzo.nutrientes['CHOCDF']['quantity'] as num).toInt();
         totalProteinas +=
-            (almuerzo.nutrientes['PROCNT']['quantity'] as num).toDouble();
-        totalGrasas +=
-            (almuerzo.nutrientes['FAT']['quantity'] as num).toDouble();
+            (almuerzo.nutrientes['PROCNT']['quantity'] as num).toInt();
+        totalGrasas += (almuerzo.nutrientes['FAT']['quantity'] as num).toInt();
       }
 
       // Merienda
@@ -80,13 +78,12 @@ class PlanAlimenticioService {
       if (meriendaDelDia.isNotEmpty) {
         var merienda = meriendaDelDia.first;
         totalCalorias +=
-            (merienda.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
+            (merienda.nutrientes['ENERC_KCAL']['quantity'] as num).toInt();
         totalCarbohidratos +=
-            (merienda.nutrientes['CHOCDF']['quantity'] as num).toDouble();
+            (merienda.nutrientes['CHOCDF']['quantity'] as num).toInt();
         totalProteinas +=
-            (merienda.nutrientes['PROCNT']['quantity'] as num).toDouble();
-        totalGrasas +=
-            (merienda.nutrientes['FAT']['quantity'] as num).toDouble();
+            (merienda.nutrientes['PROCNT']['quantity'] as num).toInt();
+        totalGrasas += (merienda.nutrientes['FAT']['quantity'] as num).toInt();
       }
 
       // Cena
@@ -97,12 +94,12 @@ class PlanAlimenticioService {
       if (cenaDelDia.isNotEmpty) {
         var cena = cenaDelDia.first;
         totalCalorias +=
-            (cena.nutrientes['ENERC_KCAL']['quantity'] as num).toDouble();
+            (cena.nutrientes['ENERC_KCAL']['quantity'] as num).toInt();
         totalCarbohidratos +=
-            (cena.nutrientes['CHOCDF']['quantity'] as num).toDouble();
+            (cena.nutrientes['CHOCDF']['quantity'] as num).toInt();
         totalProteinas +=
-            (cena.nutrientes['PROCNT']['quantity'] as num).toDouble();
-        totalGrasas += (cena.nutrientes['FAT']['quantity'] as num).toDouble();
+            (cena.nutrientes['PROCNT']['quantity'] as num).toInt();
+        totalGrasas += (cena.nutrientes['FAT']['quantity'] as num).toInt();
       }
     }
 

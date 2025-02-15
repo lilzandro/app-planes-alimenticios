@@ -1,3 +1,5 @@
+import 'package:app_planes/models/planAlimenticioModel.dart';
+
 int calcularEdad(DateTime fechaNacimiento) {
   DateTime hoy = DateTime.now();
   int edad = hoy.year - fechaNacimiento.year;
@@ -31,4 +33,130 @@ double calcularCaloriasDiarias(double tmb, String nivelActividad) {
     default:
       return tmb * 1.2;
   }
+}
+
+PlanDiario? getMealForDate(List<PlanDiario> mealList, DateTime date) {
+  try {
+    return mealList.firstWhere((meal) =>
+        meal.fecha.year == date.year &&
+        meal.fecha.month == date.month &&
+        meal.fecha.day == date.day);
+  } catch (e) {
+    return null;
+  }
+}
+
+int getMealCalories(PlanAlimenticioModel? plan, String mealName) {
+  if (plan == null) return 0;
+  DateTime today = DateTime.now();
+  PlanDiario? diario;
+  switch (mealName) {
+    case "Desayuno":
+      diario = getMealForDate(plan.desayuno, today);
+      break;
+    case "Almuerzo":
+      diario = getMealForDate(plan.almuerzo, today);
+      break;
+    case "Cena":
+      diario = getMealForDate(plan.cena, today);
+      break;
+    case "Merienda":
+      diario = getMealForDate(plan.merienda1, today);
+      break;
+    default:
+      diario = null;
+  }
+  return (diario?.nutrientes['ENERC_KCAL']['quantity'] ?? 0).toInt();
+}
+
+int getMealCarbohidratos(PlanAlimenticioModel? plan, String mealName) {
+  if (plan == null) return 0;
+  DateTime today = DateTime.now();
+  PlanDiario? diario;
+  switch (mealName) {
+    case "Desayuno":
+      diario = getMealForDate(plan.desayuno, today);
+      break;
+    case "Almuerzo":
+      diario = getMealForDate(plan.almuerzo, today);
+      break;
+    case "Cena":
+      diario = getMealForDate(plan.cena, today);
+      break;
+    case "Merienda":
+      diario = getMealForDate(plan.merienda1, today);
+      break;
+    default:
+      diario = null;
+  }
+  return (diario?.nutrientes['CHOCDF']['quantity'] ?? 0).toInt();
+}
+
+int getMealProteinas(PlanAlimenticioModel? plan, String mealName) {
+  if (plan == null) return 0;
+  DateTime today = DateTime.now();
+  PlanDiario? diario;
+  switch (mealName) {
+    case "Desayuno":
+      diario = getMealForDate(plan.desayuno, today);
+      break;
+    case "Almuerzo":
+      diario = getMealForDate(plan.almuerzo, today);
+      break;
+    case "Cena":
+      diario = getMealForDate(plan.cena, today);
+      break;
+    case "Merienda":
+      diario = getMealForDate(plan.merienda1, today);
+      break;
+    default:
+      diario = null;
+  }
+  return (diario?.nutrientes['PROCNT']['quantity'] ?? 0).toInt();
+}
+
+int getMealGrasas(PlanAlimenticioModel? plan, String mealName) {
+  if (plan == null) return 0;
+  DateTime today = DateTime.now();
+  PlanDiario? diario;
+  switch (mealName) {
+    case "Desayuno":
+      diario = getMealForDate(plan.desayuno, today);
+      break;
+    case "Almuerzo":
+      diario = getMealForDate(plan.almuerzo, today);
+      break;
+    case "Cena":
+      diario = getMealForDate(plan.cena, today);
+      break;
+    case "Merienda":
+      diario = getMealForDate(plan.merienda1, today);
+      break;
+    default:
+      diario = null;
+  }
+  return (diario?.nutrientes['FAT']['quantity'] ?? 0).toInt();
+}
+
+Map<String, double> recalcularProgreso(
+    Map<String, bool> mealCompletion, PlanAlimenticioModel? plan) {
+  double calorias = 0;
+  double carbohidratos = 0;
+  double proteinas = 0;
+  double grasas = 0;
+
+  mealCompletion.forEach((meal, completed) {
+    if (completed) {
+      calorias += getMealCalories(plan, meal).toDouble();
+      carbohidratos += getMealCarbohidratos(plan, meal).toDouble();
+      proteinas += getMealProteinas(plan, meal).toDouble();
+      grasas += getMealGrasas(plan, meal).toDouble();
+    }
+  });
+  return {
+    'calorias': calorias,
+    'carbohidratos': carbohidratos,
+    'proteinas': proteinas,
+    'grasas': grasas,
+  };
 }
