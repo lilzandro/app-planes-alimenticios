@@ -167,7 +167,7 @@ void showMealBottomSheet({
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '$receta - ${(gramosComida / proporcionComida).toInt()} gramos',
+                                    '$receta - ${(gramosComida).toInt()} gramos',
                                     style: const TextStyle(
                                       fontFamily: 'Comfortaa',
                                       fontWeight: FontWeight.bold,

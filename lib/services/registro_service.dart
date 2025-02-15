@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/calculos.dart';
 import 'package:app_planes/database/databaseHelper.dart';
+import 'package:app_planes/utils/traductor.dart'; // Asegúrate de importar la función traducirTexto
 
 class RegistroService {
   final AuthService _authService = AuthService();
@@ -138,31 +139,62 @@ class RegistroService {
 
         DateTime currentDate = DateTime.now();
 
-        recipeData.forEach((mealType, recipes) {
+        for (var entry in recipeData.entries) {
+          String mealType = entry.key;
+          List recipes = entry.value; // Lista de recetas por tipo de comida
+
           for (int i = 0; i < recipes.length; i++) {
             final receta = recipes[i]['recipe'];
-            final yield = receta['yield'];
 
-            final nutrientes = receta['totalNutrients'];
+            // Traduce el nombre de la receta
+            final translatedNombre = await traducirTexto(receta['label']);
+
+            // Traduce la lista de instrucciones
+            final List<dynamic> instructions = receta['instructionLines'];
+            final translatedInstrucciones = await Future.wait(
+                instructions.map((instruction) => traducirTexto(instruction)));
+
+            // Traduce la información de ingredientes (ejemplo asumiendo que cada ingrediente tiene un campo 'text')
+            final List<Map<String, dynamic>> ingredientesInfo =
+                List<Map<String, dynamic>>.from(receta['ingredients'] ?? []);
+            final translatedIngredientesInfo =
+                await Future.wait(ingredientesInfo.map((ingrediente) async {
+              final translatedText = await traducirTexto(ingrediente['text']);
+              return {
+                ...ingrediente,
+                'text': translatedText,
+              };
+            }));
+
+            // Obtener el valor de yield y calcular los nutrientes por porción
+            final double yieldValue = (receta['yield'] as num).toDouble();
+            final Map<String, dynamic> nutrientes =
+                Map<String, dynamic>.from(receta['totalNutrients']);
             nutrientes.forEach((key, value) {
-              if (value['quantity'] != null && yield != null && yield > 0) {
-                value['quantity'] = value['quantity'] / yield;
+              if (value['quantity'] != null && yieldValue > 0) {
+                value['quantity'] = (value['quantity'] as num) / yieldValue;
               }
             });
 
+            // Se divide totalWeight entre yield para obtener la cantidad de gramos por porción
+            final double totalWeight =
+                (receta['totalWeight'] as num).toDouble();
+            final double gramosComida =
+                yieldValue != 0 ? totalWeight / yieldValue : totalWeight;
+
             final planDiario = PlanDiario(
-              nombreReceta: receta['label'],
+              nombreReceta: translatedNombre,
               imagenReceta: receta['images']['REGULAR']['url'],
               ingredientes: List<String>.from(receta['ingredientLines']),
-              informacionIngredientes:
-                  List<Map<String, dynamic>>.from(receta['ingredients'] ?? []),
-              nutrientes: receta['totalNutrients'],
-              gramosComida: receta['totalWeight'],
+              informacionIngredientes: translatedIngredientesInfo,
+              nutrientes: nutrientes, // Se usa el Map modificado
+              gramosComida: gramosComida, // Gramos por porción calculados
               proporcionComida: receta['yield'],
               fecha: currentDate.add(Duration(days: i)),
-              intrucciones: List<String>.from(receta['instructionLines']),
+              intrucciones: List<String>.from(translatedInstrucciones),
             );
 
+            // Asignamos el plan al tipo de comida correspondiente
             switch (mealType) {
               case 'Breakfast':
                 planAlimenticio.desayuno.add(planDiario);
@@ -176,10 +208,12 @@ class RegistroService {
               case 'Snack':
                 planAlimenticio.merienda1.add(planDiario);
                 break;
+              default:
+                // Opcional: manejar otros tipos
+                break;
             }
           }
-        });
-
+        }
         // Registra al usuario
         UserCredential userCredential =
             await _authService.registrarUsuario(correo, contrasena);

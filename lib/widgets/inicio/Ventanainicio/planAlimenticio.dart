@@ -1,4 +1,3 @@
-import 'package:app_planes/services/notification_service.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/vetanaInferior.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
@@ -14,8 +13,6 @@ Widget buildPlanAlimenticio(
   DateTime selectedDate,
   Function(String, bool?) onMealToggle, // callback para actualizar
 ) {
-  NotificationService().scheduleMealNotifications(selectedDate);
-
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: const BoxDecoration(
