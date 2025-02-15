@@ -5,16 +5,14 @@ import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-String? selectedMeal;
-
 Widget buildPlanAlimenticio(
   BuildContext context,
-  String selectedMeal,
+  Map<String, bool> mealCompletion,
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
   userId,
   DateTime selectedDate,
-  Function(String, bool?) onMealToggle, // nuevo callback
+  Function(String, bool?) onMealToggle, // callback para actualizar
 ) {
   NotificationService().scheduleMealNotifications(selectedDate);
 
@@ -29,7 +27,7 @@ Widget buildPlanAlimenticio(
       children: [
         _buildButtonRow(selectedDate),
         const SizedBox(height: 20),
-        _buildMealPlanContainer(context, selectedMeal, setState,
+        _buildMealPlanContainer(context, mealCompletion, setState,
             planAlimenticio, selectedDate, onMealToggle),
         const SizedBox(height: 20),
         _buildImageContainer('assets/verduras.jpg', 'Plan Alimenticio'),
@@ -40,7 +38,7 @@ Widget buildPlanAlimenticio(
   );
 }
 
-Widget _buildButtonRow(selectedDate) {
+Widget _buildButtonRow(DateTime selectedDate) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
@@ -65,7 +63,7 @@ PlanDiario? _mealForDate(List<PlanDiario> mealList, DateTime selectedDate) {
 
 Widget _buildMealPlanContainer(
   BuildContext context,
-  String selectedMeal,
+  Map<String, bool> mealCompletion,
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
   DateTime selectedDate,
@@ -80,8 +78,7 @@ Widget _buildMealPlanContainer(
           planAlimenticio != null
               ? _mealForDate(planAlimenticio.desayuno, selectedDate)
               : null,
-          selectedMeal,
-          setState,
+          mealCompletion,
           context,
           onMealToggle,
         ),
@@ -91,8 +88,7 @@ Widget _buildMealPlanContainer(
           planAlimenticio != null
               ? _mealForDate(planAlimenticio.almuerzo, selectedDate)
               : null,
-          selectedMeal,
-          setState,
+          mealCompletion,
           context,
           onMealToggle,
         ),
@@ -102,8 +98,7 @@ Widget _buildMealPlanContainer(
           planAlimenticio != null
               ? _mealForDate(planAlimenticio.cena, selectedDate)
               : null,
-          selectedMeal,
-          setState,
+          mealCompletion,
           context,
           onMealToggle,
         ),
@@ -113,8 +108,7 @@ Widget _buildMealPlanContainer(
           planAlimenticio != null
               ? _mealForDate(planAlimenticio.merienda1, selectedDate)
               : null,
-          selectedMeal,
-          setState,
+          mealCompletion,
           context,
           onMealToggle,
         ),
@@ -126,10 +120,9 @@ Widget _buildMealPlanContainer(
 Widget _buildExpandableOption(
   String mealName,
   dynamic mealData,
-  String selectedMeal,
-  Function setState,
+  Map<String, bool> mealCompletion,
   BuildContext context,
-  Function(String, bool?) onMealToggle, // callback añadido
+  Function(String, bool?) onMealToggle,
 ) {
   final String imagePath = mealData?.imagenReceta ?? 'assets/$mealName.png';
   final String receta = mealData?.nombreReceta ?? 'No disponible';
@@ -139,7 +132,10 @@ Widget _buildExpandableOption(
   final List<Map<String, dynamic>> informacionIngredientes =
       mealData?.informacionIngredientes ?? [];
   final List<String> intrucciones = mealData?.intrucciones ?? [];
-  print('VplanAli Receta para $mealName: $receta');
+
+  // Se utiliza el estado del mapa mealCompletion en lugar de selectedMeal
+  final bool isSelected = mealCompletion[mealName] ?? false;
+  print('Plan Alimenticio - Receta para $mealName: $receta');
 
   return GestureDetector(
     onTap: () {
@@ -153,7 +149,8 @@ Widget _buildExpandableOption(
         mealName: mealName,
         imagePath: imagePath,
         imageEr: 'assets/$mealName.png',
-        selectedMeal: selectedMeal,
+        // Se pasa el estado actual de la selección (isSelected)
+        selectedMeal: isSelected ? mealName : '',
         color: Colors.transparent,
         planDiario: [],
         receta: receta,
@@ -161,13 +158,14 @@ Widget _buildExpandableOption(
         nutrientes: nutrientes,
         proporcionComida: proporcionComida,
         informacionIngredientes: informacionIngredientes,
-        intrucciones: intrucciones, // Nuevo parámetro
+        intrucciones: intrucciones,
       );
     },
     child: Container(
       height: DimensionesDePantalla.pantallaSize * .08,
-      color: selectedMeal == mealName
-          ? const Color.fromARGB(255, 198, 4, 4)
+      // Destaca el fondo según el estado de selección
+      color: isSelected
+          ? const Color.fromARGB(0, 198, 4, 4)
           : const Color.fromARGB(0, 188, 17, 17),
       alignment: Alignment.centerLeft,
       child: Row(
@@ -175,7 +173,7 @@ Widget _buildExpandableOption(
           _buildMealImage(imagePath, mealName),
           Expanded(
             child:
-                _buildMealInfo(mealName, receta, selectedMeal, (bool? checked) {
+                _buildMealInfo(mealName, receta, isSelected, (bool? checked) {
               onMealToggle(mealName, checked);
             }),
           ),
@@ -185,36 +183,7 @@ Widget _buildExpandableOption(
   );
 }
 
-Widget _buildMealImage(String imagePath, String mealName) {
-  return Padding(
-    padding: EdgeInsets.symmetric(
-        horizontal: DimensionesDePantalla.anchoPantalla * .03),
-    child: ClipOval(
-      child: imagePath.startsWith('http')
-          ? CachedNetworkImage(
-              imageUrl: imagePath,
-              height: DimensionesDePantalla.anchoPantalla * .15,
-              width: DimensionesDePantalla.anchoPantalla * .16,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Image.asset(
-                'assets/$mealName.png',
-                height: DimensionesDePantalla.anchoPantalla * .15,
-                width: DimensionesDePantalla.anchoPantalla * .16,
-                fit: BoxFit.cover,
-              ),
-            )
-          : Image.asset(
-              imagePath,
-              height: DimensionesDePantalla.anchoPantalla * .15,
-              width: DimensionesDePantalla.anchoPantalla * .16,
-              fit: BoxFit.cover,
-            ),
-    ),
-  );
-}
-
-Widget _buildMealInfo(String mealName, String receta, String selectedMeal,
+Widget _buildMealInfo(String mealName, String receta, bool isSelected,
     Function(bool?) onChanged) {
   final Map<String, String> mealTimes = {
     'Desayuno': '7:00 AM',
@@ -222,34 +191,39 @@ Widget _buildMealInfo(String mealName, String receta, String selectedMeal,
     'Cena': '7:00 PM',
     'Merienda': '9:00 PM',
   };
-  final bool isSelected = mealName == selectedMeal;
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$mealName: ${mealTimes[mealName] ?? ''}',
-            style: const TextStyle(
-              fontFamily: 'Comfortaa',
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF023336),
-              fontSize: 14,
+      Expanded(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$mealName: ${mealTimes[mealName] ?? ''}',
+              style: const TextStyle(
+                fontFamily: 'Comfortaa',
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF023336),
+                fontSize: 14,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          Text(
-            receta,
-            style: const TextStyle(
-              fontFamily: 'Comfortaa',
-              color: Color(0xFF023336),
-              fontSize: 12,
+            Text(
+              receta,
+              style: const TextStyle(
+                fontFamily: 'Comfortaa',
+                color: Color(0xFF023336),
+                fontSize: 12,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       Checkbox(
+        activeColor: const Color(0xFF4DA674),
+        checkColor: Colors.white,
         value: isSelected,
         onChanged: onChanged,
       ),
@@ -341,11 +315,11 @@ Widget _buildButton(String? label, VoidCallback onPressed,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null)
-            Icon(icon, size: iconSize ?? 19, color: Color(0xFFEAF8E7)),
+            Icon(icon, size: iconSize ?? 19, color: const Color(0xFFEAF8E7)),
           if (label != null)
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Comfortaa',
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFEAF8E7),
@@ -353,6 +327,35 @@ Widget _buildButton(String? label, VoidCallback onPressed,
             ),
         ],
       ),
+    ),
+  );
+}
+
+Widget _buildMealImage(String imagePath, String mealName) {
+  return Padding(
+    padding: EdgeInsets.symmetric(
+        horizontal: DimensionesDePantalla.anchoPantalla * .03),
+    child: ClipOval(
+      child: imagePath.startsWith('http')
+          ? CachedNetworkImage(
+              imageUrl: imagePath,
+              height: DimensionesDePantalla.anchoPantalla * .15,
+              width: DimensionesDePantalla.anchoPantalla * .16,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Image.asset(
+                'assets/$mealName.png',
+                height: DimensionesDePantalla.anchoPantalla * .15,
+                width: DimensionesDePantalla.anchoPantalla * .16,
+                fit: BoxFit.cover,
+              ),
+            )
+          : Image.asset(
+              imagePath,
+              height: DimensionesDePantalla.anchoPantalla * .15,
+              width: DimensionesDePantalla.anchoPantalla * .16,
+              fit: BoxFit.cover,
+            ),
     ),
   );
 }

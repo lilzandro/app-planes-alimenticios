@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart'; // Importa la librería de LinearPercentIndicator y CircularPercentIndicator
 
 // Widget para el contenedor con barras de progreso lineales
-Container buildProgressContainer(double progresoCalorias, double metaCalorias,
-    double totalCarbohidratos, double totalProteinas, double totalGrasas) {
+Container buildProgressContainer(
+  double progresoCalorias,
+  double metaCalorias,
+  double progresoCarbohidratos,
+  double totalCarbohidratos,
+  double progresoProteinas,
+  double totalProteinas,
+  double totalGrasas,
+  double grasasProgreso,
+) {
   return Container(
     color: const Color(0xFF4da674),
     child: Center(
@@ -13,7 +21,6 @@ Container buildProgressContainer(double progresoCalorias, double metaCalorias,
           SizedBox(
             height: DimensionesDePantalla.pantallaSize * 0.01,
           ),
-          // Ahora el primer parámetro es el progreso y el segundo la meta
           buildCircularPercentIndicator(
               progresoCalorias.toInt(), metaCalorias.toInt()),
           Padding(
@@ -21,11 +28,12 @@ Container buildProgressContainer(double progresoCalorias, double metaCalorias,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                buildLinearPercentIndicator("Carbohidratos",
+                    progresoCarbohidratos.toInt(), totalCarbohidratos.toInt()),
+                buildLinearPercentIndicator("Proteinas",
+                    progresoProteinas.toInt(), totalProteinas.toInt()),
                 buildLinearPercentIndicator(
-                    "Carbohidratos", 20, totalCarbohidratos.toInt()),
-                buildLinearPercentIndicator(
-                    "Proteinas", 20, totalProteinas.toInt()),
-                buildLinearPercentIndicator("Grasas", 20, totalGrasas.toInt()),
+                    "Grasas", grasasProgreso.toInt(), totalGrasas.toInt()),
               ],
             ),
           ),
