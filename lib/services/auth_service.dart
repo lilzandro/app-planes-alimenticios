@@ -1,4 +1,5 @@
 import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:app_planes/utils/conectividad.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
@@ -105,5 +106,13 @@ class AuthService {
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
     }
+  }
+
+  Future<bool> signOutWithConnectivityCheck() async {
+    // Verifica conexión real a internet
+    bool isOnline = await hasInternetConnection();
+    if (!isOnline) return false;
+    await _auth.signOut();
+    return true;
   }
 }
