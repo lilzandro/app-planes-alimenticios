@@ -11,7 +11,10 @@ class ReportePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final String? userId = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
-      appBar: AppBar(title: const Text("Reporte de Progreso")),
+      backgroundColor: Color(0xFFEAF8E7),
+      appBar: AppBar(
+          backgroundColor: Color(0xFF5AC488),
+          title: const Text("Reporte de Progreso")),
       body: userId == null
           ? const Center(child: Text("No hay usuario autenticado."))
           : StreamBuilder<List<ProgresoModel>>(
@@ -39,6 +42,7 @@ class ReportePage extends StatelessWidget {
                         (progreso.merienda ? 1 : 0);
 
                     return Card(
+                      color: Color(0xFFEAF8E7),
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       child: ListTile(
