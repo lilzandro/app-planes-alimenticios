@@ -1,5 +1,6 @@
 import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/services/database_service.dart';
+import 'package:app_planes/services/progresoServices.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/indicadores.dart';
 import 'package:app_planes/widgets/inicio/Ventanainicio/planAlimenticio.dart';
@@ -38,15 +39,27 @@ class _VentanaInicioState extends State<VentanaInicio> {
     "Cena": false,
     "Merienda": false,
   };
+
+  String? userId;
+
   @override
   void initState() {
     super.initState();
-    _loadPlanAlimenticio().then((_) {
-      loadMealCompletion();
+    // Primero carga el userId guardado
+    _loadUserId().then((_) {
+      _loadPlanAlimenticio().then((_) {
+        loadMealCompletion();
+      });
     });
   }
 
-  String? userId;
+  Future<void> _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+    print('UserId cargado: $userId');
+  }
 
   Future<void> _loadPlanAlimenticio() async {
     _planAlimenticio = await PlanAlimenticioService.loadPlanAlimenticio();
@@ -65,26 +78,21 @@ class _VentanaInicioState extends State<VentanaInicio> {
     setState(() {});
   }
 
-  Future<void> saveMealCompletion() async {
-    final prefs = await SharedPreferences.getInstance();
-    mealCompletion.forEach((meal, completed) {
-      prefs.setBool(meal, completed);
-    });
-    String todayStr = DateTime.now().toIso8601String().split("T")[0];
-    prefs.setString("mealCompletionDate", todayStr);
-  }
-
   Future<void> loadMealCompletion() async {
-    Map<String, bool> loadedMealCompletion =
-        await CacheService().loadMealCompletion();
-    setState(() {
-      mealCompletion = loadedMealCompletion;
-      _recalcularProgreso();
-    });
+    if (userId != null) {
+      Map<String, bool> loadedMealCompletion =
+          await CacheService().loadMealCompletion(userId!);
+      setState(() {
+        mealCompletion = loadedMealCompletion;
+        _recalcularProgreso();
+      });
+    }
   }
 
   Future<void> _saveMealCompletion() async {
-    await CacheService().saveMealCompletion(mealCompletion);
+    if (userId != null) {
+      await CacheService().saveMealCompletion(mealCompletion, userId!);
+    }
   }
 
   void _recalcularProgreso() {
@@ -99,12 +107,27 @@ class _VentanaInicioState extends State<VentanaInicio> {
   }
 
   // Actualización al marcar/desmarcar una comida
-  void toggleMeal(String mealName, bool? value) {
+  void toggleMeal(String mealName, bool? value) async {
+    if (userId == null) {
+      print('No hay userId disponible');
+      return;
+    }
     setState(() {
       mealCompletion[mealName] = value ?? false;
       _recalcularProgreso();
     });
     _saveMealCompletion();
+    print('Usuariok: $userId, Meal: $mealName, Check: ${value ?? false}');
+    // Actualizar Firebase con el estado del check y los progresos calculados
+    FirebaseService.updateProgresoForMeal(
+      userId!,
+      mealName,
+      value ?? false,
+      caloriasProgreso: _caloriasProgreso,
+      carbohidratosProgreso: _carbohidratosProgreso,
+      proteinasProgreso: _proteinasProgreso,
+      grasasProgreso: _grasasProgreso,
+    );
   }
 
   @override

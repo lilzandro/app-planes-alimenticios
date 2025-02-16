@@ -1,4 +1,8 @@
+import 'package:app_planes/models/progresoModel.dart';
 import 'package:app_planes/screens/Login/login_screen.dart';
+import 'package:app_planes/services/progresoServices.dart';
+import 'package:app_planes/utils/reporte_page.dart.dart';
+import 'package:app_planes/widgets/planAlimenticio/estadisticas.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_planes/models/registro_usuario_model.dart';
@@ -31,12 +35,23 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   }
 
   Future<void> _loadUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString('userId');
-    });
-    if (userId != null) {
-      _fetchUserFromFirebase(userId!);
+    final prefs = await SharedPreferences.getInstance();
+    // Obtén el id actual desde FirebaseAuth
+    String? firebaseUserId = FirebaseAuth.instance.currentUser?.uid;
+    print('FirebaseAuth current user id: $firebaseUserId');
+    // Actualiza el userId y almacénalo en SharedPreferences
+    if (firebaseUserId != null) {
+      setState(() {
+        userId = firebaseUserId;
+      });
+      await prefs.setString('userId', firebaseUserId);
+      _fetchUserFromFirebase(firebaseUserId);
+    } else {
+      // Si no hay usuario en Firebase, limpia el userId de SharedPreferences
+      await prefs.remove('userId');
+      setState(() {
+        userId = null;
+      });
     }
   }
 
@@ -65,7 +80,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   }
 
   Future<void> _handleSignOut() async {
-    // Intenta cerrar sesión solo si hay conexión real
+    // Realiza el cierre de sesión
     bool didSignOut = await AuthService().signOutWithConnectivityCheck();
     if (!didSignOut) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -76,6 +91,9 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
       );
       return;
     }
+    // Limpia el userId de SharedPreferences para evitar datos antiguos
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userId');
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => VentanaInicioSeccion()),
@@ -203,20 +221,56 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   }
 
   Widget _progreso() {
+    // Obtiene el userId actual directamente de FirebaseAuth
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
     return Container(
-      height: DimensionesDePantalla.pantallaSize * 0.25,
+      padding: EdgeInsets.only(
+        top: DimensionesDePantalla.pantallaSize * 0.04,
+        left: DimensionesDePantalla.pantallaSize * 0.02,
+        right: DimensionesDePantalla.pantallaSize * 0.02,
+      ),
+      height: DimensionesDePantalla.pantallaSize * 0.35,
       width: DimensionesDePantalla.pantallaSize * 0.9,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(30.0)),
         boxShadow: [
-          BoxShadow(
-            color: Color.fromARGB(45, 0, 0, 0),
-            blurRadius: 4.0,
-            offset: Offset(0, 0),
-          ),
+          // ...boxShadow...
         ],
         color: Color(0xFFEAF8E7),
       ),
+      child: currentUserId == null
+          ? Center(child: Text("No hay usuario"))
+          : StreamBuilder<List<ProgresoModel>>(
+              stream: FirebaseService.getProgressStream(currentUserId),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text("Error al cargar progreso"));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final progressList = snapshot.data ?? [];
+
+                /* 
+                  Se asume que cada ProgresoModel corresponde a un día y contiene los valores
+                  booleanos si se comió Desayuno, Almuerzo, Cena y Merienda. Se calcula el total
+                  de comidas consumidas para ese día y se ubica en la posición correspondiente de la semana.
+                  En Dart, DateTime.weekday retorna un número de 1 (lunes) a 7 (domingo).
+                */
+                List<int> dailyMealsCount = List.filled(7, 0);
+                for (var progreso in progressList) {
+                  int dayIndex = progreso.fecha.weekday - 1;
+                  int meals = (progreso.desayuno ? 1 : 0) +
+                      (progreso.almuerzo ? 1 : 0) +
+                      (progreso.cena ? 1 : 0) +
+                      (progreso.merienda ? 1 : 0);
+                  dailyMealsCount[dayIndex] = meals;
+                }
+                return DailyMealsWeeklyChart(
+                  dailyMealsCount: dailyMealsCount,
+                );
+              },
+            ),
     );
   }
 
@@ -255,15 +309,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
 
   Widget _buildProfileDetails() {
     return Container(
-      padding: EdgeInsets.all(DimensionesDePantalla.pantallaSize * 0.02),
-      height: DimensionesDePantalla.pantallaSize * 0.7,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
-        ),
-        color: Color(0xFFEAF8E7),
-      ),
+      // ... código existente ...
       child: Column(
         children: [
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.05),
@@ -273,6 +319,13 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
             if (registroUsuario != null) {
               EditarInformacionUsuario.mostrar(context, registroUsuario!);
             }
+          }),
+          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+          _buildActionButton("Ver Reporte", () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReportePage()),
+            );
           }),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
           _buildActionButton("Cerrar Sesión", () {
