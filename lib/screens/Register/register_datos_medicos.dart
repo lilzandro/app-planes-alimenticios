@@ -90,6 +90,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
     ];
   }
 
+  //// filepath: /C:/Users/lisan/Desktop/Workspaces/app_planes/lib/screens/Register/register_datos_medicos.dart
   Widget _construirFormularioDatosMedicos() {
     return Form(
       key: _formKey,
@@ -148,7 +149,8 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                   validator: validarNivelGlucosa,
                 ),
               ]),
-            if (_patologia == 'Diabetes Tipo 1')
+            if (_patologia == 'Diabetes Tipo 1' ||
+                _patologia == 'Diabetes Tipo 2')
               Column(children: [
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
                 construirDropdownUsoInsulina(
@@ -259,15 +261,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
                 });
               },
             ),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            construirCampoTexto(
-              labelText: "Observaciones Médicas",
-              keyboardType: TextInputType.multiline,
-              initialValue: registroUsuario.observaciones,
-              onChanged: (value) => registroUsuario.observaciones = value,
-              validator: validarObservacionesMedicas,
-              maxLines: 3,
-            ),
+            // Se elimina el campo de "Observaciones Médicas"
             SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
             _construirBotonSiguiente(),
           ],

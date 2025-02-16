@@ -150,15 +150,18 @@ class _VentanaInicioState extends State<VentanaInicio> {
         _totalGrasas,
         _grasasProgreso,
       ),
-      buildPlanAlimenticio(
-        context,
-        mealCompletion,
-        setState,
-        _planAlimenticio,
-        userId,
-        DateTime.now(),
-        toggleMeal,
-      ),
+      if (userId != null)
+        buildPlanAlimenticio(
+          context,
+          mealCompletion,
+          setState,
+          _planAlimenticio,
+          userId!,
+          DateTime.now(),
+          toggleMeal,
+        )
+      else
+        const Center(child: CircularProgressIndicator()),
     ];
   }
 }

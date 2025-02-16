@@ -1,37 +1,66 @@
-import 'package:app_planes/widgets/inicio/Ventanainicio/vetanaInferior.dart';
-import 'package:flutter/material.dart';
-import 'package:app_planes/utils/dimensiones_pantalla.dart';
+//// filepath: /C:/Users/lisan/Desktop/Workspaces/app_planes/lib/widgets/inicio/Ventanainicio/planAlimenticio.dart
 import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:app_planes/widgets/inicio/Ventanainicio/vetanaInferior.dart';
 
 Widget buildPlanAlimenticio(
   BuildContext context,
   Map<String, bool> mealCompletion,
   Function setState,
   PlanAlimenticioModel? planAlimenticio,
-  userId,
+  String userId,
   DateTime selectedDate,
   Function(String, bool?) onMealToggle, // callback para actualizar
 ) {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: const BoxDecoration(
-      borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-      color: Color(0xFFEAF8E7),
-    ),
-    child: Column(
-      children: [
-        _buildButtonRow(selectedDate),
-        const SizedBox(height: 20),
-        _buildMealPlanContainer(context, mealCompletion, setState,
-            planAlimenticio, selectedDate, onMealToggle),
-        const SizedBox(height: 20),
-        _buildImageContainer('assets/verduras.jpg', 'Plan Alimenticio'),
-        const SizedBox(height: 20),
-        _buildExtraContainer(),
-      ],
-    ),
+  // Consulta el documento del usuario para obtener la relación y el tipo de insulina.
+  return FutureBuilder<DocumentSnapshot>(
+    future: FirebaseFirestore.instance.collection('usuarios').doc(userId).get(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData && snapshot.data!.exists) {
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        String? relacionStr = data['relacionInsulinaCarbohidratos'];
+        double userInsulinRelation = double.tryParse(relacionStr ?? '1') ?? 1;
+        // Se extrae el tipo de insulina desde Firebase.
+        String userInsulinType = data['tipoInsulina'] ?? '';
+        print(
+            'Relación insulina/carbohidratos (Firebase): $userInsulinRelation');
+        print('Tipo de insulina (Firebase): $userInsulinType');
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0)),
+            color: Color(0xFFEAF8E7),
+          ),
+          child: Column(
+            children: [
+              _buildButtonRow(selectedDate),
+              const SizedBox(height: 20),
+              _buildMealPlanContainer(
+                context,
+                mealCompletion,
+                setState,
+                planAlimenticio,
+                selectedDate,
+                onMealToggle,
+                userInsulinRelation,
+                userInsulinType, // Se pasa el tipo de insulina.
+              ),
+              const SizedBox(height: 20),
+              _buildImageContainer('assets/verduras.jpg', 'Plan Alimenticio'),
+              const SizedBox(height: 20),
+              _buildExtraContainer(),
+            ],
+          ),
+        );
+      } else {
+        return const Center(child: CircularProgressIndicator());
+      }
+    },
   );
 }
 
@@ -65,6 +94,8 @@ Widget _buildMealPlanContainer(
   PlanAlimenticioModel? planAlimenticio,
   DateTime selectedDate,
   Function(String, bool?) onMealToggle,
+  double userInsulinRelation,
+  String userInsulinType, // Nuevo parámetro
 ) {
   return SizedBox(
     height: DimensionesDePantalla.pantallaSize * 0.33,
@@ -78,6 +109,8 @@ Widget _buildMealPlanContainer(
           mealCompletion,
           context,
           onMealToggle,
+          userInsulinRelation,
+          userInsulinType, // Se pasa el tipo.
         ),
         _buildSeparator(),
         _buildExpandableOption(
@@ -88,6 +121,8 @@ Widget _buildMealPlanContainer(
           mealCompletion,
           context,
           onMealToggle,
+          userInsulinRelation,
+          userInsulinType,
         ),
         _buildSeparator(),
         _buildExpandableOption(
@@ -98,6 +133,8 @@ Widget _buildMealPlanContainer(
           mealCompletion,
           context,
           onMealToggle,
+          userInsulinRelation,
+          userInsulinType,
         ),
         _buildSeparator(),
         _buildExpandableOption(
@@ -108,6 +145,8 @@ Widget _buildMealPlanContainer(
           mealCompletion,
           context,
           onMealToggle,
+          userInsulinRelation,
+          userInsulinType,
         ),
       ],
     ),
@@ -120,6 +159,8 @@ Widget _buildExpandableOption(
   Map<String, bool> mealCompletion,
   BuildContext context,
   Function(String, bool?) onMealToggle,
+  double userInsulinRelation,
+  String userInsulinType, // Nuevo parámetro
 ) {
   final String imagePath = mealData?.imagenReceta ?? 'assets/$mealName.png';
   final String receta = mealData?.nombreReceta ?? 'No disponible';
@@ -130,7 +171,15 @@ Widget _buildExpandableOption(
       mealData?.informacionIngredientes ?? [];
   final List<String> intrucciones = mealData?.intrucciones ?? [];
 
-  // Se utiliza el estado del mapa mealCompletion en lugar de selectedMeal
+  // Se usa la clave de carbohidratos acorde a tus datos.
+  double carbs =
+      double.tryParse(nutrientes['CHOCDF']?['quantity']?.toString() ?? '0') ??
+          0;
+  print('Carbohidratos para $mealName: $carbs');
+  print('Relación insulina/carbohidratos: $userInsulinRelation');
+  double insulinDose =
+      (userInsulinRelation > 0) ? carbs / userInsulinRelation : 0;
+
   final bool isSelected = mealCompletion[mealName] ?? false;
   print('Plan Alimenticio - Receta para $mealName: $receta');
 
@@ -146,7 +195,6 @@ Widget _buildExpandableOption(
         mealName: mealName,
         imagePath: imagePath,
         imageEr: 'assets/$mealName.png',
-        // Se pasa el estado actual de la selección (isSelected)
         selectedMeal: isSelected ? mealName : '',
         color: Colors.transparent,
         planDiario: [],
@@ -160,7 +208,6 @@ Widget _buildExpandableOption(
     },
     child: Container(
       height: DimensionesDePantalla.pantallaSize * .08,
-      // Destaca el fondo según el estado de selección
       color: isSelected
           ? const Color.fromARGB(0, 198, 4, 4)
           : const Color.fromARGB(0, 188, 17, 17),
@@ -169,10 +216,16 @@ Widget _buildExpandableOption(
         children: [
           _buildMealImage(imagePath, mealName),
           Expanded(
-            child:
-                _buildMealInfo(mealName, receta, isSelected, (bool? checked) {
-              onMealToggle(mealName, checked);
-            }),
+            child: _buildMealInfo(
+              mealName,
+              receta,
+              insulinDose,
+              isSelected,
+              (bool? checked) {
+                onMealToggle(mealName, checked);
+              },
+              userInsulinType, // Se pasa el tipo de insulina.
+            ),
           ),
         ],
       ),
@@ -180,8 +233,15 @@ Widget _buildExpandableOption(
   );
 }
 
-Widget _buildMealInfo(String mealName, String receta, bool isSelected,
-    Function(bool?) onChanged) {
+//// filepath: /C:/Users/lisan/Desktop/Workspaces/app_planes/lib/widgets/inicio/Ventanainicio/planAlimenticio.dart
+Widget _buildMealInfo(
+  String mealName,
+  String receta,
+  double insulinDose,
+  bool isSelected,
+  Function(bool?) onChanged,
+  String userInsulinType, // Nuevo parámetro recibido
+) {
   final Map<String, String> mealTimes = {
     'Desayuno': '7:00 AM',
     'Almuerzo': '12:00 PM',
@@ -209,12 +269,19 @@ Widget _buildMealInfo(String mealName, String receta, bool isSelected,
             Text(
               receta,
               style: const TextStyle(
-                fontFamily: 'Comfortaa',
-                color: Color(0xFF023336),
                 fontSize: 12,
               ),
               overflow: TextOverflow.ellipsis,
             ),
+            if (userInsulinType.toLowerCase() ==
+                "Insulina Rápida".toLowerCase())
+              Text(
+                "Dosis de insulina: ${insulinDose.toStringAsFixed(1)} u",
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue,
+                ),
+              ),
           ],
         ),
       ),
