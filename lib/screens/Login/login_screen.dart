@@ -5,6 +5,7 @@ import 'package:app_planes/screens/Login/olvidar_contrase%C3%B1a.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:app_planes/services/auth_service.dart';
 import 'package:app_planes/database/databaseHelper.dart' as db_helper2;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -253,10 +254,34 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
 
               if (planAlimenticio != null) {
                 print(
-                    'Plan alimenticio encontrado: ${planAlimenticio!.desayuno}'); // Depuración
+                    'Plan alimenticio encontrado localmente: ${planAlimenticio!.desayuno}');
               } else {
                 print(
-                    'No se encontró un plan alimenticio para este usuario'); // Depuración
+                    'No se encontró un plan alimenticio local para este usuario. Buscando en Firebase...');
+                try {
+                  // Buscar en Firestore el plan alimenticio asociado al usuario.
+                  final planSnapshot = await FirebaseFirestore.instance
+                      .collection('planesAlimenticios')
+                      .where('usuarioId', isEqualTo: userCredential.user!.uid)
+                      .get();
+
+                  if (planSnapshot.docs.isNotEmpty) {
+                    // Suponiendo que la estructura en Firestore coincide con la de PlanAlimenticioModel.fromJson.
+                    final planData = planSnapshot.docs.first.data();
+                    planAlimenticio = PlanAlimenticioModel.fromJson(planData);
+
+                    // Guardar el plan alimenticio localmente.
+                    await _databaseHelper.insertPlanAlimenticio(
+                        userCredential.user!.uid, planAlimenticio!);
+
+                    print(
+                        'Plan alimenticio recuperado de Firebase y guardado localmente.');
+                  } else {
+                    print('No se encontró plan alimenticio en Firebase.');
+                  }
+                } catch (e) {
+                  print('Error al recuperar plan alimenticio de Firebase: $e');
+                }
               }
 
               Navigator.push(

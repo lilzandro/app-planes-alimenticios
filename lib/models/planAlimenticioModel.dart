@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+//// filepath: /c:/Users/lisan/Desktop/Workspaces/app_planes/lib/models/planAlimenticioModel.dart
 class PlanAlimenticioModel {
   List<PlanDiario> desayuno;
   List<PlanDiario> merienda1;
@@ -23,15 +24,25 @@ class PlanAlimenticioModel {
   }
 
   factory PlanAlimenticioModel.fromJson(Map<String, dynamic> json) {
+    List<dynamic> parseField(dynamic field) {
+      if (field is String) {
+        return jsonDecode(field);
+      } else if (field is List) {
+        return field;
+      } else {
+        return [];
+      }
+    }
+
     return PlanAlimenticioModel(
       desayuno: List<PlanDiario>.from(
-          jsonDecode(json['desayuno']).map((e) => PlanDiario.fromJson(e))),
+          parseField(json['desayuno']).map((e) => PlanDiario.fromJson(e))),
       merienda1: List<PlanDiario>.from(
-          jsonDecode(json['merienda1']).map((e) => PlanDiario.fromJson(e))),
+          parseField(json['merienda1']).map((e) => PlanDiario.fromJson(e))),
       almuerzo: List<PlanDiario>.from(
-          jsonDecode(json['almuerzo']).map((e) => PlanDiario.fromJson(e))),
+          parseField(json['almuerzo']).map((e) => PlanDiario.fromJson(e))),
       cena: List<PlanDiario>.from(
-          jsonDecode(json['cena']).map((e) => PlanDiario.fromJson(e))),
+          parseField(json['cena']).map((e) => PlanDiario.fromJson(e))),
     );
   }
 }
