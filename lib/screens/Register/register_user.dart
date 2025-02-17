@@ -14,7 +14,8 @@ class RegistroUsuario extends StatefulWidget {
 class _RegistroUsuarioState extends State<RegistroUsuario> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final RegistroService _registroService = RegistroService();
-
+  bool _isPasswordHidden = true;
+  bool _isRepeatPasswordHidden = true;
   late String correo;
   late String contrasena;
   late String repetirContrasena;
@@ -111,16 +112,22 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFC1E6BA).withOpacity(0.35),
+        color: const Color(0xFFC1E6BA).withOpacity(0.35),
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(color: const Color(0xFFC1E6BA).withOpacity(0.4)),
       ),
       child: TextFormField(
         keyboardType: keyboardType,
-        cursorColor: Color(0xFF023336),
-        style:
-            TextStyle(fontFamily: 'Comfortaa', color: const Color(0xFF123456)),
-        obscureText: isPassword && !(isPassword && false),
+        cursorColor: const Color(0xFF023336),
+        style: const TextStyle(
+            fontFamily: 'Comfortaa',
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF123456)),
+        obscureText: isPassword
+            ? (labelText == "Contraseña"
+                ? _isPasswordHidden
+                : _isRepeatPasswordHidden)
+            : false,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(
@@ -129,6 +136,29 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    labelText == "Contraseña"
+                        ? (_isPasswordHidden
+                            ? Icons.visibility_off
+                            : Icons.visibility)
+                        : (_isRepeatPasswordHidden
+                            ? Icons.visibility_off
+                            : Icons.visibility),
+                    color: const Color(0xFF023336).withOpacity(0.6),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (labelText == "Contraseña") {
+                        _isPasswordHidden = !_isPasswordHidden;
+                      } else if (labelText == "Repetir Contraseña") {
+                        _isRepeatPasswordHidden = !_isRepeatPasswordHidden;
+                      }
+                    });
+                  },
+                )
+              : null,
         ),
         onChanged: onChanged,
         validator: validator,

@@ -1,6 +1,7 @@
 //// filepath: /C:/Users/lisan/Desktop/Workspaces/app_planes/lib/widgets/inicio/Ventanainicio/planAlimenticio.dart
 import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:app_planes/widgets/planAlimenticio/recomendaciones.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -71,9 +72,9 @@ Widget buildPlanAlimenticio(
                 userInsulinType,
               ),
               const SizedBox(height: 20),
-              _buildImageContainer('assets/verduras.jpg', 'Plan Alimenticio'),
+              _buildImageContainer(
+                  context, 'assets/verduras.jpg', 'Recomendaciones'),
               const SizedBox(height: 20),
-              _buildExtraContainer(),
             ],
           ),
         );
@@ -321,28 +322,34 @@ Widget _buildSeparator() {
   );
 }
 
-Widget _buildImageContainer(String imagePath, String label) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30.0),
-    ),
-    height: DimensionesDePantalla.pantallaSize * 0.2,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(30.0),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            imagePath,
-            fit: BoxFit.cover,
+Widget _buildImageContainer(
+    BuildContext context, String imagePath, String label) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const RecomendacionesScreen()),
+      );
+    },
+    child: Container(
+      height: DimensionesDePantalla.pantallaSize * 0.2,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF4DA674), Color(0xFF023336)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Comfortaa',
+            color: Colors.white,
+            fontSize: 20,
           ),
-          Center(
-            child: Text(
-              label,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ),
-        ],
+        ),
       ),
     ),
   );

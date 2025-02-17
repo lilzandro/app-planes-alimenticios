@@ -31,12 +31,21 @@ class RegistroService {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Correo en uso"),
+                backgroundColor: Color(0xFFEAF8E7),
+                title: Text("Correo en uso",
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF023336))),
                 content: Text(
-                    "El correo ya está registrado. Por favor, use otro correo."),
+                    "El correo ya está registrado. Por favor, use otro correo.",
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa', color: Color(0xFF023336))),
                 actions: [
                   TextButton(
-                    child: Text("Aceptar"),
+                    child: Text("Aceptar",
+                        style: TextStyle(
+                            fontFamily: 'Comfortaa', color: Color(0xFF023336))),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -238,12 +247,23 @@ class RegistroService {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Registro Exitoso"),
+              backgroundColor: Color(0xFFEAF8E7),
+              title: Text("Registro Exitoso",
+                  style: TextStyle(
+                      fontFamily: 'Comfortaa',
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF023336))),
               content: Text(
-                  "Se ha enviado un correo de verificación a tu dirección de correo electrónico. Para continuar, por favor verifica tu correo. Una vez verificado, podrás iniciar sesión y revisar tu plan de alimentación."),
+                  "¡Listo! Se ha enviado un correo de verificación. Revisa tu email y, una vez verificado, inicia sesión para ver tu plan de alimentación.",
+                  style: TextStyle(
+                      fontFamily: 'Comfortaa', color: Color(0xFF023336))),
               actions: [
                 TextButton(
-                  child: Text("Continuar"),
+                  child: Text("Continuar",
+                      style: TextStyle(
+                          fontFamily: 'Comfortaa',
+                          color: Color(0xFF023336),
+                          fontWeight: FontWeight.bold)),
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.pushReplacementNamed(context, '/login');
@@ -335,22 +355,27 @@ void mostrarDialogoCarga(BuildContext context) {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text(
-              "Estamos creando tu plan de alimentación...",
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      );
-    },
+    builder: (context) => AlertDialog(
+      backgroundColor: Color(0xFFEAF8E7),
+      content: Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF4DA674)),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+              child: Container(
+                  color: Color(0xFFEAF8E7),
+                  child: Text(
+                    "Creando tu plan alimenticio, por favor espere...",
+                    style: TextStyle(
+                      fontFamily: 'Comfortaa',
+                      fontSize: 16,
+                      color: Color(0xFF023336),
+                    ),
+                  ))),
+        ],
+      ),
+    ),
   );
 }
