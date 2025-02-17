@@ -19,8 +19,10 @@ class EdamamService {
       List<String>? alergias) async {
     final edamamMealApi = EdamamMealApi(appId, appKey, baseUrl, userApi);
 
-    int minC = (caloriasDiarias * 0.8).toInt();
-    int maxC = caloriasDiarias;
+    var caloriasNecesarias = caloriasDiarias - 80;
+
+    int minC = (caloriasNecesarias * 0.8).toInt();
+    int maxC = caloriasNecesarias;
     print("MINIMO" + minC.toString() + "MAXIMO" + maxC.toString());
 
     Map<String, dynamic> mealBody;

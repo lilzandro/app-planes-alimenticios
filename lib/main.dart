@@ -22,6 +22,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDateFormatting('es_ES', null);
+
   runApp(const MyApp());
 }
 

@@ -106,4 +106,14 @@ class DatabaseHelper {
       }
     }
   }
+
+  // Dentro de la clase DatabaseHelper, agrega lo siguiente:
+  Future<int> deletePlanAlimenticio(String userId) async {
+    final db = await database;
+    return await db.delete(
+      'plan_alimenticio',
+      where: 'userId = ?',
+      whereArgs: [userId],
+    );
+  }
 }

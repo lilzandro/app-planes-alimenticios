@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_planes/models/planAlimenticioModel.dart';
 import 'package:app_planes/utils/conectividad.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,6 +39,22 @@ class AuthService {
   Future<bool> verificarCorreo(User user) async {
     await user.reload();
     return user.emailVerified;
+  }
+
+  Future<void> guardarNeuvoPlanAlimenticio(
+      PlanAlimenticioModel plan, String userId) async {
+    DocumentReference planRef =
+        await _firestore.collection('planesAlimenticios').add({
+      'desayuno': plan.desayuno.map((e) => e.toJson()).toList(),
+      'merienda1': plan.merienda1.map((e) => e.toJson()).toList(),
+      'almuerzo': plan.almuerzo.map((e) => e.toJson()).toList(),
+      'cena': plan.cena.map((e) => e.toJson()).toList(),
+      'usuarioId': userId,
+    });
+
+    await _firestore.collection('usuarios').doc(userId).update({
+      'planAlimenticioId': planRef.id,
+    });
   }
 
   Future<void> guardarDatosUsuario(UserCredential userCredential,
@@ -105,6 +123,16 @@ class AuthService {
     User? user = _auth.currentUser;
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
+    }
+  }
+
+  Future<bool> checkConnectivity() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      // Si la lista no está vacía y se obtuvo la dirección, hay conexión.
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
     }
   }
 

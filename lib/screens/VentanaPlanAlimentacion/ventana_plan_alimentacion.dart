@@ -1,11 +1,19 @@
+import 'package:app_planes/database/databaseHelper.dart';
+import 'package:app_planes/models/registro_usuario_model.dart';
+import 'package:app_planes/screens/home.dart';
+import 'package:app_planes/services/cache_service.dart';
 import 'package:app_planes/services/database_service.dart';
+import 'package:app_planes/utils/utils.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:intl/intl.dart';
 import 'package:app_planes/screens/VentanaPlanAlimentacion/plan_dia.dart';
 import 'package:app_planes/models/planAlimenticioModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_planes/services/planAlimentacionServices.dart';
+import 'package:app_planes/services/auth_service.dart';
 
 class VentanaPlanAlimentacion extends StatefulWidget {
   final PlanAlimenticioModel? planAlimenticio;
@@ -19,6 +27,7 @@ class VentanaPlanAlimentacion extends StatefulWidget {
 
 class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
   Future<PlanAlimenticioModel?>? _futurePlanAlimenticio;
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   @override
   void initState() {
@@ -39,10 +48,15 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error al cargar el plan alimenticio'));
-        } else if (!snapshot.hasData || snapshot.data == null) {
-          return Center(child: Text('Plan alimenticio no disponible'));
         } else {
-          PlanAlimenticioModel planAlimenticio = snapshot.data!;
+          // Si no hay datos, se crea un plan vacío en lugar de mostrar un mensaje.
+          PlanAlimenticioModel planAlimenticio = snapshot.data ??
+              PlanAlimenticioModel(
+                desayuno: [],
+                merienda1: [],
+                almuerzo: [], cena: [],
+                // Agrega otros campos necesarios según el modelo
+              );
           int cantidadComidas = planAlimenticio.desayuno.length;
           return ResponsiveContainer(
             buildBlocks: (context) =>
@@ -113,7 +127,6 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       SizedBox(height: DimensionesDePantalla.anchoPantalla * 0.05),
       _buildCreatePlanButton(),
       SizedBox(height: DimensionesDePantalla.anchoPantalla * 0.07),
-      _buildCarousel(),
     ];
   }
 
@@ -123,7 +136,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       child: Column(
         children: [
           Text(
-            'Menú manual',
+            'Cambiar Plan alimenticio',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Comfortaa',
@@ -133,7 +146,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             ),
           ),
           Text(
-            'Realiza tus propias recetas',
+            'Cambia tu plan actual',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Comfortaa',
@@ -161,7 +174,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: _fetchAndCreateNewPlan,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFF023336),
           shadowColor: Colors.transparent,
@@ -180,29 +193,199 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     );
   }
 
-  Widget _buildCarousel() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: DimensionesDePantalla.pantallaSize * 0.18,
-        autoPlay: true,
-        viewportFraction: 0.5,
-      ),
-      items: [1, 2, 3, 4, 5].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: BoxDecoration(color: Color(0xFFC1E6BA)),
-              child: Text(
-                'text $i',
-                style: TextStyle(fontSize: 16.0),
+  Future<void> _fetchAndCreateNewPlan() async {
+    bool confirm = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Confirmar cambio de plan"),
+            content: Text(
+                "¿Está seguro de cambiar de plan? Esto eliminará el plan actual."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text("Cancelar"),
               ),
-            );
-          },
-        );
-      }).toList(),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text("Aceptar"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!confirm) return;
+
+    // 2. Verificar conectividad utilizando signOutWithConnectivityCheck de AuthService
+    // Se asume que este método se ha adaptado para actuar únicamente como verificación de conectividad.
+    bool isOnline = await AuthService().checkConnectivity();
+    if (!isOnline) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Sin conexión"),
+          content: Text(
+              "No tiene conexión a internet. Por favor, verifique su red e intente nuevamente."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Aceptar"),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    // Mostrar ventana de carga
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 20),
+            Expanded(child: Text('Se está creando su nuevo plan alimenticio')),
+          ],
+        ),
+      ),
     );
+
+    try {
+      // ... código actual para obtener el usuario, eliminar y crear el plan ...
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc((await SharedPreferences.getInstance()).getString('userId'))
+          .get();
+
+      print('Usuario obtenido de Firebase:' + userDoc.id);
+
+      // Suponiendo que userDoc está verificado y existe
+      RegistroUsuarioModel usuario = RegistroUsuarioModel(
+        nombre: userDoc['nombre'],
+        apellido: userDoc['apellido'],
+        fechaNacimiento: userDoc['fechaNacimiento'] is Timestamp
+            ? (userDoc['fechaNacimiento'] as Timestamp).toDate()
+            : DateTime.parse(userDoc['fechaNacimiento']),
+        edad: userDoc['edad'],
+        estatura: userDoc['estatura'],
+        peso: userDoc['peso'],
+        sexo: userDoc['sexo'],
+        diabetesTipo1: userDoc['diabetesTipo1'],
+        diabetesTipo2: userDoc['diabetesTipo2'],
+        hipertension: userDoc['hipertension'],
+        nivelGlucosa: userDoc['nivelGlucosa'],
+        usoInsulina: userDoc['usoInsulina'],
+        presionArterial: userDoc['presionArterial'],
+        observaciones: userDoc['observaciones'],
+        nivelActividad: userDoc['nivelActividad'],
+        alergiasIntolerancias:
+            List<String>.from(userDoc['alergiasIntolerancias']),
+        indiceMasaCorporal: userDoc['indiceMasaCorporal'],
+        tasaMetabolicaBasal: userDoc['tasaMetabolicaBasal'],
+        caloriasDiarias: userDoc['caloriasDiarias'],
+        cantidadInsulina: userDoc['cantidadInsulina'],
+        tipoInsulina: userDoc['tipoInsulina'],
+        relacionInsulinaCarbohidratos: userDoc['relacionInsulinaCarbohidratos'],
+      );
+
+      String planAlimenticioId = userDoc['planAlimenticioId'];
+
+      await FirebaseFirestore.instance
+          .collection('planesAlimenticios')
+          .doc(planAlimenticioId)
+          .delete();
+      print('Plan eliminado de Firebase');
+
+      await DatabaseHelper().deletePlanAlimenticio(userDoc.id);
+      print('Plan eliminado localmente');
+
+      String patologia;
+      if (usuario.diabetesTipo1) {
+        patologia = 'Diabetes Tipo 1';
+      } else if (usuario.diabetesTipo2) {
+        patologia = 'Diabetes Tipo 2';
+      } else if (usuario.hipertension) {
+        patologia = 'Hipertensión';
+      } else {
+        throw Exception('Error: Patología desconocida');
+      }
+
+      final alergiasConvertidas =
+          convertirAlergias(usuario.alergiasIntolerancias);
+
+      print('Calorías Diarias: ${usuario.caloriasDiarias}');
+      print('Patología: $patologia');
+      print('Nivel de Glucosa: ${usuario.nivelGlucosa}');
+      print('Alergias: $alergiasConvertidas');
+
+      PlanAlimenticioModel nuevoPlan =
+          await PlanAlimenticioServices().crearNuevoPlanAlimenticio(
+        context,
+        usuario.caloriasDiarias ?? 0,
+        patologia,
+        usuario.nivelGlucosa ?? 0,
+        alergiasConvertidas,
+      );
+
+      await AuthService().guardarNeuvoPlanAlimenticio(nuevoPlan, userDoc.id);
+
+      // Buscar en Firestore el plan alimenticio asociado al usuario.
+      final planSnapshot = await FirebaseFirestore.instance
+          .collection('planesAlimenticios')
+          .where('usuarioId', isEqualTo: userDoc.id)
+          .get();
+
+      if (planSnapshot.docs.isNotEmpty) {
+        // Suponiendo que la estructura en Firestore coincide con la de PlanAlimenticioModel.fromJson.
+        final planData = planSnapshot.docs.first.data();
+        PlanAlimenticioModel planAlimenticio =
+            PlanAlimenticioModel.fromJson(planData);
+
+        // Guardar el plan alimenticio localmente.
+        await _databaseHelper.insertPlanAlimenticio(
+            userDoc.id, planAlimenticio);
+
+        print('Plan alimenticio recuperado de Firebase y guardado localmente.');
+      } else {
+        print('No se encontró plan alimenticio en Firebase.');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      Navigator.pop(context); // Cierra la ventana de carga
+
+      // Obtener el userId desde SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString('userId');
+
+      if (userId != null) {
+        Map<String, bool> resetMealCompletion = {
+          "Desayuno": false,
+          "Almuerzo": false,
+          "Cena": false,
+          "Merienda": false,
+        };
+        await CacheService().saveMealCompletion(resetMealCompletion, userId);
+        await CacheService().resetWeeklyStatistics(userId);
+      }
+
+      // Buscar el plan alimenticio localmente
+      PlanAlimenticioModel? localPlan;
+      if (userId != null) {
+        localPlan = await _databaseHelper.getPlanAlimenticio(userId);
+        print(
+            'Plan alimenticio local recuperado: ${localPlan?.toJson().toString()}');
+      }
+
+      // Navegar a Inicio() pasando el plan local recuperado
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Inicio(planAlimenticio: localPlan),
+        ),
+      );
+    }
   }
 
   Widget _buildCalendarWidget(

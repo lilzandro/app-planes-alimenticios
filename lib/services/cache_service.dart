@@ -56,4 +56,13 @@ class CacheService {
       }
     }
   }
+
+  Future<void> resetWeeklyStatistics(String userId) async {
+    // Ejemplo: reiniciar estadísticas semanales guardadas localmente o actualizar en Firestore.
+    // Aquí se resetean contadores, fechas o flags relacionados a estadísticas.
+    // Puedes utilizar SharedPreferences o tu base de datos local según tu arquitectura.
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('weeklyStatistics_$userId');
+    print('Estadísticas semanales reseteadas para el usuario: $userId');
+  }
 }
