@@ -89,8 +89,10 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
         Text(
           "Inicio de Sesión",
           style: TextStyle(
+            fontFamily: 'Comfortaa',
             fontSize: MediaQuery.of(context).size.width * 0.06,
             fontWeight: FontWeight.bold,
+            color: Color(0xFF023336),
           ),
         ),
         SizedBox(
@@ -130,11 +132,15 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         cursorColor: const Color(0xFF023336),
-        style: TextStyle(color: const Color(0xFF123456)),
+        style: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF123456),
+            fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           labelText: 'Correo Electrónico',
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+          labelStyle: TextStyle(
+              fontFamily: 'Comfortaa',
+              color: const Color(0xFF023336).withOpacity(0.6)),
 
           border: InputBorder.none, // Sin borde visible
           contentPadding: EdgeInsets.symmetric(
@@ -169,12 +175,16 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
       child: TextFormField(
         obscureText: _obscurePassword,
         cursorColor: const Color(0xFF023336),
-        style: TextStyle(color: const Color(0xFF123456)),
+        style: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF123456),
+            fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           labelText: 'Contraseña',
 
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+          labelStyle: TextStyle(
+              fontFamily: 'Comfortaa',
+              color: const Color(0xFF023336).withOpacity(0.6)),
           suffixIcon: IconButton(
             icon: Icon(
               _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -299,7 +309,7 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
                 errorMessage =
                     'La contraseña es incorrecta. Por favor, intenta de nuevo.';
               } else {
-                errorMessage = 'Error al iniciar sesión';
+                errorMessage = 'Error al iniciar sesión, revisa tu conexión.';
               }
             });
           } catch (e) {
@@ -320,7 +330,11 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
                 Color(0xFFEAF8E7),
               ),
             )
-          : const Text('Iniciar Sesión'),
+          : const Text('Iniciar Sesión',
+              style: TextStyle(
+                  fontFamily: 'Comfortaa',
+                  color: Color(0xFFEAF8E7),
+                  fontWeight: FontWeight.bold)),
     );
   }
 
@@ -368,7 +382,11 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
         );
       },
       child: Text('¿Olvidaste tu contraseña?',
-          style: TextStyle(color: Color(0xFF023336))),
+          style: TextStyle(
+            color: Color(0xFF023336),
+            fontFamily: 'Comfortaa',
+            fontWeight: FontWeight.bold,
+          )),
     );
   }
 }

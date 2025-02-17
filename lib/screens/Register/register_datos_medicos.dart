@@ -101,6 +101,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
             Text(
               "Datos Médicos",
               style: TextStyle(
+                fontFamily: 'Comfortaa',
                 fontSize: MediaQuery.of(context).size.width * 0.06,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF023336),
@@ -225,6 +226,7 @@ class _RegistroDatosMedicosState extends State<RegistroDatosMedicos> {
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width * 0.05,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Comfortaa',
                 color: Color(0xFF023336),
               ),
             ),

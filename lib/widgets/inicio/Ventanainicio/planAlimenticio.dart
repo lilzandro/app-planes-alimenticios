@@ -22,6 +22,8 @@ Widget buildPlanAlimenticio(
       if (snapshot.hasData && snapshot.data!.exists) {
         final data = snapshot.data!.data() as Map<String, dynamic>;
         String? relacionStr = data['relacionInsulinaCarbohidratos'];
+        String? cantidadInsulina = data['cantidadInsulina'];
+
         double userInsulinRelation = double.tryParse(relacionStr ?? '1') ?? 1;
         // Se extrae el tipo de insulina desde Firebase.
         String userInsulinType = data['tipoInsulina'] ?? '';
@@ -40,6 +42,24 @@ Widget buildPlanAlimenticio(
             children: [
               _buildButtonRow(selectedDate),
               const SizedBox(height: 20),
+              if (userInsulinType.toLowerCase() == "diabetes tipo 2")
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border:
+                        Border.all(color: const Color(0xFF4DA674), width: 2),
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color(0xFFEAF8E7),
+                  ),
+                  child: Text(
+                    'Recuerda usar tu dosis de insulina: $cantidadInsulina u',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF023336),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
               _buildMealPlanContainer(
                 context,
                 mealCompletion,
@@ -48,7 +68,7 @@ Widget buildPlanAlimenticio(
                 selectedDate,
                 onMealToggle,
                 userInsulinRelation,
-                userInsulinType, // Se pasa el tipo de insulina.
+                userInsulinType,
               ),
               const SizedBox(height: 20),
               _buildImageContainer('assets/verduras.jpg', 'Plan Alimenticio'),

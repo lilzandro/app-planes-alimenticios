@@ -19,11 +19,13 @@ Widget construirCampoTexto({
       initialValue: initialValue,
       keyboardType: keyboardType,
       cursorColor: Color(0xFF023336),
-      style: TextStyle(color: const Color(0xFF123456)),
+      style: TextStyle(fontFamily: 'Comfortaa', color: const Color(0xFF123456)),
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+        labelStyle: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF023336).withOpacity(0.6)),
         border: InputBorder.none,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -50,7 +52,9 @@ Widget construirDropdownPatologia({
       value: patologia.isNotEmpty ? patologia : null,
       decoration: InputDecoration(
         labelText: "Patología",
-        labelStyle: TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+        labelStyle: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF023336).withOpacity(0.6)),
         border: InputBorder.none,
       ),
       items: patologias.map((String value) {
@@ -80,7 +84,9 @@ Widget construirDropdownNivelActividad({
       value: nivelActividad.isNotEmpty ? nivelActividad : null,
       decoration: InputDecoration(
         labelText: "Nivel de Actividad Física",
-        labelStyle: TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+        labelStyle: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF023336).withOpacity(0.6)),
         border: InputBorder.none,
       ),
       items: [
@@ -116,7 +122,9 @@ Widget construirDropdownUsoInsulina({
       value: usoInsulina != null && usoInsulina.isNotEmpty ? usoInsulina : null,
       decoration: InputDecoration(
         labelText: "¿Usa Insulina?",
-        labelStyle: TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+        labelStyle: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF023336).withOpacity(0.6)),
         border: InputBorder.none,
       ),
       items: ['Sí', 'No'].map((String value) {
@@ -146,7 +154,9 @@ Widget construirDropdownTipoInsulina({
       value: tipoInsulina,
       decoration: InputDecoration(
         labelText: "Tipo de Insulina",
-        labelStyle: TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+        labelStyle: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF023336).withOpacity(0.6)),
         border: InputBorder.none,
       ),
       items: ['Insulina Lenta', 'Insulina Rápida'].map((String value) {

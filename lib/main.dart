@@ -4,6 +4,7 @@ import 'package:app_planes/screens/VentanaPerfil/ventana_perfil.dart';
 import 'package:flutter/material.dart';
 import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 // Importaciones Firebase
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +37,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      // Integración de localizaciones para que el calendario muestre el idioma español
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', 'ES'),
+      ],
       home: const AuthenticationWrapper(),
       routes: {
         // '/register': (context) => RegistroScreen(),

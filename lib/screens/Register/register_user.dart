@@ -64,9 +64,10 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 Text(
                   "Crear Usuario",
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.06,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontFamily: 'Comfortaa',
+                      fontSize: MediaQuery.of(context).size.width * 0.06,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF023336)),
                 ),
                 SizedBox(height: DimensionesDePantalla.pantallaSize * 0.04),
                 _construirCampoTexto(
@@ -117,12 +118,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       child: TextFormField(
         keyboardType: keyboardType,
         cursorColor: Color(0xFF023336),
-        style: TextStyle(color: const Color(0xFF123456)),
+        style:
+            TextStyle(fontFamily: 'Comfortaa', color: const Color(0xFF123456)),
         obscureText: isPassword && !(isPassword && false),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+          labelStyle: TextStyle(
+              fontFamily: 'Comfortaa',
+              color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -150,7 +153,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
               _formKey.currentState!.validate()
           ? _registrarUsuario
           : null,
-      child: const Text('Registrar'),
+      child: const Text('Registrar',
+          style: TextStyle(
+              fontFamily: 'Comfortaa',
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFEAF8E7))), //
     );
   }
 }

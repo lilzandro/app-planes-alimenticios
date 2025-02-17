@@ -140,16 +140,14 @@ class ArranqueApp extends StatelessWidget {
                 // NOMBRE APP
                 Container(
                   padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.5),
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  decoration: BoxDecoration(),
                   child: Text(
-                    "Nombre de la App",
-                    style: TextStyle(fontSize: 30, color: Colors.white),
+                    "Vitacplan",
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa',
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFEAF8E7)),
                   ),
                 ),
                 SizedBox(
@@ -184,8 +182,12 @@ class ArranqueApp extends StatelessWidget {
                     Navigator.pushReplacementNamed(context, '/register-1');
                   },
                   child: Text(
-                    "Empecemos",
-                    style: TextStyle(fontSize: 25, color: Color(0xFFEAF8E7)),
+                    "Registrate",
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Color(0xFFEAF8E7),
+                        fontFamily: 'Comfortaa',
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 Row(
@@ -193,7 +195,11 @@ class ArranqueApp extends StatelessWidget {
                   children: [
                     Text(
                       "Ya eres usuario?",
-                      style: TextStyle(color: Color(0xFFC1E6BA)),
+                      style: TextStyle(
+                          color: Color(0xFFC1E6BA),
+                          fontFamily: 'Comfortaa',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
                     ),
                     TextButton(
                       onPressed: () {
@@ -206,7 +212,11 @@ class ArranqueApp extends StatelessWidget {
                       },
                       child: Text(
                         "Inicia Sesión",
-                        style: TextStyle(color: Color(0xFFEAF8E7)),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFFEAF8E7),
+                            fontFamily: 'Comfortaa',
+                            fontWeight: FontWeight.bold),
                       ),
                     )
                   ],

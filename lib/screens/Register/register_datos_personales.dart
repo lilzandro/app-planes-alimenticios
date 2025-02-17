@@ -86,6 +86,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
             Text(
               "Datos Personales",
               style: TextStyle(
+                  fontFamily: 'Comfortaa',
                   fontSize: MediaQuery.of(context).size.width * 0.06,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF023336)),
@@ -162,11 +163,14 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
         keyboardType: keyboardType,
         cursorColor: const Color(0xFF023336),
         style: TextStyle(
+            fontFamily: 'Comfortaa',
+            fontWeight: FontWeight.bold,
             color: const Color(0xFF123456)), // Cambia aquí el color del texto
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+          labelStyle: TextStyle(
+              color: const Color(0xFF023336).withOpacity(0.6),
+              fontFamily: 'Comfortaa'),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -190,6 +194,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               ? "${registroUsuario.fechaNacimiento!.day}/${registroUsuario.fechaNacimiento!.month}/${registroUsuario.fechaNacimiento!.year}"
               : "Seleccionar Fecha de Nacimiento",
           style: TextStyle(
+            fontFamily: 'Comfortaa',
             color: registroUsuario.fechaNacimiento != null
                 ? const Color(0xFF023336)
                 : const Color(0xFF023336).withOpacity(0.6),
@@ -197,12 +202,30 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
         ),
         trailing: const Icon(Icons.calendar_today),
         onTap: () async {
-          // Mostrar el selector de fecha
+          // Mostrar el selector de fecha con tema personalizado
           final nuevaFecha = await showDatePicker(
             context: context,
             initialDate: registroUsuario.fechaNacimiento ?? DateTime.now(),
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
+            locale: const Locale('es', 'ES'),
+            builder: (BuildContext context, Widget? child) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: const Color(0xFF023336), // Color de encabezado
+                    onPrimary: const Color(
+                        0xFFEAF8E7), // Color del texto del encabezado
+                    surface:
+                        const Color(0xFFC1E6BA), // Color de fondo del diálogo
+                    onSurface:
+                        const Color(0xFF023336), // Color del texto del cuerpo
+                  ),
+                  dialogBackgroundColor: const Color(0xFFEAF8E7),
+                ),
+                child: child!,
+              );
+            },
           );
           if (nuevaFecha != null) {
             setState(() {

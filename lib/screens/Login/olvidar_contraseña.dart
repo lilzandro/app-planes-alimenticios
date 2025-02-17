@@ -74,6 +74,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
         Text(
           "Recuperar Contraseña",
           style: TextStyle(
+            fontFamily: 'Comfortaa',
             fontSize: MediaQuery.of(context).size.width * 0.06,
             fontWeight: FontWeight.bold,
             color: Color(0xFF023336),
@@ -107,11 +108,15 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         cursorColor: Color(0xFF023336),
-        style: TextStyle(color: const Color(0xFF123456)),
+        style: TextStyle(
+            fontFamily: 'Comfortaa',
+            color: const Color(0xFF123456),
+            fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           labelText: 'Correo Electrónico',
-          labelStyle:
-              TextStyle(color: const Color(0xFF023336).withOpacity(0.6)),
+          labelStyle: TextStyle(
+              fontFamily: 'Comfortaa',
+              color: const Color(0xFF023336).withOpacity(0.6)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
               vertical: 10.0, horizontal: 10.0), // Espaciado interno
@@ -154,7 +159,9 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
                 Color(0xFFEAF8E7),
               ),
             )
-          : const Text('Enviar Correo'),
+          : const Text('Enviar Correo',
+              style: TextStyle(
+                  fontFamily: 'Comfortaa', fontWeight: FontWeight.bold)),
     );
   }
 
