@@ -106,15 +106,34 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
       context: context,
       builder: (BuildContext ctx) {
         return AlertDialog(
-          title: Text('Confirmar cierre de sesión'),
-          content: Text('¿Estás seguro de que deseas cerrar sesión?'),
+          backgroundColor: Color(0xFFEAF8E7),
+          title: Text(
+            'Confirmar cierre de sesión',
+            style: TextStyle(
+                fontFamily: 'Comfortaa',
+                color: Color(0xFF023336),
+                fontWeight: FontWeight.bold),
+          ),
+          content: Text('¿Estás seguro de que deseas cerrar sesión?',
+              style: TextStyle(
+                  fontFamily: 'Comfortaa',
+                  color: Color(0xFF023336),
+                  fontWeight: FontWeight.bold)),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: Text('Cancelar',
+                  style: TextStyle(
+                    fontFamily: 'Comfortaa',
+                    color: Color(0xFFCA4343),
+                  )),
               onPressed: () => Navigator.of(ctx).pop(),
             ),
             TextButton(
-              child: Text('Cerrar sesión'),
+              child: Text('Cerrar sesión',
+                  style: TextStyle(
+                    fontFamily: 'Comfortaa',
+                    color: Color(0xFF023336),
+                  )),
               onPressed: () {
                 Navigator.of(ctx).pop();
                 _handleSignOut();
@@ -234,7 +253,11 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(30.0)),
         boxShadow: [
-          // ...boxShadow...
+          BoxShadow(
+            color: Color.fromARGB(45, 0, 0, 0),
+            blurRadius: 4.0,
+            offset: Offset(0, 0),
+          ),
         ],
         color: Color(0xFFEAF8E7),
       ),

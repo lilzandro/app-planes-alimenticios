@@ -68,10 +68,8 @@ Widget _buildButtonRow(DateTime selectedDate) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-      _buildButton(icon: Icons.arrow_back, '', () {}),
       _buildButton(' Hoy ${selectedDate.day}', () {},
           isMiddleButton: true, icon: Icons.calendar_today, iconSize: 22),
-      _buildButton(icon: Icons.arrow_forward, '', () {}),
     ],
   );
 }
@@ -367,7 +365,7 @@ Widget _buildButton(String? label, VoidCallback onPressed,
   return Container(
     height: DimensionesDePantalla.anchoPantalla * .1,
     width: isMiddleButton
-        ? DimensionesDePantalla.anchoPantalla * .5
+        ? DimensionesDePantalla.anchoPantalla * .7
         : DimensionesDePantalla.anchoPantalla * .12,
     decoration: BoxDecoration(
       color: const Color(0xFF023336),

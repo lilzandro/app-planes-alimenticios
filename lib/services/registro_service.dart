@@ -65,6 +65,7 @@ class RegistroService {
           registroUsuario.estatura ?? 0.0,
           edad,
         );
+        print('TMBregistro: $tmb');
         double caloriasDiarias = calcularCaloriasDiarias(
           tmb,
           registroUsuario.nivelActividad ?? 'Sedentario',

@@ -96,23 +96,27 @@ Widget buildCircularPercentIndicator(int progresoCalorias, int metaCalorias) {
     center: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(
+          height: 5,
+        ),
         Text(
           "$progresoCalorias / $metaCalorias",
           style: textStyleBase.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 15,
           ),
         ),
         Text(
           "Calorías",
           style: textStyleBase.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 10,
+            fontSize: 12,
           ),
         ),
         Text(
-          "consumidas",
-          style: textStyleBase.copyWith(fontSize: 10),
+          "Diarias",
+          style:
+              textStyleBase.copyWith(fontWeight: FontWeight.bold, fontSize: 12),
         ),
       ],
     ),

@@ -90,7 +90,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
             Container(
               alignment: Alignment.center,
               child: const Text(
-                'Plan Semanal\n de Alimentación',
+                'Plan de\n Alimentación',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Comfortaa',
@@ -137,7 +137,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       child: Column(
         children: [
           Text(
-            'Cambiar Plan alimenticio',
+            'Cambiar plan alimenticio',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Comfortaa',
@@ -198,17 +198,27 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
     bool confirm = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
+            backgroundColor: Color(0xFFEAF8E7),
             title: Text("Confirmar cambio de plan"),
             content: Text(
-                "¿Está seguro de cambiar de plan? Esto eliminará el plan actual."),
+              "¿Está seguro de cambiar de plan? Esto eliminará el plan actual.",
+              style:
+                  TextStyle(color: Color(0xFF023336), fontFamily: 'Comfortaa'),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: Text("Cancelar"),
+                child: Text(
+                  "Cancelar",
+                  style: TextStyle(
+                      fontFamily: 'Comfortaa', color: Color(0xFFCA4343)),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: Text("Aceptar"),
+                child: Text("Aceptar",
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa', color: Color(0xFF023336))),
               ),
             ],
           ),
@@ -242,11 +252,24 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
+        backgroundColor: Color(0xFFEAF8E7),
         content: Row(
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF4DA674)),
+            ),
             SizedBox(width: 20),
-            Expanded(child: Text('Se está creando su nuevo plan alimenticio')),
+            Expanded(
+                child: Container(
+                    color: Color(0xFFEAF8E7),
+                    child: Text(
+                      "Creando plan alimenticio, por favor espere...",
+                      style: TextStyle(
+                        fontFamily: 'Comfortaa',
+                        fontSize: 16,
+                        color: Color(0xFF023336),
+                      ),
+                    ))),
           ],
         ),
       ),
@@ -321,18 +344,21 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       print('Alergias: ${usuario.edad}');
 
       double tmb = calcularTMB(
-        registroUsuario.sexo ?? 'Hombre',
-        registroUsuario.peso ?? 0.0,
-        registroUsuario.estatura ?? 0.0,
-        registroUsuario.edad ?? 0,
+        usuario.sexo ?? 'Hombre',
+        usuario.peso ?? 0,
+        usuario.estatura ?? 0.0,
+        usuario.edad ?? 0,
       );
+
+      print('TMB: $tmb');
 
       double caloriasDiarias = calcularCaloriasDiarias(
         tmb,
         registroUsuario.nivelActividad ?? 'Sedentario',
       );
 
-      var caloriasN = caloriasDiarias.toInt() - 100;
+      int caloriasN = caloriasDiarias.toInt() - 100;
+      print('Calorías DiariasN: $caloriasN');
 
       PlanAlimenticioModel nuevoPlan =
           await PlanAlimenticioServices().crearNuevoPlanAlimenticio(
