@@ -277,7 +277,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
   Widget _buildActionButton(String label, VoidCallback? onPressed) {
     return Container(
       height: DimensionesDePantalla.anchoPantalla * .12,
-      width: DimensionesDePantalla.anchoPantalla * .5,
+      width: DimensionesDePantalla.anchoPantalla * .8,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
         boxShadow: [
@@ -335,6 +335,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           _buildActionButton("Cerrar Sesión", () {
             _showSignOutConfirmationDialog(context);
           }),
+          SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
         ],
       ),
     );

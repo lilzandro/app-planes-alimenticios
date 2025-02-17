@@ -3,6 +3,7 @@ import 'package:app_planes/models/registro_usuario_model.dart';
 import 'package:app_planes/screens/home.dart';
 import 'package:app_planes/services/cache_service.dart';
 import 'package:app_planes/services/database_service.dart';
+import 'package:app_planes/utils/calculos.dart';
 import 'package:app_planes/utils/utils.dart';
 import 'package:app_planes/widgets/orientacion_responsive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -314,15 +315,29 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
       final alergiasConvertidas =
           convertirAlergias(usuario.alergiasIntolerancias);
 
-      print('Calorías Diarias: ${usuario.caloriasDiarias}');
-      print('Patología: $patologia');
-      print('Nivel de Glucosa: ${usuario.nivelGlucosa}');
-      print('Alergias: $alergiasConvertidas');
+      print('Calorías Diarias: ${usuario.sexo}');
+      print('Patología: ${usuario.peso}');
+      print('Nivel de Glucosa: ${usuario.estatura}');
+      print('Alergias: ${usuario.edad}');
+
+      double tmb = calcularTMB(
+        registroUsuario.sexo ?? 'Hombre',
+        registroUsuario.peso ?? 0.0,
+        registroUsuario.estatura ?? 0.0,
+        registroUsuario.edad ?? 0,
+      );
+
+      double caloriasDiarias = calcularCaloriasDiarias(
+        tmb,
+        registroUsuario.nivelActividad ?? 'Sedentario',
+      );
+
+      var caloriasN = caloriasDiarias.toInt() - 100;
 
       PlanAlimenticioModel nuevoPlan =
           await PlanAlimenticioServices().crearNuevoPlanAlimenticio(
         context,
-        usuario.caloriasDiarias ?? 0,
+        caloriasN,
         patologia,
         usuario.nivelGlucosa ?? 0,
         alergiasConvertidas,
@@ -351,6 +366,25 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
         print('No se encontró plan alimenticio en Firebase.');
       }
     } catch (e) {
+      Navigator.pop(context); // Cierra la ventana de carga
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Error al crear plan alimenticio"),
+          content: const Text(
+            "No se pudo crear el plan alimenticio.\n\n"
+            "No se encontró un plan en la base de datos que cumpla con los requerimientos establecidos.\n"
+            "Por favor, verifique y modifique los parámetros de su cuenta e intente nuevamente.\n"
+            "Si el problema persiste, contacte al soporte técnico.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Aceptar"),
+            ),
+          ],
+        ),
+      );
       print('Error: $e');
     } finally {
       Navigator.pop(context); // Cierra la ventana de carga

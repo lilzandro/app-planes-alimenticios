@@ -231,7 +231,7 @@ class _RegistroDatosPersonalesState extends State<RegistroDatosPersonales> {
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         ),
         value: sexo,
-        items: ["Masculino", "Femenino", "Otro"]
+        items: ["Masculino", "Femenino"]
             .map((sexo) => DropdownMenuItem(
                   value: sexo,
                   child: Text(sexo),
