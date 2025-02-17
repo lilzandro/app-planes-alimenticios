@@ -29,6 +29,7 @@ class DetalleComida extends StatelessWidget {
       backgroundColor: Color(0xFFEAF8E7),
       appBar: AppBar(
         backgroundColor: Color(0xFFEAF8E7),
+        surfaceTintColor: Color(0xFFEAF8E7),
         title: Text(mealName),
       ),
       body: Padding(
