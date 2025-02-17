@@ -315,9 +315,13 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.05),
           _progreso(),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
-          _buildActionButton("Editar Perfil", () {
+          _buildActionButton("Editar Perfil", () async {
             if (registroUsuario != null) {
-              EditarInformacionUsuario.mostrar(context, registroUsuario!);
+              await EditarInformacionUsuario.mostrar(context, registroUsuario!);
+              // Luego de cerrar el modal, vuelve a buscar y actualizar el usuario.
+              if (userId != null) {
+                _fetchUserFromFirebase(userId!);
+              }
             }
           }),
           SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),

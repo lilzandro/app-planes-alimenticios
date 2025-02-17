@@ -1,16 +1,19 @@
 import 'package:app_planes/models/registro_usuario_model.dart';
+import 'package:app_planes/services/user_repository.dart';
+import 'package:app_planes/utils/dimensiones_pantalla.dart';
 import 'package:app_planes/utils/linea.dart';
 import 'package:flutter/material.dart';
-import 'package:app_planes/utils/dimensiones_pantalla.dart';
+import 'package:app_planes/utils/validaciones.dart'; // Asegúrate de importar las validaciones
+import 'package:app_planes/services/auth_service.dart';
 
-class EditarInformacionUsuario extends StatelessWidget {
+class EditarInformacionUsuario extends StatefulWidget {
   final RegistroUsuarioModel registroUsuario;
 
   const EditarInformacionUsuario({super.key, required this.registroUsuario});
 
-  static void mostrar(
+  static Future<dynamic> mostrar(
       BuildContext context, RegistroUsuarioModel registroUsuario) {
-    showModalBottomSheet(
+    return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       enableDrag: false,
@@ -23,6 +26,115 @@ class EditarInformacionUsuario extends StatelessWidget {
   }
 
   @override
+  _EditarInformacionUsuarioState createState() =>
+      _EditarInformacionUsuarioState();
+}
+
+class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
+  late TextEditingController _nombreController;
+  late TextEditingController _apellidoController;
+  late TextEditingController _edadController;
+  late TextEditingController _estaturaController;
+  late TextEditingController _pesoController;
+
+  final _formKey = GlobalKey<FormState>();
+  final UserRepository _userRepository = UserRepository();
+
+  @override
+  void initState() {
+    super.initState();
+    _nombreController =
+        TextEditingController(text: widget.registroUsuario.nombre);
+    _apellidoController =
+        TextEditingController(text: widget.registroUsuario.apellido);
+    _edadController = TextEditingController(
+        text: widget.registroUsuario.edad?.toString() ?? "");
+    _estaturaController = TextEditingController(
+        text: widget.registroUsuario.estatura != null
+            ? widget.registroUsuario.estatura!.toInt().toString()
+            : "");
+    _pesoController = TextEditingController(
+        text: widget.registroUsuario.peso != null
+            ? widget.registroUsuario.peso!.toInt().toString()
+            : "");
+  }
+
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    _apellidoController.dispose();
+    _edadController.dispose();
+    _estaturaController.dispose();
+    _pesoController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _guardarCambios() async {
+    if (_formKey.currentState!.validate()) {
+      // Verificar si hay conexión a internet
+      bool isOnline = await AuthService().checkConnectivity();
+      if (!isOnline) {
+        // Mostrar un AlertDialog en lugar de un SnackBar
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Sin conexión"),
+            content: const Text(
+                "No estás conectado a Internet. Inténtalo más tarde."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Aceptar"),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      // Actualizar el objeto registroUsuario con los nuevos valores.
+      RegistroUsuarioModel updatedUser = RegistroUsuarioModel(
+        nombre: _nombreController.text,
+        apellido: _apellidoController.text,
+        edad: int.tryParse(_edadController.text),
+        estatura: double.tryParse(_estaturaController.text),
+        peso: double.tryParse(_pesoController.text),
+        // Mantenemos los otros campos sin cambios.
+        fechaNacimiento: widget.registroUsuario.fechaNacimiento,
+        sexo: widget.registroUsuario.sexo,
+        diabetesTipo1: widget.registroUsuario.diabetesTipo1,
+        diabetesTipo2: widget.registroUsuario.diabetesTipo2,
+        hipertension: widget.registroUsuario.hipertension,
+        nivelGlucosa: widget.registroUsuario.nivelGlucosa,
+        usoInsulina: widget.registroUsuario.usoInsulina,
+        presionArterial: widget.registroUsuario.presionArterial,
+        observaciones: widget.registroUsuario.observaciones,
+        nivelActividad: widget.registroUsuario.nivelActividad,
+        alergiasIntolerancias: widget.registroUsuario.alergiasIntolerancias,
+        indiceMasaCorporal: widget.registroUsuario.indiceMasaCorporal,
+        tasaMetabolicaBasal: widget.registroUsuario.tasaMetabolicaBasal,
+        caloriasDiarias: widget.registroUsuario.caloriasDiarias,
+        cantidadInsulina: widget.registroUsuario.cantidadInsulina,
+        tipoInsulina: widget.registroUsuario.tipoInsulina,
+        relacionInsulinaCarbohidratos:
+            widget.registroUsuario.relacionInsulinaCarbohidratos,
+      );
+
+      try {
+        await _userRepository.updateUser(updatedUser);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Información actualizada con éxito")),
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error al actualizar: $e")),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
@@ -31,92 +143,102 @@ class EditarInformacionUsuario extends StatelessWidget {
         top: DimensionesDePantalla.pantallaSize * 0.02,
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.1),
-            Text(
-              'Editar Información',
-              style: TextStyle(
-                fontSize: DimensionesDePantalla.pantallaSize * 0.025,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF023336),
-                fontFamily: 'Comfortaa',
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.1),
+              Text(
+                'Editar Información',
+                style: TextStyle(
+                  fontSize: DimensionesDePantalla.pantallaSize * 0.025,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF023336),
+                  fontFamily: 'Comfortaa',
+                ),
               ),
-            ),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            linea(1.0, 1.0),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-            _buildTextField('Nombre', registroUsuario.nombre ?? ''),
-            _buildTextField('Apellido', registroUsuario.apellido ?? ''),
-            _buildTextField('Edad', registroUsuario.edad?.toString() ?? ''),
-            _buildTextField(
-                'Estatura', registroUsuario.estatura?.toString() ?? ''),
-            _buildTextField('Peso', registroUsuario.peso?.toString() ?? ''),
-            _buildTextField('Sexo', registroUsuario.sexo ?? ''),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Lógica para guardar cambios
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF023336),
-                    padding: EdgeInsets.symmetric(
-                      vertical: DimensionesDePantalla.pantallaSize * 0.015,
-                      horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+              linea(1.0, 1.0),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+              _buildTextField("Nombre", _nombreController,
+                  validator: validarNombre),
+              _buildTextField("Apellido", _apellidoController,
+                  validator: validarApellido),
+              _buildTextField("Edad", _edadController, isNumber: true,
+                  validator: (value) {
+                if (value == null || value.isEmpty) return 'Ingresa tu edad';
+                int? age = int.tryParse(value);
+                if (age == null) return 'Ingresa un número válido';
+                if (age < 18 || age > 80)
+                  return 'La edad debe estar entre 18 y 80 años';
+                return null;
+              }),
+              _buildTextField("Estatura", _estaturaController,
+                  isNumber: true, validator: validarEstatura),
+              _buildTextField("Peso", _pesoController,
+                  isNumber: true, validator: validarPeso),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: _guardarCambios,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF023336),
+                      padding: EdgeInsets.symmetric(
+                        vertical: DimensionesDePantalla.pantallaSize * 0.015,
+                        horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                  ),
-                  child: Text(
-                    'Guardar',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontFamily: 'Comfortaa',
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Lógica para cancelar y cerrar
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(
-                      vertical: DimensionesDePantalla.pantallaSize * 0.015,
-                      horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                    child: const Text(
+                      'Guardar',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontFamily: 'Comfortaa',
+                      ),
                     ),
                   ),
-                  child: Text(
-                    'Cancelar',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontFamily: 'Comfortaa',
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: EdgeInsets.symmetric(
+                        vertical: DimensionesDePantalla.pantallaSize * 0.015,
+                        horizontal: DimensionesDePantalla.anchoPantalla * 0.02,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontFamily: 'Comfortaa',
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
-          ],
+                ],
+              ),
+              SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, String initialValue) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {bool isNumber = false, String? Function(String?)? validator}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -125,13 +247,14 @@ class EditarInformacionUsuario extends StatelessWidget {
           style: TextStyle(
             fontSize: DimensionesDePantalla.pantallaSize * 0.02,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF023336),
+            color: const Color(0xFF023336),
             fontFamily: 'Comfortaa',
           ),
         ),
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.01),
         TextFormField(
-          initialValue: initialValue,
+          controller: controller,
+          keyboardType: isNumber ? TextInputType.number : TextInputType.text,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide:
@@ -145,12 +268,17 @@ class EditarInformacionUsuario extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.0),
             ),
             filled: true,
-            fillColor: Color(0xFFC1E6BA).withOpacity(0.35),
+            fillColor: const Color(0xFFC1E6BA).withOpacity(0.35),
           ),
           style: TextStyle(
             fontSize: DimensionesDePantalla.pantallaSize * 0.02,
             fontFamily: 'Comfortaa',
           ),
+          validator: validator ??
+              (value) {
+                if (value == null || value.isEmpty) return 'Campo requerido';
+                return null;
+              },
         ),
         SizedBox(height: DimensionesDePantalla.pantallaSize * 0.02),
       ],
