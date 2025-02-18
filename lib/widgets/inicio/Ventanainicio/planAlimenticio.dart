@@ -355,38 +355,6 @@ Widget _buildImageContainer(
   );
 }
 
-Widget _buildExtraContainer() {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30.0),
-      color: const Color(0xFFEAF8E7),
-      boxShadow: const [
-        BoxShadow(
-          color: Color.fromARGB(45, 0, 0, 0),
-          blurRadius: 4.0,
-          offset: Offset(0, 0),
-        ),
-      ],
-    ),
-    height: DimensionesDePantalla.pantallaSize * 0.2,
-    child: Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Flexible(
-            flex: 2,
-            fit: FlexFit.loose,
-            child: Container(
-              height: DimensionesDePantalla.pantallaSize * .2,
-              child: const Center(child: Text('Bloque Extra')),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
 Widget _buildButton(String? label, VoidCallback onPressed,
     {bool isMiddleButton = false, IconData? icon, double? iconSize}) {
   return Container(

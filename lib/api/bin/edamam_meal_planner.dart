@@ -86,6 +86,9 @@ class EdamamService {
         } else {
           mealBody['plan']['accept']['all'].removeWhere((element) =>
               element is Map<String, dynamic> && element.containsKey('health'));
+          mealBody['plan']['accept']['all'].add({
+            "health": ["Mediterranean"],
+          });
         }
       case 'Hipertensión':
         print("hipertensionBody");
