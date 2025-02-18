@@ -16,9 +16,17 @@ import 'screens/Login/login_screen.dart';
 import 'screens/Register/register_datos_personales.dart';
 import 'screens/home.dart';
 import 'screens/start_screen.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Bloquea la orientación a solo vertical
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,11 +41,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // Desactiva el banner de debug
       title: 'App Planes',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // Integración de localizaciones para que el calendario muestre el idioma español
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -48,7 +56,6 @@ class MyApp extends StatelessWidget {
       ],
       home: const AuthenticationWrapper(),
       routes: {
-        // '/register': (context) => RegistroScreen(),
         '/register-1': (context) => const RegistroDatosPersonales(),
         '/register-2': (context) => const RegistroDatosMedicos(),
         '/register-3': (context) => const RegistroUsuario(),

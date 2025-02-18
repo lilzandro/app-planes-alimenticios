@@ -44,7 +44,6 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
     return [
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.08),
       Center(
-          child: Expanded(
         child: Container(
           decoration: BoxDecoration(
             color: Color(0xFFEAF8E7),
@@ -57,14 +56,14 @@ class _VentanaInicioSesionState extends State<VentanaInicioSeccion> {
             ],
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
-          height: screenSize.height * 0.60,
           width: screenSize.width * 0.9,
           padding: EdgeInsets.only(
+              bottom: DimensionesDePantalla.pantallaSize * 0.02,
               left: DimensionesDePantalla.pantallaSize * 0.02,
               right: DimensionesDePantalla.pantallaSize * 0.02),
           child: _construirFormularioInicioSesion(),
         ),
-      )),
+      ),
       SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
       _construirBotonIniciarSesion(),
       _construirOlvidasteContrasena(),
