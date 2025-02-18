@@ -340,7 +340,7 @@ class _VentanaPlanAlimentacionState extends State<VentanaPlanAlimentacion> {
 
       print('Calorías Diarias: ${usuario.sexo}');
       print('Patología: ${usuario.peso}');
-      print('Nivel de Glucosa: ${usuario.estatura}');
+      print('Nivel de Glucosa: ${usuario.nivelGlucosa}');
       print('Alergias: ${usuario.edad}');
 
       double tmb = calcularTMB(

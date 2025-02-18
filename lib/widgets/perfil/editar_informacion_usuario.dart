@@ -85,6 +85,7 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
     super.dispose();
   }
 
+  //// filepath: /C:/Users/lisan/Desktop/Workspaces/app_planes/lib/widgets/perfil/editar_informacion_usuario.dart
   Future<void> _guardarCambios() async {
     if (_formKey.currentState!.validate()) {
       // Verificar si hay conexión a internet
@@ -144,7 +145,79 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Información actualizada con éxito")),
         );
-        Navigator.pop(context);
+
+        // Verificar si se modificaron datos que influyen en el plan alimenticio.
+        bool impactData = false;
+        if (_edadController.text !=
+            (widget.registroUsuario.edad?.toString() ?? "")) {
+          impactData = true;
+        }
+        if (_estaturaController.text !=
+            (widget.registroUsuario.estatura != null
+                ? widget.registroUsuario.estatura!.toInt().toString()
+                : "")) {
+          impactData = true;
+        }
+        if (_pesoController.text !=
+            (widget.registroUsuario.peso != null
+                ? widget.registroUsuario.peso!.toInt().toString()
+                : "")) {
+          impactData = true;
+        }
+        if ((widget.registroUsuario.diabetesTipo1 ||
+                widget.registroUsuario.diabetesTipo2) &&
+            _nivelGlucosaController != null) {
+          if (_nivelGlucosaController!.text !=
+              (widget.registroUsuario.nivelGlucosa?.toString() ?? "")) {
+            impactData = true;
+          }
+        }
+        if (widget.registroUsuario.hipertension &&
+            _presionArterialController != null) {
+          if (_presionArterialController!.text !=
+              (widget.registroUsuario.presionArterial?.toString() ?? "")) {
+            impactData = true;
+          }
+        }
+
+        if (impactData) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: const Color(0xFFEAF8E7),
+              title: const Text("Atención",
+                  style: TextStyle(
+                    color: Color(0xFF023336),
+                    fontFamily: 'Comfortaa',
+                    fontWeight: FontWeight.bold,
+                  )),
+              content: const Text(
+                "Has modificado datos que influyen en tu plan alimenticio actual. "
+                "Para ver estos cambios, asegúrate de actualizar el plan actual en la sección 'Plan Alimenticio'.",
+                style: TextStyle(
+                  color: Color(0xFF023336),
+                  fontFamily: 'Comfortaa',
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Cierra el diálogo.
+                    Navigator.pop(context); // Cierra el modal de edición.
+                  },
+                  child: const Text("Aceptar",
+                      style: TextStyle(
+                        color: Color(0xFF023336),
+                        fontFamily: 'Comfortaa',
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+              ],
+            ),
+          );
+        } else {
+          Navigator.pop(context);
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error al actualizar: $e")),
