@@ -87,7 +87,7 @@ final Map<String, dynamic> diabetes2Body = {
           "diet": ["BALANCED", "HIGH_FIBER"],
         },
         {
-          "health": ["DASH"]
+          "health": ["Mediterranean"],
         }
       ]
     },
