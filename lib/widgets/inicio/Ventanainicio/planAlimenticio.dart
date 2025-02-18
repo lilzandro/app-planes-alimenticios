@@ -145,9 +145,9 @@ Widget _buildMealPlanContainer(
         ),
         _buildSeparator(),
         _buildExpandableOption(
-          "Cena",
+          "Merienda",
           planAlimenticio != null
-              ? _mealForDate(planAlimenticio.cena, selectedDate)
+              ? _mealForDate(planAlimenticio.merienda1, selectedDate)
               : null,
           mealCompletion,
           context,
@@ -157,9 +157,9 @@ Widget _buildMealPlanContainer(
         ),
         _buildSeparator(),
         _buildExpandableOption(
-          "Merienda",
+          "Cena",
           planAlimenticio != null
-              ? _mealForDate(planAlimenticio.merienda1, selectedDate)
+              ? _mealForDate(planAlimenticio.cena, selectedDate)
               : null,
           mealCompletion,
           context,
@@ -264,8 +264,8 @@ Widget _buildMealInfo(
   final Map<String, String> mealTimes = {
     'Desayuno': '7:00 AM',
     'Almuerzo': '12:00 PM',
+    'Merienda': '4:00 PM',
     'Cena': '7:00 PM',
-    'Merienda': '9:00 PM',
   };
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,

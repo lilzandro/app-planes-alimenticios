@@ -93,9 +93,6 @@ final Map<String, dynamic> diabetes2Body = {
     },
     "fit": {
       "ENERC_KCAL": {"min": 1000, "max": 2000},
-      "FAMS": {"min": 10, "max": 30},
-      "FIBTG": {"min": 10, "max": 50},
-      "FAPU": {"min": 10, "max": 30},
     },
     "sections": {
       "Breakfast": {
