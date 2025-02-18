@@ -36,6 +36,8 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
   late TextEditingController _edadController;
   late TextEditingController _estaturaController;
   late TextEditingController _pesoController;
+  TextEditingController? _nivelGlucosaController;
+  TextEditingController? _presionArterialController;
 
   final _formKey = GlobalKey<FormState>();
   final UserRepository _userRepository = UserRepository();
@@ -57,6 +59,18 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
         text: widget.registroUsuario.peso != null
             ? widget.registroUsuario.peso!.toInt().toString()
             : "");
+
+    // Si el usuario es diabético (tipo 1 o 2) le mostramos el campo de nivel de glucosa.
+    if (widget.registroUsuario.diabetesTipo1 ||
+        widget.registroUsuario.diabetesTipo2) {
+      _nivelGlucosaController = TextEditingController(
+          text: widget.registroUsuario.nivelGlucosa?.toString() ?? "");
+    }
+    // Si el usuario es hipertenso le mostramos el campo de presión arterial.
+    if (widget.registroUsuario.hipertension) {
+      _presionArterialController = TextEditingController(
+          text: widget.registroUsuario.presionArterial?.toString() ?? "");
+    }
   }
 
   @override
@@ -66,6 +80,8 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
     _edadController.dispose();
     _estaturaController.dispose();
     _pesoController.dispose();
+    _nivelGlucosaController?.dispose();
+    _presionArterialController?.dispose();
     super.dispose();
   }
 
@@ -74,7 +90,6 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
       // Verificar si hay conexión a internet
       bool isOnline = await AuthService().checkConnectivity();
       if (!isOnline) {
-        // Mostrar un AlertDialog en lugar de un SnackBar
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -92,22 +107,26 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
         return;
       }
 
-      // Actualizar el objeto registroUsuario con los nuevos valores.
+      // Crear el objeto actualizado, incorporando los campos condicionales.
       RegistroUsuarioModel updatedUser = RegistroUsuarioModel(
         nombre: _nombreController.text,
         apellido: _apellidoController.text,
         edad: int.tryParse(_edadController.text),
         estatura: double.tryParse(_estaturaController.text),
         peso: double.tryParse(_pesoController.text),
-        // Mantenemos los otros campos sin cambios.
+        // Se mantienen otros campos sin cambios.
         fechaNacimiento: widget.registroUsuario.fechaNacimiento,
         sexo: widget.registroUsuario.sexo,
         diabetesTipo1: widget.registroUsuario.diabetesTipo1,
         diabetesTipo2: widget.registroUsuario.diabetesTipo2,
         hipertension: widget.registroUsuario.hipertension,
-        nivelGlucosa: widget.registroUsuario.nivelGlucosa,
+        nivelGlucosa: _nivelGlucosaController != null
+            ? int.tryParse(_nivelGlucosaController!.text)
+            : widget.registroUsuario.nivelGlucosa,
+        presionArterial: _presionArterialController != null
+            ? _presionArterialController!.text
+            : widget.registroUsuario.presionArterial,
         usoInsulina: widget.registroUsuario.usoInsulina,
-        presionArterial: widget.registroUsuario.presionArterial,
         observaciones: widget.registroUsuario.observaciones,
         nivelActividad: widget.registroUsuario.nivelActividad,
         alergiasIntolerancias: widget.registroUsuario.alergiasIntolerancias,
@@ -179,6 +198,23 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
                   isNumber: true, validator: validarEstatura),
               _buildTextField("Peso", _pesoController,
                   isNumber: true, validator: validarPeso),
+              // Campo adicional para nivel de glucosa si es diabético
+              if (widget.registroUsuario.diabetesTipo1 ||
+                  widget.registroUsuario.diabetesTipo2)
+                _buildTextField("Nivel de glucosa", _nivelGlucosaController!,
+                    isNumber: true, validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return 'Ingresa el nivel de glucosa';
+                  return null;
+                }),
+              // Campo adicional para presión arterial si es hipertenso
+              if (widget.registroUsuario.hipertension)
+                _buildTextField("Presión arterial", _presionArterialController!,
+                    isNumber: true, validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return 'Ingresa la presión arterial';
+                  return null;
+                }),
               SizedBox(height: DimensionesDePantalla.pantallaSize * 0.03),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

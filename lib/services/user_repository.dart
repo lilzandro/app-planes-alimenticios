@@ -22,6 +22,17 @@ class UserRepository {
           diabetesTipo1: userDoc['diabetesTipo1'],
           diabetesTipo2: userDoc['diabetesTipo2'],
           hipertension: userDoc['hipertension'],
+          nivelGlucosa: userDoc['nivelGlucosa'],
+          usoInsulina: userDoc['usoInsulina'],
+          presionArterial: userDoc['presionArterial'],
+          observaciones: userDoc['observaciones'],
+          alergiasIntolerancias:
+              List<String>.from(userDoc['alergiasIntolerancias']),
+          indiceMasaCorporal: userDoc['indiceMasaCorporal'],
+          tasaMetabolicaBasal: userDoc['tasaMetabolicaBasal'],
+          caloriasDiarias: userDoc['caloriasDiarias'],
+          cantidadInsulina: userDoc['cantidadInsulina'],
+          tipoInsulina: userDoc['tipoInsulina'],
         );
       } else {
         return null;
@@ -50,6 +61,8 @@ class UserRepository {
         'diabetesTipo1': updatedUser.diabetesTipo1,
         'diabetesTipo2': updatedUser.diabetesTipo2,
         'hipertension': updatedUser.hipertension,
+        'nivelGlucosa': updatedUser.nivelGlucosa,
+        'presionArterial': updatedUser.presionArterial,
       });
       print("Usuario actualizado correctamente en Firestore.");
     } catch (e) {

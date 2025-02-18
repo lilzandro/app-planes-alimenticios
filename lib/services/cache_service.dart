@@ -13,6 +13,37 @@ class CacheService {
     await prefs.setDouble('peso', user.peso ?? 0.0);
     await prefs.setString('sexo', user.sexo ?? '');
     await prefs.setString('nivelActividad', user.nivelActividad ?? '');
+    await prefs.setBool('diabetesTipo1', user.diabetesTipo1 ?? false);
+    await prefs.setBool('diabetesTipo2', user.diabetesTipo2 ?? false);
+    await prefs.setBool('hipertension', user.hipertension ?? false);
+    await prefs.setDouble(
+        'nivelGlucosa', (user.nivelGlucosa ?? 0.0).toDouble());
+    await prefs.setString('usoInsulina', user.usoInsulina ?? '');
+    await prefs.setString('presionArterial', user.presionArterial ?? '');
+    await prefs.setString('observaciones', user.observaciones ?? '');
+    await prefs.setStringList(
+        'alergiasIntolerancias', user.alergiasIntolerancias ?? []);
+  }
+
+  //// filepath: /c:/Users/lisan/Desktop/Workspaces/app_planes/lib/services/cache_service.dart
+  Future<void> clearUserCache() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('nombre');
+    await prefs.remove('apellido');
+    await prefs.remove('edad');
+    await prefs.remove('estatura');
+    await prefs.remove('peso');
+    await prefs.remove('sexo');
+    await prefs.remove('nivelActividad');
+    await prefs.remove('diabetesTipo1');
+    await prefs.remove('diabetesTipo2');
+    await prefs.remove('hipertension');
+    await prefs.remove('nivelGlucosa');
+    await prefs.remove('usoInsulina');
+    await prefs.remove('presionArterial');
+    await prefs.remove('observaciones');
+    await prefs.remove('alergiasIntolerancias');
+    print('Información del usuario eliminada del cache');
   }
 
   Future<void> saveMealCompletion(
