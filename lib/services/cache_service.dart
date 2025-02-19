@@ -17,6 +17,8 @@ class CacheService {
     await prefs.setBool('diabetesTipo2', user.diabetesTipo2 ?? false);
     await prefs.setBool('hipertension', user.hipertension ?? false);
     await prefs.setDouble(
+        'cantidadInsulina', (user.cantidadInsulina as num? ?? 0.0).toDouble());
+    await prefs.setDouble(
         'nivelGlucosa', (user.nivelGlucosa ?? 0.0).toDouble());
     await prefs.setString('usoInsulina', user.usoInsulina ?? '');
     await prefs.setString('presionArterial', user.presionArterial ?? '');
@@ -35,6 +37,7 @@ class CacheService {
     await prefs.remove('peso');
     await prefs.remove('sexo');
     await prefs.remove('nivelActividad');
+    await prefs.remove('cantidadInsulina');
     await prefs.remove('diabetesTipo1');
     await prefs.remove('diabetesTipo2');
     await prefs.remove('hipertension');

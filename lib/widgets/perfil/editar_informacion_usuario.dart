@@ -36,6 +36,7 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
   late TextEditingController _edadController;
   late TextEditingController _estaturaController;
   late TextEditingController _pesoController;
+  late TextEditingController _glucosaController;
   TextEditingController? _nivelGlucosaController;
   TextEditingController? _presionArterialController;
 
@@ -58,6 +59,10 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
     _pesoController = TextEditingController(
         text: widget.registroUsuario.peso != null
             ? widget.registroUsuario.peso!.toInt().toString()
+            : "");
+    _glucosaController = TextEditingController(
+        text: widget.registroUsuario.cantidadInsulina != null
+            ? int.parse(widget.registroUsuario.cantidadInsulina!).toString()
             : "");
 
     // Si el usuario es diabético (tipo 1 o 2) le mostramos el campo de nivel de glucosa.
@@ -82,6 +87,7 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
     _pesoController.dispose();
     _nivelGlucosaController?.dispose();
     _presionArterialController?.dispose();
+    _glucosaController.dispose();
     super.dispose();
   }
 
@@ -107,6 +113,12 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
         );
         return;
       }
+
+      double? nuevaCantidadInsulina = double.tryParse(_glucosaController.text);
+      double nuevaRelacionInsulinaCarbohidratos =
+          (nuevaCantidadInsulina != null && nuevaCantidadInsulina > 0)
+              ? (500 / nuevaCantidadInsulina)
+              : widget.registroUsuario.relacionInsulinaCarbohidratos as double;
 
       // Crear el objeto actualizado, incorporando los campos condicionales.
       RegistroUsuarioModel updatedUser = RegistroUsuarioModel(
@@ -134,10 +146,10 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
         indiceMasaCorporal: widget.registroUsuario.indiceMasaCorporal,
         tasaMetabolicaBasal: widget.registroUsuario.tasaMetabolicaBasal,
         caloriasDiarias: widget.registroUsuario.caloriasDiarias,
-        cantidadInsulina: widget.registroUsuario.cantidadInsulina,
+        cantidadInsulina: _glucosaController.text,
         tipoInsulina: widget.registroUsuario.tipoInsulina,
         relacionInsulinaCarbohidratos:
-            widget.registroUsuario.relacionInsulinaCarbohidratos,
+            nuevaRelacionInsulinaCarbohidratos.toString(),
       );
 
       try {
@@ -271,6 +283,12 @@ class _EditarInformacionUsuarioState extends State<EditarInformacionUsuario> {
                   isNumber: true, validator: validarEstatura),
               _buildTextField("Peso", _pesoController,
                   isNumber: true, validator: validarPeso),
+              _buildTextField("Cantidad de insulina", _glucosaController,
+                  isNumber: true, validator: (value) {
+                if (value == null || value.isEmpty)
+                  return 'Ingresa la cantidad de insulina';
+                return null;
+              }),
               // Campo adicional para nivel de glucosa si es diabético
               if (widget.registroUsuario.diabetesTipo1 ||
                   widget.registroUsuario.diabetesTipo2)

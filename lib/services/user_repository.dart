@@ -63,6 +63,9 @@ class UserRepository {
         'hipertension': updatedUser.hipertension,
         'nivelGlucosa': updatedUser.nivelGlucosa,
         'presionArterial': updatedUser.presionArterial,
+        'cantidadInsulina': updatedUser.cantidadInsulina,
+        'relacionInsulinaCarbohidratos':
+            updatedUser.relacionInsulinaCarbohidratos,
       });
       print("Usuario actualizado correctamente en Firestore.");
     } catch (e) {
