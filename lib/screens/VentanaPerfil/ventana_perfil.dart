@@ -67,7 +67,7 @@ class _VentanaPerfilState extends State<VentanaPerfil> {
           });
           // Guardar la información del usuario en caché
           await CacheService().saveUserToCache(registroUsuario!);
-          print('Usuario encontrados: ${registroUsuario!.nivelGlucosa}');
+          print('Usuario encontrado: ${registroUsuario!.nombre}');
         } else {
           print('No se encontró el usuario en Firestore');
         }

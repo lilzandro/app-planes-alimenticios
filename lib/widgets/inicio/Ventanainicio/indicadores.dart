@@ -30,7 +30,7 @@ Container buildProgressContainer(
               children: [
                 buildLinearPercentIndicator("Carbohidratos",
                     progresoCarbohidratos.toInt(), totalCarbohidratos.toInt()),
-                buildLinearPercentIndicator("Proteinas",
+                buildLinearPercentIndicator("Proteínas",
                     progresoProteinas.toInt(), totalProteinas.toInt()),
                 buildLinearPercentIndicator(
                     "Grasas", grasasProgreso.toInt(), totalGrasas.toInt()),

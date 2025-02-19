@@ -4,11 +4,11 @@ import 'package:app_planes/utils/traductor.dart';
 import 'package:flutter/material.dart';
 
 class PlanAlimenticioServices {
-  static const appId = 'b7503255';
-  static const appKey = 'b16f42432da7a84f616ee939dd8a1112';
+  static const appId = '416aa5bc';
+  static const appKey = 'abe04dacd5f18f30dbe290657f19ff94';
   static const baseUrl =
       'https://api.edamam.com/api/meal-planner/v1/$appId/select?app_id=$appId&app_key=$appKey&type=edamam-generic';
-  static const userApi = 'karenpps';
+  static const userApi = 'daveh';
 
   final EdamamService _edamamService =
       EdamamService(appId, appKey, baseUrl, userApi);

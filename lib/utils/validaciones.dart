@@ -87,8 +87,8 @@ String? validarCantidadInsulina(String? value) {
   if (cantidadInsulina == null) {
     return "Ingresa un número válido";
   }
-  if (cantidadInsulina < 5 || cantidadInsulina > 80) {
-    return "La cantidad de insulina debe estar entre 5 y 80 U/día";
+  if (cantidadInsulina < 1 || cantidadInsulina > 80) {
+    return "Error. solo se admite entre 1 y 80 U/día";
   }
   return null;
 }

@@ -59,11 +59,11 @@ class RegistroService {
 
         mostrarDialogoCarga(context);
 
-        const appId = 'b7503255';
-        const appKey = 'b16f42432da7a84f616ee939dd8a1112';
+        const appId = '416aa5bc';
+        const appKey = 'abe04dacd5f18f30dbe290657f19ff94';
         const baseUrl =
             'https://api.edamam.com/api/meal-planner/v1/$appId/select?app_id=$appId&app_key=$appKey&type=edamam-generic';
-        const userApi = 'karenpps';
+        const userApi = 'daveh';
 
         final edamamService = EdamamService(appId, appKey, baseUrl, userApi);
 
